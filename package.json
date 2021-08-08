@@ -1,0 +1,23 @@
+{
+  "name": "wbt-flow",
+  "version": "0.0.1",
+  "description": "Persistent weight-balanced (bounded balance) tree written in Flow (Flowtype)",
+  "keywords": [
+    "weight balanced tree",
+    "persistent tree",
+    "flow"
+  ],
+  "main": "index.mjs",
+  "author": "Michael Wiencek <mwtuea@gmail.com>",
+  "license": "MIT",
+  "private": false,
+  "type": "module",
+  "dependencies": {},
+  "devDependencies": {
+    "benchmark": "2.1.4",
+    "flow-bin": "0.157.0",
+    "flow-remove-types": "2.157.0",
+    "immutable": "4.0.0-rc.14",
+    "tape": "5.3.1"
+  }
+}

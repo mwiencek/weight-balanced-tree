@@ -1,0 +1,125 @@
+// @flow strict
+
+import test from 'tape';
+
+import * as tree from './index.mjs';
+
+function cmpIntegers(a: number, b: number): number {
+  return a - b;
+}
+
+function shuffle(array: Array<number>): void {
+  for (let i = array.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1));
+    // $FlowIssue[unsupported-syntax]
+    [array[i], array[j]] = [array[j], array[i]];
+  }
+}
+
+function countSize(node: tree.ImmutableTreeT<mixed> | null): number {
+  if (node === null) {
+    return 0;
+  }
+  return 1 + countSize(node.left) + countSize(node.right);
+}
+
+function checkBalance(node: tree.ImmutableTreeT<mixed>): boolean {
+  if (
+    (node.left === null || node.left.size === 1) &&
+    (node.right === null || node.right.size === 1)
+  ) {
+    return true;
+  }
+  return (
+    tree.getSize(node.left) <= (3 * tree.getSize(node.right)) &&
+    tree.getSize(node.right) <= (3 * tree.getSize(node.left))
+  );
+}
+
+function checkTreeInvariants(
+  t: tape$Context,
+  node: tree.ImmutableTreeT<number> | null,
+): void {
+  if (node === null) {
+    return;
+  }
+
+  const actualSize = countSize(node);
+  if (node.size !== actualSize) {
+    t.comment('wrong tree size: ' + treeToString(node));
+  }
+  t.equal(node.size, actualSize, 'stored size is correct');
+
+  const isBalanced = checkBalance(node);
+  if (!isBalanced) {
+    t.comment('unbalanced tree: ' + treeToString(node));
+  }
+  t.ok(isBalanced, 'node is balanced');
+
+  if (node.left) {
+    t.ok(node.left.value < node.value, 'left node has a smaller value');
+    checkTreeInvariants(t, node.left);
+  }
+
+  if (node.right) {
+    t.ok(node.right.value > node.value, 'right node has a larger value');
+    checkTreeInvariants(t, node.right);
+  }
+}
+
+function treeToString(
+  node: tree.ImmutableTreeT<mixed> | null,
+): string {
+  if (node === null) {
+    return '';
+  }
+  const leftTree = treeToString(node.left);
+  const rightTree = treeToString(node.right);
+  return (
+    String(node.value) + ' ' + String(node.size) +
+    (leftTree ? '(' + leftTree + ')' : '') +
+    (rightTree ? '(' + rightTree + ')' : '')
+  );
+}
+
+test('all', function (t) {
+  const oneToThirtyOne = [];
+
+  for (let i = 1; i <= 31; i++) {
+    oneToThirtyOne.push(i);
+  }
+
+  const numbers = oneToThirtyOne.slice(0);
+
+  for (let i = 0; i < 5; i++) {
+    let node = null;
+
+    for (const num of numbers) {
+      node = tree.insert(node, num, cmpIntegers);
+      checkTreeInvariants(t, node);
+    }
+
+    t.deepEqual(
+      Array.from(tree.iterate(node)),
+      oneToThirtyOne,
+      'tree is in order',
+    );
+
+    shuffle(numbers);
+
+    for (const num of numbers) {
+      let foundNode = tree.find(node, num, cmpIntegers);
+      t.ok(foundNode !== null && foundNode.value === num, 'existing node is found');
+
+      node = tree.remove(node, num, cmpIntegers);
+      checkTreeInvariants(t, node);
+
+      foundNode = tree.find(node, num, cmpIntegers);
+      t.ok(foundNode === null, 'removed node is not found');
+    }
+
+    t.ok(node === null, 'tree is empty');
+  }
+
+  t.end();
+});

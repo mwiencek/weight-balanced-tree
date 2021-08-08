@@ -1,0 +1,304 @@
+// @flow strict
+
+export type ImmutableTreeT<+T> = {
+  +value: T,
+  +size: number,
+  +left: ImmutableTreeT<T> | null,
+  +right: ImmutableTreeT<T> | null,
+};
+
+export type MutableTreeT<T> = {
+  value: T,
+  size: number,
+  left: ImmutableTreeT<T> | null,
+  right: ImmutableTreeT<T> | null,
+};
+
+declare var invariant: (mixed) => void;
+
+/*
+ * DELTA and RATIO are taken from GHC:
+ * https://gitlab.haskell.org/ghc/packages/containers/-/blob/f00aa02/containers/src/Data/Map/Internal.hs#L4011-4017
+ */
+const DELTA = 3;
+const RATIO = 2;
+
+export function getSize<T>(tree: ImmutableTreeT<T> | null): number {
+  return tree === null ? 0 : tree.size;
+}
+
+function getNewSize(leftSize: number, rightSize: number): number {
+  return leftSize + rightSize + 1;
+}
+
+function immutableRotateLeft<T>(a: ImmutableTreeT<T>): ImmutableTreeT<T> {
+  const b = a.right;
+  /*:: invariant(b); */
+  const c = b.right;
+  /*:: invariant(c); */
+  const left = {
+    value: a.value,
+    size: getSize(a.left) + getSize(b.left) + 1,
+    left: a.left,
+    right: b.left,
+  };
+  return {
+    value: b.value,
+    size: left.size + getSize(c) + 1,
+    left: left,
+    right: c,
+  };
+}
+
+function immutableRotateRight<T>(c: ImmutableTreeT<T>): ImmutableTreeT<T> {
+  const b = c.left;
+  /*:: invariant(b); */
+  const a = b.left;
+  /*:: invariant(a); */
+  const right = {
+    value: c.value,
+    size: getSize(b.right) + getSize(c.right) + 1,
+    left: b.right,
+    right: c.right,
+  };
+  return {
+    value: b.value,
+    size: getSize(a) + right.size + 1,
+    left: a,
+    right: right,
+  };
+}
+
+function mutableRotateLeft<T>(a: MutableTreeT<T>): void {
+  const b = a.right;
+  /*:: invariant(b); */
+  const c = b.right;
+  /*:: invariant(c); */
+  const left = {
+    value: a.value,
+    size: getSize(a.left) + getSize(b.left) + 1,
+    left: a.left,
+    right: b.left,
+  };
+  a.value = b.value;
+  a.size = left.size + getSize(c) + 1;
+  a.left = left;
+  a.right = c;
+}
+
+function mutableRotateRight<T>(c: MutableTreeT<T>): void {
+  const b = c.left;
+  /*:: invariant(b); */
+  const a = b.left;
+  /*:: invariant(a); */
+  const right = {
+    value: c.value,
+    size: getSize(b.right) + getSize(c.right) + 1,
+    left: b.right,
+    right: c.right,
+  };
+  c.value = b.value;
+  c.size = getSize(a) + right.size + 1;
+  c.left = a;
+  c.right = right;
+}
+
+function mutableRotateLeftRight<T>(tree: MutableTreeT<T>): void {
+  /*:: invariant(tree.left); */
+  tree.left = immutableRotateLeft(tree.left);
+  mutableRotateRight(tree);
+}
+
+function mutableRotateRightLeft<T>(tree: MutableTreeT<T>): void {
+  /*:: invariant(tree.right); */
+  tree.right = immutableRotateRight(tree.right);
+  mutableRotateLeft(tree);
+}
+
+function mutableBalanceLeft<T>(tree: MutableTreeT<T>): void {
+  const left = tree.left;
+  const right = tree.right;
+  const leftSize = getSize(left);
+  const rightSize = getSize(right);
+
+  if ((leftSize + rightSize) < 2) {
+    return;
+  }
+
+  if (leftSize > (DELTA * rightSize)) {
+    /*:: invariant(left); */
+    const leftLeftSize = left.left === null ? 0 : left.left.size;
+    const leftRightSize = left.right === null ? 0 : left.right.size;
+    if (leftRightSize < (RATIO * leftLeftSize)) {
+      mutableRotateRight(tree);
+    } else {
+      mutableRotateLeftRight(tree);
+    }
+  }
+}
+
+function mutableBalanceRight<T>(tree: MutableTreeT<T>): void {
+  const left = tree.left;
+  const right = tree.right;
+  const leftSize = getSize(left);
+  const rightSize = getSize(right);
+
+  if ((leftSize + rightSize) < 2) {
+    return;
+  }
+
+  if (rightSize > (DELTA * leftSize)) {
+    /*:: invariant(right); */
+    const rightLeftSize = right.left === null ? 0 : right.left.size;
+    const rightRightSize = right.right === null ? 0 : right.right.size;
+    if (rightLeftSize < (RATIO * rightRightSize)) {
+      mutableRotateLeft(tree);
+    } else {
+      mutableRotateRightLeft(tree);
+    }
+  }
+}
+
+export function remove<T>(
+  tree: ImmutableTreeT<T> | null,
+  value: T,
+  cmp: (T, T) => number,
+): ImmutableTreeT<T> | null {
+  if (tree === null) {
+    return null;
+  }
+
+  const order = cmp(value, tree.value);
+  let newTree: MutableTreeT<T> | void;
+
+  if (order === 0) {
+    if (tree.left === null) {
+      return tree.right;
+    }
+    if (tree.right === null) {
+      return tree.left;
+    }
+    let minTree = tree.right;
+    while (minTree.left) {
+      minTree = minTree.left;
+    }
+    newTree = {
+      value: minTree.value,
+      size: tree.size - 1,
+      left: tree.left,
+      right: remove(tree.right, minTree.value, cmp),
+    };
+    mutableBalanceLeft(newTree);
+    return newTree;
+  }
+
+  let left = tree.left;
+  let right = tree.right;
+
+  if (order < 0) {
+    left = remove(left, value, cmp);
+    newTree = {
+      value: tree.value,
+      size: getSize(left) + getSize(right) + 1,
+      left,
+      right,
+    };
+    mutableBalanceRight(newTree);
+  } else {
+    right = remove(right, value, cmp);
+    newTree = {
+      value: tree.value,
+      size: getSize(left) + getSize(right) + 1,
+      left,
+      right,
+    };
+    mutableBalanceLeft(newTree);
+  }
+
+  return newTree;
+}
+
+export function find<T>(
+  tree: ImmutableTreeT<T> | null,
+  value: T,
+  cmp: (T, T) => number,
+): ImmutableTreeT<T> | null {
+  let cursor = tree;
+  while (cursor !== null) {
+    const order = cmp(value, cursor.value);
+    if (order === 0) {
+      break;
+    } else if (order < 0) {
+      cursor = cursor.left;
+    } else {
+      cursor = cursor.right;
+    }
+  }
+  return cursor
+}
+
+export function insert<T>(
+  tree: ImmutableTreeT<T> | null,
+  value: T,
+  cmp: (T, T) => number,
+): ImmutableTreeT<T> {
+  if (tree === null) {
+    return {
+      value,
+      size: 1,
+      left: null,
+      right: null,
+    };
+  }
+
+  const order = cmp(value, tree.value);
+
+  if (order === 0) {
+    return tree;
+  }
+
+  let left = tree.left;
+  let right = tree.right;
+  let newTree: MutableTreeT<T> | null = null;
+
+  if (order < 0) {
+    left = insert(left, value, cmp);
+    newTree = {
+      value: tree.value,
+      size: left.size + getSize(right) + 1,
+      left,
+      right,
+    };
+    mutableBalanceLeft(newTree);
+  } else {
+    right = insert(right, value, cmp);
+    newTree = {
+      value: tree.value,
+      size: getSize(left) + right.size + 1,
+      left,
+      right,
+    };
+    mutableBalanceRight(newTree);
+  }
+
+  return newTree;
+}
+
+export function* iterate<T>(
+  tree: ImmutableTreeT<T> | null,
+): Generator<T, void, void> {
+  const stack = [];
+  let cursor = tree;
+  do {
+    while (cursor !== null) {
+      stack.push(cursor);
+      cursor = cursor.left;
+    }
+    if (stack.length) {
+      cursor = stack.pop();
+      yield cursor.value;
+      /*:: invariant(cursor); */
+      cursor = cursor.right;
+    }
+  } while (stack.length || cursor !== null);
+}
