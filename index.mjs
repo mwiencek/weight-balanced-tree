@@ -23,6 +23,19 @@ declare var invariant: (mixed) => void;
 const DELTA = 3;
 const RATIO = 2;
 
+export const NOOP: 1 = 1;
+export const REPLACE: 2 = 2;
+export const THROW: 3 = 3;
+
+export type INSERT_DUPLICATE_ACTION =
+  | typeof NOOP
+  | typeof REPLACE
+  | typeof THROW;
+
+export type REMOVE_NOT_FOUND_ACTION =
+  | typeof NOOP
+  | typeof THROW;
+
 export function getSize<T>(tree: ImmutableTreeT<T> | null): number {
   return tree === null ? 0 : tree.size;
 }
@@ -163,13 +176,14 @@ export function remove<T>(
   tree: ImmutableTreeT<T> | null,
   value: T,
   cmp: (T, T) => number,
+  notFoundAction?: REMOVE_NOT_FOUND_ACTION = NOOP,
 ): ImmutableTreeT<T> | null {
   if (tree === null) {
     return null;
   }
 
   const order = cmp(value, tree.value);
-  let newTree: MutableTreeT<T> | void;
+  let newTree: MutableTreeT<T> | null = null;
 
   if (order === 0) {
     if (tree.left === null) {
@@ -186,7 +200,7 @@ export function remove<T>(
       value: minTree.value,
       size: tree.size - 1,
       left: tree.left,
-      right: remove(tree.right, minTree.value, cmp),
+      right: remove(tree.right, minTree.value, cmp, THROW),
     };
     mutableBalanceLeft(newTree);
     return newTree;
@@ -196,16 +210,18 @@ export function remove<T>(
   let right = tree.right;
 
   if (order < 0) {
-    left = remove(left, value, cmp);
-    newTree = {
-      value: tree.value,
-      size: getSize(left) + getSize(right) + 1,
-      left,
-      right,
-    };
-    mutableBalanceRight(newTree);
-  } else {
-    right = remove(right, value, cmp);
+    if (left !== null) {
+      left = remove(left, value, cmp, notFoundAction);
+      newTree = {
+        value: tree.value,
+        size: getSize(left) + getSize(right) + 1,
+        left,
+        right,
+      };
+      mutableBalanceRight(newTree);
+    }
+  } else if (right !== null) {
+    right = remove(right, value, cmp, notFoundAction);
     newTree = {
       value: tree.value,
       size: getSize(left) + getSize(right) + 1,
@@ -213,6 +229,23 @@ export function remove<T>(
       right,
     };
     mutableBalanceLeft(newTree);
+  }
+
+  if (newTree === null) {
+    switch (notFoundAction) {
+      case NOOP:
+        return tree;
+      case THROW:
+        throw new Error(
+          'Failed to remove non-existent value: ' +
+          String(value),
+        );
+      default:
+        throw new Error(
+          'Invalid REMOVE_NOT_FOUND_ACTION: ' +
+          String(notFoundAction),
+        );
+    }
   }
 
   return newTree;
@@ -241,6 +274,7 @@ export function insert<T>(
   tree: ImmutableTreeT<T> | null,
   value: T,
   cmp: (T, T) => number,
+  duplicateAction?: INSERT_DUPLICATE_ACTION = NOOP,
 ): ImmutableTreeT<T> {
   if (tree === null) {
     return {
@@ -254,29 +288,55 @@ export function insert<T>(
   const order = cmp(value, tree.value);
 
   if (order === 0) {
-    return tree;
+    switch (duplicateAction) {
+      case NOOP:
+        return tree;
+      case REPLACE:
+        return {
+          value,
+          size: tree.size,
+          left: tree.left,
+          right: tree.right,
+        };
+      case THROW:
+        throw new Error(
+          'Failed to insert duplicate value: ' +
+          String(value),
+        );
+      default:
+        throw new Error(
+          'Invalid INSERT_DUPLICATE_ACTION: ' +
+          String(duplicateAction),
+        );
+    }
   }
 
-  let left = tree.left;
-  let right = tree.right;
+  const left = tree.left;
+  const right = tree.right;
   let newTree: MutableTreeT<T> | null = null;
 
   if (order < 0) {
-    left = insert(left, value, cmp);
+    const newLeftBranch = insert(left, value, cmp, duplicateAction);
+    if (newLeftBranch === left) {
+      return tree;
+    }
     newTree = {
       value: tree.value,
-      size: left.size + getSize(right) + 1,
-      left,
+      size: newLeftBranch.size + getSize(right) + 1,
+      left: newLeftBranch,
       right,
     };
     mutableBalanceLeft(newTree);
   } else {
-    right = insert(right, value, cmp);
+    const newRightBranch = insert(right, value, cmp, duplicateAction);
+    if (newRightBranch === right) {
+      return tree;
+    }
     newTree = {
       value: tree.value,
-      size: getSize(left) + right.size + 1,
+      size: getSize(left) + newRightBranch.size + 1,
       left,
-      right,
+      right: newRightBranch,
     };
     mutableBalanceRight(newTree);
   }

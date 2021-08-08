@@ -123,3 +123,55 @@ test('all', function (t) {
 
   t.end();
 });
+
+test('actions', function (t) {
+  let node = null;
+
+  const compareX = (a, b) => a.x.localeCompare(b.x);
+
+  const xa1 = {x: 'a'};
+  const xa2 = {x: 'a'};
+  const xb1 = {x: 'b'};
+
+  node = tree.insert(node, xa1, compareX);
+  let prevNode = node;
+  node = tree.insert(node, xa2, compareX, tree.NOOP);
+  t.ok(node === prevNode, 'tree is unmodified with duplicateAction = NOOP (root node)');
+  t.ok(node !== null && node.value === xa1, 'tree value is unmodified with duplicateAction = NOOP (root node)');
+  prevNode = node;
+  node = tree.insert(node, xa2, compareX, tree.REPLACE);
+  t.ok(node !== prevNode, 'tree is modified with duplicateAction = REPLACE (root node)');
+  t.ok(node !== null && node.value === xa2, 'tree value is modified with duplicateAction = REPLACE (root node)');
+  t.throws(
+    function () {
+      node = tree.insert(node, xa1, compareX, tree.THROW);
+    },
+    /^Error: Failed to insert duplicate value: \[object Object\]$/,
+    'exception is thrown with duplicateAction = THROW (root node)',
+  );
+  node = tree.insert(node, xb1, compareX);
+  prevNode = node;
+  node = tree.insert(node, xb1, compareX, tree.NOOP);
+  t.ok(node === prevNode, 'tree is unmodified with duplicateAction = NOOP (non-root node)');
+  t.throws(
+    function () {
+      node = tree.insert(node, xb1, compareX, tree.THROW);
+    },
+    /^Error: Failed to insert duplicate value: \[object Object\]$/,
+    'exception is thrown with duplicateAction = THROW (non-root node)',
+  );
+
+  node = tree.remove(node, xb1, compareX);
+  prevNode = node;
+  node = tree.remove(node, xb1, compareX, tree.NOOP);
+  t.ok(prevNode === node, 'tree is unmodified with notFoundAction = NOOP');
+  t.throws(
+    function () {
+      node = tree.remove(node, xb1, compareX, tree.THROW);
+    },
+    /^Error: Failed to remove non-existent value: \[object Object\]$/,
+    'exception is thrown with notFoundAction = THROW',
+  );
+
+  t.end();
+});

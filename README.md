@@ -24,6 +24,15 @@ type ImmutableTreeT<+T> = {
   +left: ImmutableTreeT<T> | null,
   +right: ImmutableTreeT<T> | null,
 };
+
+type INSERT_DUPLICATE_ACTION =
+  | typeof NOOP
+  | typeof REPLACE
+  | typeof THROW;
+
+type REMOVE_NOT_FOUND_ACTION =
+  | typeof NOOP
+  | typeof THROW;
 ```
 
 ### insert
@@ -33,6 +42,7 @@ insert<T>(
     tree: ImmutableTreeT<T> | null,
     value: T,
     cmp: (T, T) => number,
+    duplicateAction?: INSERT_DUPLICATE_ACTION = NOOP,
 ): ImmutableTree<T>;
 ```
 
@@ -42,6 +52,16 @@ modified.
 The `cmp` (comparator) function is used to order the values.  This should never
 change for a particular tree.  (It's recommended to create utility functions
 for each type of tree that always pass the same comparator.)
+
+The optional `duplicateAction` determines what should happen when `value`
+already exists in the tree.  The default action, `NOOP`, returns `tree` back
+unmodified.  The other supported actions are:
+
+ * `REPLACE`, which returns a new tree with the value replaced.
+ * `THROW`, which throws an exception.
+
+(Note: These actions are numeric constants exported from wbt-flow, not
+strings.)
 
 ### remove
 
@@ -60,6 +80,11 @@ If this was the last value in `tree`, `null` is returned (indicating an empty
 tree).
 
 The `cmp` (comparator) function is the same as used for `insert`.
+
+The optional `notFoundAction` determines what should happen when `value`
+is not found in the tree.  The default action, `NOOP`, returns `tree` back
+unmodified.  The only other supported action is `THROW`, which throws an
+exception.
 
 ### find
 
