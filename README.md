@@ -118,17 +118,22 @@ Performance will largely depend on the size of your data and the cost of your
 comparator function.  [benchmark.mjs](benchmark.mjs) tests an ASCII table with
 uniform-length string keys and a simple string comparator function.
 
+Comparisons against plain objects and `Immutable.Map` from
+[immutable-js](https://immutable-js.com/) are included.  If you're not using
+the tree as a map, these numbers may be irrelevant, and are a bit
+apples-to-oranges as only the tree allows traversing items in sorted order.
+
 
 ```
 insertion (wbt-flow) x 32,676 ops/sec ±0.29% (93 runs sampled)
-insertion (immutable-js) x 34,208 ops/sec ±1.63% (94 runs sampled)
+insertion (immutable-js Map.set) x 34,208 ops/sec ±1.63% (94 runs sampled)
 insertion (plain object) x 1,953 ops/sec ±0.65% (96 runs sampled)
 find/get (wbt-flow) x 72,919 ops/sec ±0.12% (94 runs sampled)
-find/get (immutable-js) x 223,716 ops/sec ±0.23% (96 runs sampled)
+find/get (immutable-js Map.get) x 223,716 ops/sec ±0.23% (96 runs sampled)
 find/get (plain object) x 228,418 ops/sec ±0.06% (95 runs sampled)
 find/get (array find) x 11,018 ops/sec ±0.19% (95 runs sampled)
 removal (wbt-flow) x 51,277 ops/sec ±0.66% (95 runs sampled)
-removal (immutable-js) x 35,322 ops/sec ±1.26% (95 runs sampled)
+removal (immutable-js Map.delete) x 35,322 ops/sec ±1.26% (95 runs sampled)
 removal (plain object) x 286 ops/sec ±0.59% (90 runs sampled)
 Fastest is find/get (plain object)
 ```

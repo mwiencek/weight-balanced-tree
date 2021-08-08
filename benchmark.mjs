@@ -28,7 +28,7 @@ suite.add('insertion (wbt-flow)', function () {
   }
 });
 
-suite.add('insertion (immutable-js)', function () {
+suite.add('insertion (immutable-js Map.set)', function () {
   let map = Immutable.Map();
   for (const pair of asciiTable) {
     map = map.set(pair[0], pair[1]);
@@ -49,7 +49,7 @@ suite.add('find/get (wbt-flow)', function () {
   }
 });
 
-suite.add('find/get (immutable-js)', function () {
+suite.add('find/get (immutable-js Map.get)', function () {
   for (const pair of asciiTable) {
     prefilledImmutableMap.get(pair[0]);
   }
@@ -74,7 +74,7 @@ suite.add('removal (wbt-flow)', function () {
   }
 });
 
-suite.add('removal (immutable-js)', function () {
+suite.add('removal (immutable-js Map.delete)', function () {
   let map = prefilledImmutableMap;
   for (const pair of asciiTable) {
     map = map.delete(pair[0]);
