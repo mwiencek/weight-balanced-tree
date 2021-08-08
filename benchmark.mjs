@@ -14,7 +14,7 @@ const compareKeys = (a, b) => a[0] < b[0] ? -1 : (a[0] > b[0] ? 1 : 0);
 
 let prefilledTree = null;
 for (const pair of asciiTable) {
-  prefilledTree = wbt.insert(prefilledTree, pair, compareKeys);
+  prefilledTree = wbt.insert(prefilledTree, pair, compareKeys, wbt.THROW);
 }
 
 const prefilledImmutableMap = Immutable.Map(asciiTable);
@@ -24,7 +24,7 @@ const prefilledPlainObject = Object.fromEntries(asciiTable);
 suite.add('insertion (wbt-flow)', function () {
   let tree = null;
   for (const pair of asciiTable) {
-    tree = wbt.insert(tree, pair, compareKeys);
+    tree = wbt.insert(tree, pair, compareKeys, wbt.THROW);
   }
 });
 
@@ -70,7 +70,7 @@ suite.add('find/get (array find)', function () {
 suite.add('removal (wbt-flow)', function () {
   let tree = prefilledTree;
   for (const pair of asciiTable) {
-    tree = wbt.remove(tree, pair, compareKeys);
+    tree = wbt.remove(tree, pair, compareKeys, wbt.THROW);
   }
 });
 
