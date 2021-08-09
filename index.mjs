@@ -251,10 +251,10 @@ export function remove<T>(
   return newTree;
 }
 
-export function find<T>(
+export function find<T, V = T>(
   tree: ImmutableTreeT<T> | null,
-  value: T,
-  cmp: (T, T) => number,
+  value: V,
+  cmp: (V, T) => number,
 ): ImmutableTreeT<T> | null {
   let cursor = tree;
   while (cursor !== null) {

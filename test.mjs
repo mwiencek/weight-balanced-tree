@@ -175,3 +175,20 @@ test('actions', function (t) {
 
   t.end();
 });
+
+test('find with different value type', function (t) {
+  const compareX = (a, b) => a.x.localeCompare(b.x);
+
+  const xa = {x: 'a'};
+  const xb = {x: 'b'};
+
+  let node = null;
+  node = tree.insert(node, xa, compareX);
+  node = tree.insert(node, xb, compareX);
+
+  const foundNode =
+    tree.find(node, 'b', (x, value) => x.localeCompare(value.x));
+  t.ok(foundNode !== null && foundNode.value.x === 'b')
+
+  t.end();
+});
