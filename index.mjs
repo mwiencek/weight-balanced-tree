@@ -267,7 +267,7 @@ export function find<T>(
       cursor = cursor.right;
     }
   }
-  return cursor
+  return cursor;
 }
 
 export function insert<T>(
