@@ -27,10 +27,11 @@ export const NOOP: 1 = 1;
 export const REPLACE: 2 = 2;
 export const THROW: 3 = 3;
 
-export type INSERT_DUPLICATE_ACTION =
+export type INSERT_DUPLICATE_ACTION<T> =
   | typeof NOOP
   | typeof REPLACE
-  | typeof THROW;
+  | typeof THROW
+  | ((givenValue: T, existingValue: T) => T);
 
 export type REMOVE_NOT_FOUND_ACTION =
   | typeof NOOP
@@ -274,7 +275,7 @@ export function insert<T>(
   tree: ImmutableTreeT<T> | null,
   value: T,
   cmp: (T, T) => number,
-  duplicateAction?: INSERT_DUPLICATE_ACTION = NOOP,
+  duplicateAction?: INSERT_DUPLICATE_ACTION<T> = NOOP,
 ): ImmutableTreeT<T> {
   if (tree === null) {
     return {
@@ -303,11 +304,20 @@ export function insert<T>(
           'Failed to insert duplicate value: ' +
           String(value),
         );
-      default:
+      default: {
+        if (typeof duplicateAction === 'function') {
+          return {
+            value: duplicateAction(value, tree.value),
+            size: tree.size,
+            left: tree.left,
+            right: tree.right,
+          };
+        }
         throw new Error(
           'Invalid INSERT_DUPLICATE_ACTION: ' +
           String(duplicateAction),
         );
+      }
     }
   }
 

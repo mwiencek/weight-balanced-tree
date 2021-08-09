@@ -28,7 +28,8 @@ type ImmutableTreeT<+T> = {
 type INSERT_DUPLICATE_ACTION =
   | typeof NOOP
   | typeof REPLACE
-  | typeof THROW;
+  | typeof THROW
+  | ((givenValue: T, existingValue: T) => T);
 
 type REMOVE_NOT_FOUND_ACTION =
   | typeof NOOP
@@ -59,8 +60,12 @@ unmodified.  The other supported actions are:
 
  * `REPLACE`, which returns a new tree with the value replaced.
  * `THROW`, which throws an exception.
+ * A function of type `(T, T) => T`.  This is similar to `REPLACE`, except
+   it uses the result of the function as the new value to use.  The first
+   argument is the given value passed to `insert`, and the second is the
+   existing value in the tree.
 
-(Note: These actions are numeric constants exported from wbt-flow, not
+(Note: The named actions are numeric constants exported from wbt-flow, not
 strings.)
 
 ### remove
