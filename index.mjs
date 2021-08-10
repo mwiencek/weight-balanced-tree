@@ -137,9 +137,7 @@ function mutableBalanceLeft<T>(tree: MutableTreeT<T>): void {
 
   if (leftSize > (DELTA * rightSize)) {
     /*:: invariant(left); */
-    const leftLeftSize = left.left === null ? 0 : left.left.size;
-    const leftRightSize = left.right === null ? 0 : left.right.size;
-    if (leftRightSize < (RATIO * leftLeftSize)) {
+    if (getSize(left.right) < (RATIO * getSize(left.left))) {
       mutableRotateRight(tree);
     } else {
       mutableRotateLeftRight(tree);
@@ -159,9 +157,7 @@ function mutableBalanceRight<T>(tree: MutableTreeT<T>): void {
 
   if (rightSize > (DELTA * leftSize)) {
     /*:: invariant(right); */
-    const rightLeftSize = right.left === null ? 0 : right.left.size;
-    const rightRightSize = right.right === null ? 0 : right.right.size;
-    if (rightLeftSize < (RATIO * rightRightSize)) {
+    if (getSize(right.left) < (RATIO * getSize(right.right))) {
       mutableRotateLeft(tree);
     } else {
       mutableRotateRightLeft(tree);
