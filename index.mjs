@@ -41,10 +41,6 @@ export function getSize<T>(tree: ImmutableTreeT<T> | null): number {
   return tree === null ? 0 : tree.size;
 }
 
-function getNewSize(leftSize: number, rightSize: number): number {
-  return leftSize + rightSize + 1;
-}
-
 function immutableRotateLeft<T>(a: ImmutableTreeT<T>): ImmutableTreeT<T> {
   const b = a.right;
   /*:: invariant(b); */
