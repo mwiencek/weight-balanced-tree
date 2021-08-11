@@ -1,5 +1,16 @@
 # Changelog
 
+## v0.0.3 (2021-08-11)
+
+ * Changed the types of the `duplicateAction` parameter (on `insert`) and the
+   `notFoundAction` parameter (on `remove`) to `TreeActionT<T>`, which is a
+   simple function type.
+ * Changed `NOOP`, `REPLACE`, and `THROW` from numeric constants to functions
+   of type `TreeActionT`.
+ * Made `duplicateAction` and `notFoundAction` required.
+ * Reduced object allocations during balancing: one less per rotation.
+ * Code cleanup.
+
 ## v0.0.2 (2021-08-08)
 
  * Added an optional `duplicateAction` parameter to `insert`.
