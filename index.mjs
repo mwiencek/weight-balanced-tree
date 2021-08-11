@@ -23,19 +23,24 @@ declare var invariant: (mixed) => void;
 const DELTA = 3;
 const RATIO = 2;
 
-export const NOOP: 1 = 1;
-export const REPLACE: 2 = 2;
-export const THROW: 3 = 3;
+export type TreeActionT<T> =
+  (tree: ImmutableTreeT<T>, value: T) => ImmutableTreeT<T>;
 
-export type INSERT_DUPLICATE_ACTION<T> =
-  | typeof NOOP
-  | typeof REPLACE
-  | typeof THROW
-  | ((givenValue: T, existingValue: T) => T);
+// $FlowIgnore[unclear-type]
+export const NOOP: TreeActionT<any> = (tree) => tree;
 
-export type REMOVE_NOT_FOUND_ACTION =
-  | typeof NOOP
-  | typeof THROW;
+// $FlowIgnore[unclear-type]
+export const REPLACE: TreeActionT<any> = (tree, value) => ({
+  value,
+  size: tree.size,
+  left: tree.left,
+  right: tree.right,
+});
+
+// $FlowIgnore[unclear-type]
+export const THROW: TreeActionT<any> = () => {
+  throw new Error('');
+};
 
 export function getSize<T>(tree: ImmutableTreeT<T> | null): number {
   return tree === null ? 0 : tree.size;
@@ -169,7 +174,7 @@ export function remove<T>(
   tree: ImmutableTreeT<T> | null,
   value: T,
   cmp: (T, T) => number,
-  notFoundAction?: REMOVE_NOT_FOUND_ACTION = NOOP,
+  notFoundAction: TreeActionT<T> = NOOP,
 ): ImmutableTreeT<T> | null {
   if (tree === null) {
     return null;
@@ -225,20 +230,7 @@ export function remove<T>(
   }
 
   if (newTree === null) {
-    switch (notFoundAction) {
-      case NOOP:
-        return tree;
-      case THROW:
-        throw new Error(
-          'Failed to remove non-existent value: ' +
-          String(value),
-        );
-      default:
-        throw new Error(
-          'Invalid REMOVE_NOT_FOUND_ACTION: ' +
-          String(notFoundAction),
-        );
-    }
+    return notFoundAction(tree, value);
   }
 
   return newTree;
@@ -267,7 +259,7 @@ export function insert<T>(
   tree: ImmutableTreeT<T> | null,
   value: T,
   cmp: (T, T) => number,
-  duplicateAction?: INSERT_DUPLICATE_ACTION<T> = NOOP,
+  duplicateAction: TreeActionT<T> = NOOP,
 ): ImmutableTreeT<T> {
   if (tree === null) {
     return {
@@ -281,36 +273,7 @@ export function insert<T>(
   const order = cmp(value, tree.value);
 
   if (order === 0) {
-    switch (duplicateAction) {
-      case NOOP:
-        return tree;
-      case REPLACE:
-        return {
-          value,
-          size: tree.size,
-          left: tree.left,
-          right: tree.right,
-        };
-      case THROW:
-        throw new Error(
-          'Failed to insert duplicate value: ' +
-          String(value),
-        );
-      default: {
-        if (typeof duplicateAction === 'function') {
-          return {
-            value: duplicateAction(value, tree.value),
-            size: tree.size,
-            left: tree.left,
-            right: tree.right,
-          };
-        }
-        throw new Error(
-          'Invalid INSERT_DUPLICATE_ACTION: ' +
-          String(duplicateAction),
-        );
-      }
-    }
+    return duplicateAction(tree, value);
   }
 
   const left = tree.left;

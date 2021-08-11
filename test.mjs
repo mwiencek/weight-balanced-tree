@@ -147,7 +147,7 @@ test('actions', function (t) {
   t.ok(node !== null && node.value === xa2, 'tree value is modified with duplicateAction = REPLACE (root node)');
 
   prevNode = node;
-  node = tree.insert(node, xa2, compareX, (a, b) => ({x: a.x, y: b.x + b.y}));
+  node = tree.insert(node, xa2, compareX, (tree, value) => ({...tree, value: {x: value.x, y: tree.value.x + tree.value.y}}));
   t.ok(node !== prevNode, 'tree is modified with duplicateAction = function (root node)');
   t.ok(node !== null && node.value.y === 'a2', 'tree value is modified with duplicateAction = function (root node)');
 
@@ -155,7 +155,7 @@ test('actions', function (t) {
     function () {
       node = tree.insert(node, xa1, compareX, tree.THROW);
     },
-    /^Error: Failed to insert duplicate value: \[object Object\]$/,
+    /^Error$/,
     'exception is thrown with duplicateAction = THROW (root node)',
   );
 
@@ -171,7 +171,7 @@ test('actions', function (t) {
   t.ok(node !== null && node.right !== null && node.right.value === xb2, 'tree value is modified with duplicateAction = REPLACE (non-root node)');
 
   prevNode = node;
-  node = tree.insert(node, xb2, compareX, (a, b) => ({x: a.x, y: b.x + b.y}));
+  node = tree.insert(node, xb2, compareX, (tree, value) => ({...tree, value: {x: value.x, y: tree.value.x + tree.value.y}}));
   t.ok(node !== prevNode, 'tree is modified with duplicateAction = function (non-root node)');
   t.ok(node !== null && node.right !== null && node.right.value.y === 'b2', 'tree value is modified with duplicateAction = function (non-root node)');
 
@@ -179,7 +179,7 @@ test('actions', function (t) {
     function () {
       node = tree.insert(node, xb1, compareX, tree.THROW);
     },
-    /^Error: Failed to insert duplicate value: \[object Object\]$/,
+    /^Error$/,
     'exception is thrown with duplicateAction = THROW (non-root node)',
   );
 
@@ -193,7 +193,7 @@ test('actions', function (t) {
     function () {
       node = tree.remove(node, xb1, compareX, tree.THROW);
     },
-    /^Error: Failed to remove non-existent value: \[object Object\]$/,
+    /^Error$/,
     'exception is thrown with notFoundAction = THROW',
   );
 

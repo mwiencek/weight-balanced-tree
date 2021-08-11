@@ -25,15 +25,8 @@ type ImmutableTreeT<+T> = {
   +right: ImmutableTreeT<T> | null,
 };
 
-type INSERT_DUPLICATE_ACTION =
-  | typeof NOOP
-  | typeof REPLACE
-  | typeof THROW
-  | ((givenValue: T, existingValue: T) => T);
-
-type REMOVE_NOT_FOUND_ACTION =
-  | typeof NOOP
-  | typeof THROW;
+type TreeActionT<T> =
+  (tree: ImmutableTreeT<T>, value: T) => ImmutableTreeT<T>;
 ```
 
 ### insert
@@ -43,7 +36,7 @@ insert<T>(
     tree: ImmutableTreeT<T> | null,
     value: T,
     cmp: (T, T) => number,
-    duplicateAction?: INSERT_DUPLICATE_ACTION = NOOP,
+    duplicateAction: TreeActionT<T>,
 ): ImmutableTree<T>;
 ```
 
@@ -54,19 +47,19 @@ The `cmp` (comparator) function is used to order the values.  This should never
 change for a particular tree.  (It's recommended to create utility functions
 for each type of tree that always pass the same comparator.)
 
-The optional `duplicateAction` determines what should happen when `value`
-already exists in the tree.  The default action, `NOOP`, returns `tree` back
-unmodified.  The other supported actions are:
+`duplicateAction` is a function that determines what should happen when `value`
+already exists in the tree.  This is required.  The passed-in function receives
+the existing tree node that conflicts with `value` as its first argument, and
+`value` as its second argument.  The return value is a tree node that replaces
+the existing one if the reference is different.
 
- * `REPLACE`, which returns a new tree with the value replaced.
- * `THROW`, which throws an exception.
- * A function of type `(T, T) => T`.  This is similar to `REPLACE`, except
-   it uses the result of the function as the new value to use.  The first
-   argument is the given value passed to `insert`, and the second is the
-   existing value in the tree.
+There are several exports in the main module that can be used here:
 
-(Note: The named actions are numeric constants exported from wbt-flow, not
-strings.)
+ * `NOOP`, which just returns the node back unmodified.  In this case, `insert`
+   will also return the tree root back unmodified.
+ * `REPLACE`, which returns a new tree node with the value replaced.
+ * `THROW`, which throws an exception.  It doesn't provide any meaningful error
+   message, though, so you'd better write your own if needed.
 
 ### remove
 
@@ -75,6 +68,7 @@ remove<T>(
     tree: ImmutableTreeT<T> | null,
     value: T,
     cmp: (T, T) => number,
+    notFoundAction: TreeActionT<T>,
 ): ImmutableTree<T> | null;
 ```
 
@@ -90,6 +84,19 @@ The optional `notFoundAction` determines what should happen when `value`
 is not found in the tree.  The default action, `NOOP`, returns `tree` back
 unmodified.  The only other supported action is `THROW`, which throws an
 exception.
+
+`notFoundAction` is a function that determines what should happen when `value`
+is not found in the tree.  This is required.  The passed-in function receives
+the tree node where `remove` dead-ended as its first argument, and `value` as
+its second argument.  The return value is a tree node that replaces the
+dead-end one if the reference is different.
+
+As for `insert` above, you can use these exports from the main module for
+`notFoundAction`:
+
+ * `NOOP`, which just returns the node back unmodified.  In this case, `remove`
+   will also return the tree root back unmodified.
+ * `THROW`, which throws an exception.
 
 ### find
 
