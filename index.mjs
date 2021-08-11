@@ -274,35 +274,34 @@ export function insert<T>(
 
   const left = tree.left;
   const right = tree.right;
-  let newTree: MutableTreeT<T> | null = null;
 
   if (order < 0) {
     const newLeftBranch = insert(left, value, cmp, duplicateAction);
     if (newLeftBranch === left) {
       return tree;
     }
-    newTree = {
+    const newTree = {
       value: tree.value,
       size: newLeftBranch.size + (right === null ? 0 : right.size) + 1,
       left: newLeftBranch,
       right,
     };
     balanceLeft(newTree);
+    return newTree;
   } else {
     const newRightBranch = insert(right, value, cmp, duplicateAction);
     if (newRightBranch === right) {
       return tree;
     }
-    newTree = {
+    const newTree = {
       value: tree.value,
       size: (left === null ? 0 : left.size) + newRightBranch.size + 1,
       left,
       right: newRightBranch,
     };
     balanceRight(newTree);
+    return newTree;
   }
-
-  return newTree;
 }
 
 export function* iterate<T>(
