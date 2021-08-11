@@ -46,45 +46,7 @@ export function getSize<T>(tree: ImmutableTreeT<T> | null): number {
   return tree === null ? 0 : tree.size;
 }
 
-function immutableRotateLeft<T>(a: ImmutableTreeT<T>): ImmutableTreeT<T> {
-  const b = a.right;
-  /*:: invariant(b); */
-  const c = b.right;
-  /*:: invariant(c); */
-  const left = {
-    value: a.value,
-    size: getSize(a.left) + getSize(b.left) + 1,
-    left: a.left,
-    right: b.left,
-  };
-  return {
-    value: b.value,
-    size: left.size + getSize(c) + 1,
-    left: left,
-    right: c,
-  };
-}
-
-function immutableRotateRight<T>(c: ImmutableTreeT<T>): ImmutableTreeT<T> {
-  const b = c.left;
-  /*:: invariant(b); */
-  const a = b.left;
-  /*:: invariant(a); */
-  const right = {
-    value: c.value,
-    size: getSize(b.right) + getSize(c.right) + 1,
-    left: b.right,
-    right: c.right,
-  };
-  return {
-    value: b.value,
-    size: getSize(a) + right.size + 1,
-    left: a,
-    right: right,
-  };
-}
-
-function mutableRotateLeft<T>(a: MutableTreeT<T>): void {
+function rotateLeft<T>(a: MutableTreeT<T>): void {
   const b = a.right;
   /*:: invariant(b); */
   const c = b.right;
@@ -96,12 +58,12 @@ function mutableRotateLeft<T>(a: MutableTreeT<T>): void {
     right: b.left,
   };
   a.value = b.value;
-  a.size = left.size + getSize(c) + 1;
+  a.size = left.size + c.size + 1;
   a.left = left;
   a.right = c;
 }
 
-function mutableRotateRight<T>(c: MutableTreeT<T>): void {
+function rotateRight<T>(c: MutableTreeT<T>): void {
   const b = c.left;
   /*:: invariant(b); */
   const a = b.left;
@@ -113,24 +75,62 @@ function mutableRotateRight<T>(c: MutableTreeT<T>): void {
     right: c.right,
   };
   c.value = b.value;
-  c.size = getSize(a) + right.size + 1;
+  c.size = a.size + right.size + 1;
   c.left = a;
   c.right = right;
 }
 
-function mutableRotateLeftRight<T>(tree: MutableTreeT<T>): void {
-  /*:: invariant(tree.left); */
-  tree.left = immutableRotateLeft(tree.left);
-  mutableRotateRight(tree);
+function rotateLeftRight<T>(tree: MutableTreeT<T>): void {
+  const a = tree.left;
+  /*:: invariant(a); */
+  const b = a.right;
+  /*:: invariant(b); */
+  const c = b.right;
+  /*:: invariant(c); */
+  const left = {
+    value: a.value,
+    size: getSize(a.left) + getSize(b.left) + 1,
+    left: a.left,
+    right: b.left,
+  };
+  const right = {
+    value: tree.value,
+    size: getSize(c) + getSize(tree.right) + 1,
+    left: c,
+    right: tree.right,
+  };
+  tree.value = b.value;
+  tree.size = left.size + right.size + 1;
+  tree.left = left;
+  tree.right = right;
 }
 
-function mutableRotateRightLeft<T>(tree: MutableTreeT<T>): void {
-  /*:: invariant(tree.right); */
-  tree.right = immutableRotateRight(tree.right);
-  mutableRotateLeft(tree);
+function rotateRightLeft<T>(tree: MutableTreeT<T>): void {
+  const c = tree.right;
+  /*:: invariant(c); */
+  const b = c.left;
+  /*:: invariant(b); */
+  const a = b.left;
+  /*:: invariant(a); */
+  const right = {
+    value: c.value,
+    size: getSize(b.right) + getSize(c.right) + 1,
+    left: b.right,
+    right: c.right,
+  };
+  const left = {
+    value: tree.value,
+    size: getSize(tree.left) + getSize(a) + 1,
+    left: tree.left,
+    right: a,
+  };
+  tree.value = b.value;
+  tree.size = left.size + right.size + 1;
+  tree.left = left;
+  tree.right = right;
 }
 
-function mutableBalanceLeft<T>(tree: MutableTreeT<T>): void {
+function balanceLeft<T>(tree: MutableTreeT<T>): void {
   const left = tree.left;
   const right = tree.right;
   const leftSize = getSize(left);
@@ -143,14 +143,14 @@ function mutableBalanceLeft<T>(tree: MutableTreeT<T>): void {
   if (leftSize > (DELTA * rightSize)) {
     /*:: invariant(left); */
     if (getSize(left.right) < (RATIO * getSize(left.left))) {
-      mutableRotateRight(tree);
+      rotateRight(tree);
     } else {
-      mutableRotateLeftRight(tree);
+      rotateLeftRight(tree);
     }
   }
 }
 
-function mutableBalanceRight<T>(tree: MutableTreeT<T>): void {
+function balanceRight<T>(tree: MutableTreeT<T>): void {
   const left = tree.left;
   const right = tree.right;
   const leftSize = getSize(left);
@@ -163,9 +163,9 @@ function mutableBalanceRight<T>(tree: MutableTreeT<T>): void {
   if (rightSize > (DELTA * leftSize)) {
     /*:: invariant(right); */
     if (getSize(right.left) < (RATIO * getSize(right.right))) {
-      mutableRotateLeft(tree);
+      rotateLeft(tree);
     } else {
-      mutableRotateRightLeft(tree);
+      rotateRightLeft(tree);
     }
   }
 }
@@ -200,7 +200,7 @@ export function remove<T>(
       left: tree.left,
       right: remove(tree.right, minTree.value, cmp, THROW),
     };
-    mutableBalanceLeft(newTree);
+    balanceLeft(newTree);
     return newTree;
   }
 
@@ -216,7 +216,7 @@ export function remove<T>(
         left,
         right,
       };
-      mutableBalanceRight(newTree);
+      balanceRight(newTree);
     }
   } else if (right !== null) {
     right = remove(right, value, cmp, notFoundAction);
@@ -226,7 +226,7 @@ export function remove<T>(
       left,
       right,
     };
-    mutableBalanceLeft(newTree);
+    balanceLeft(newTree);
   }
 
   if (newTree === null) {
@@ -291,7 +291,7 @@ export function insert<T>(
       left: newLeftBranch,
       right,
     };
-    mutableBalanceLeft(newTree);
+    balanceLeft(newTree);
   } else {
     const newRightBranch = insert(right, value, cmp, duplicateAction);
     if (newRightBranch === right) {
@@ -303,7 +303,7 @@ export function insert<T>(
       left,
       right: newRightBranch,
     };
-    mutableBalanceRight(newTree);
+    balanceRight(newTree);
   }
 
   return newTree;
