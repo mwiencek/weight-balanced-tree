@@ -31,8 +31,8 @@ function checkBalance(node: tree.ImmutableTreeT<mixed>): boolean {
     return true;
   }
   return (
-    tree.getSize(node.left) <= (3 * tree.getSize(node.right)) &&
-    tree.getSize(node.right) <= (3 * tree.getSize(node.left))
+    (node.left === null ? 0 : node.left.size) <= (3 * (node.right === null ? 0 : node.right.size)) &&
+    (node.right === null ? 0 : node.right.size) <= (3 * (node.left === null ? 0 : node.left.size))
   );
 }
 

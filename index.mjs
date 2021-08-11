@@ -42,10 +42,6 @@ export const THROW: TreeActionT<any> = () => {
   throw new Error('');
 };
 
-export function getSize<T>(tree: ImmutableTreeT<T> | null): number {
-  return tree === null ? 0 : tree.size;
-}
-
 function rotateLeft<T>(a: MutableTreeT<T>): void {
   const b = a.right;
   /*:: invariant(b); */
@@ -53,7 +49,7 @@ function rotateLeft<T>(a: MutableTreeT<T>): void {
   /*:: invariant(c); */
   const left = {
     value: a.value,
-    size: getSize(a.left) + getSize(b.left) + 1,
+    size: (a.left === null ? 0 : a.left.size) + (b.left === null ? 0 : b.left.size) + 1,
     left: a.left,
     right: b.left,
   };
@@ -70,7 +66,7 @@ function rotateRight<T>(c: MutableTreeT<T>): void {
   /*:: invariant(a); */
   const right = {
     value: c.value,
-    size: getSize(b.right) + getSize(c.right) + 1,
+    size: (b.right === null ? 0 : b.right.size) + (c.right === null ? 0 : c.right.size) + 1,
     left: b.right,
     right: c.right,
   };
@@ -89,13 +85,13 @@ function rotateLeftRight<T>(tree: MutableTreeT<T>): void {
   /*:: invariant(c); */
   const left = {
     value: a.value,
-    size: getSize(a.left) + getSize(b.left) + 1,
+    size: (a.left === null ? 0 : a.left.size) + (b.left === null ? 0 : b.left.size) + 1,
     left: a.left,
     right: b.left,
   };
   const right = {
     value: tree.value,
-    size: getSize(c) + getSize(tree.right) + 1,
+    size: (c === null ? 0 : c.size) + (tree.right === null ? 0 : tree.right.size) + 1,
     left: c,
     right: tree.right,
   };
@@ -114,13 +110,13 @@ function rotateRightLeft<T>(tree: MutableTreeT<T>): void {
   /*:: invariant(a); */
   const right = {
     value: c.value,
-    size: getSize(b.right) + getSize(c.right) + 1,
+    size: (b.right === null ? 0 : b.right.size) + (c.right === null ? 0 : c.right.size) + 1,
     left: b.right,
     right: c.right,
   };
   const left = {
     value: tree.value,
-    size: getSize(tree.left) + getSize(a) + 1,
+    size: (tree.left === null ? 0 : tree.left.size) + (a === null ? 0 : a.size) + 1,
     left: tree.left,
     right: a,
   };
@@ -133,8 +129,8 @@ function rotateRightLeft<T>(tree: MutableTreeT<T>): void {
 function balanceLeft<T>(tree: MutableTreeT<T>): void {
   const left = tree.left;
   const right = tree.right;
-  const leftSize = getSize(left);
-  const rightSize = getSize(right);
+  const leftSize = (left === null ? 0 : left.size);
+  const rightSize = (right === null ? 0 : right.size);
 
   if ((leftSize + rightSize) < 2) {
     return;
@@ -142,7 +138,7 @@ function balanceLeft<T>(tree: MutableTreeT<T>): void {
 
   if (leftSize > (DELTA * rightSize)) {
     /*:: invariant(left); */
-    if (getSize(left.right) < (RATIO * getSize(left.left))) {
+    if ((left.right === null ? 0 : left.right.size) < (RATIO * (left.left === null ? 0 : left.left.size))) {
       rotateRight(tree);
     } else {
       rotateLeftRight(tree);
@@ -153,8 +149,8 @@ function balanceLeft<T>(tree: MutableTreeT<T>): void {
 function balanceRight<T>(tree: MutableTreeT<T>): void {
   const left = tree.left;
   const right = tree.right;
-  const leftSize = getSize(left);
-  const rightSize = getSize(right);
+  const leftSize = (left === null ? 0 : left.size);
+  const rightSize = (right === null ? 0 : right.size);
 
   if ((leftSize + rightSize) < 2) {
     return;
@@ -162,7 +158,7 @@ function balanceRight<T>(tree: MutableTreeT<T>): void {
 
   if (rightSize > (DELTA * leftSize)) {
     /*:: invariant(right); */
-    if (getSize(right.left) < (RATIO * getSize(right.right))) {
+    if ((right.left === null ? 0 : right.left.size) < (RATIO * (right.right === null ? 0 : right.right.size))) {
       rotateLeft(tree);
     } else {
       rotateRightLeft(tree);
@@ -212,7 +208,7 @@ export function remove<T>(
       left = remove(left, value, cmp, notFoundAction);
       newTree = {
         value: tree.value,
-        size: getSize(left) + getSize(right) + 1,
+        size: (left === null ? 0 : left.size) + (right === null ? 0 : right.size) + 1,
         left,
         right,
       };
@@ -222,7 +218,7 @@ export function remove<T>(
     right = remove(right, value, cmp, notFoundAction);
     newTree = {
       value: tree.value,
-      size: getSize(left) + getSize(right) + 1,
+      size: (left === null ? 0 : left.size) + (right === null ? 0 : right.size) + 1,
       left,
       right,
     };
@@ -287,7 +283,7 @@ export function insert<T>(
     }
     newTree = {
       value: tree.value,
-      size: newLeftBranch.size + getSize(right) + 1,
+      size: newLeftBranch.size + (right === null ? 0 : right.size) + 1,
       left: newLeftBranch,
       right,
     };
@@ -299,7 +295,7 @@ export function insert<T>(
     }
     newTree = {
       value: tree.value,
-      size: getSize(left) + newRightBranch.size + 1,
+      size: (left === null ? 0 : left.size) + newRightBranch.size + 1,
       left,
       right: newRightBranch,
     };
