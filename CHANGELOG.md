@@ -1,5 +1,10 @@
 # Changelog
 
+## v0.0.4 (2021-08-12)
+
+ * Made `duplicateAction` and `notFoundAction` actually required.  (Removed
+   the parameter defaults, which was also affecting the Flow types.)
+
 ## v0.0.3 (2021-08-11)
 
  * Changed the types of the `duplicateAction` parameter (on `insert`) and the

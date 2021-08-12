@@ -170,7 +170,7 @@ export function remove<T>(
   tree: ImmutableTreeT<T> | null,
   value: T,
   cmp: (T, T) => number,
-  notFoundAction: TreeActionT<T> = NOOP,
+  notFoundAction: TreeActionT<T>,
 ): ImmutableTreeT<T> | null {
   if (tree === null) {
     return null;
@@ -255,7 +255,7 @@ export function insert<T>(
   tree: ImmutableTreeT<T> | null,
   value: T,
   cmp: (T, T) => number,
-  duplicateAction: TreeActionT<T> = NOOP,
+  duplicateAction: TreeActionT<T>,
 ): ImmutableTreeT<T> {
   if (tree === null) {
     return {
