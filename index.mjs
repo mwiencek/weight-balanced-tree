@@ -26,19 +26,21 @@ const RATIO = 2;
 export type TreeActionT<T> =
   (tree: ImmutableTreeT<T>, value: T) => ImmutableTreeT<T>;
 
-// $FlowIgnore[unclear-type]
-export const NOOP: TreeActionT<any> = (tree) => tree;
+export type SomeTreeActionT =
+  <T>(tree: ImmutableTreeT<T>, value: T) => ImmutableTreeT<T>;
 
-// $FlowIgnore[unclear-type]
-export const REPLACE: TreeActionT<any> = (tree, value) => ({
-  value,
-  size: tree.size,
-  left: tree.left,
-  right: tree.right,
-});
+export const NOOP: SomeTreeActionT =
+  <T>(tree: ImmutableTreeT<T>): ImmutableTreeT<T> => tree;
 
-// $FlowIgnore[unclear-type]
-export const THROW: TreeActionT<any> = () => {
+export const REPLACE: SomeTreeActionT =
+  <T>(tree: ImmutableTreeT<T>, value: T): ImmutableTreeT<T> => ({
+    value,
+    size: tree.size,
+    left: tree.left,
+    right: tree.right,
+  });
+
+export const THROW: SomeTreeActionT = () => {
   throw new Error('');
 };
 
