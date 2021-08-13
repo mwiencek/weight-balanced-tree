@@ -95,7 +95,7 @@ test('all', function (t) {
     let node = null;
 
     for (const num of numbers) {
-      node = tree.insert(node, num, cmpIntegers);
+      node = tree.insert(node, num, cmpIntegers, tree.NOOP);
       checkTreeInvariants(t, node);
     }
 
@@ -111,7 +111,7 @@ test('all', function (t) {
       let foundNode = tree.find(node, num, cmpIntegers);
       t.ok(foundNode !== null && foundNode.value === num, 'existing node is found');
 
-      node = tree.remove(node, num, cmpIntegers);
+      node = tree.remove(node, num, cmpIntegers, tree.NOOP);
       checkTreeInvariants(t, node);
 
       foundNode = tree.find(node, num, cmpIntegers);
@@ -134,7 +134,7 @@ test('actions', function (t) {
   const xb1 = {x: 'b', y: '1'};
   const xb2 = {x: 'b', y: '2'};
 
-  node = tree.insert(node, xa1, compareX);
+  node = tree.insert(node, xa1, compareX, tree.NOOP);
 
   let prevNode = node;
   node = tree.insert(node, xa2, compareX, tree.NOOP);
@@ -159,7 +159,7 @@ test('actions', function (t) {
     'exception is thrown with duplicateAction = THROW (root node)',
   );
 
-  node = tree.insert(node, xb1, compareX);
+  node = tree.insert(node, xb1, compareX, tree.NOOP);
 
   prevNode = node;
   node = tree.insert(node, xb1, compareX, tree.NOOP);
@@ -183,7 +183,7 @@ test('actions', function (t) {
     'exception is thrown with duplicateAction = THROW (non-root node)',
   );
 
-  node = tree.remove(node, xb1, compareX);
+  node = tree.remove(node, xb1, compareX, tree.NOOP);
 
   prevNode = node;
   node = tree.remove(node, xb1, compareX, tree.NOOP);
@@ -207,8 +207,8 @@ test('find with different value type', function (t) {
   const xb = {x: 'b'};
 
   let node = null;
-  node = tree.insert(node, xa, compareX);
-  node = tree.insert(node, xb, compareX);
+  node = tree.insert(node, xa, compareX, tree.NOOP);
+  node = tree.insert(node, xb, compareX, tree.NOOP);
 
   const foundNode =
     tree.find(node, 'b', (x, value) => x.localeCompare(value.x));
