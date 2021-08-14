@@ -168,6 +168,26 @@ function balanceRight<T>(tree: MutableTreeT<T>): void {
   }
 }
 
+export function minValue<T>(
+  tree: ImmutableTreeT<T>,
+): T {
+  let node = tree;
+  while (node.left !== null) {
+    node = node.left;
+  }
+  return node.value;
+}
+
+export function maxValue<T>(
+  tree: ImmutableTreeT<T>,
+): T {
+  let node = tree;
+  while (node.right !== null) {
+    node = node.right;
+  }
+  return node.value;
+}
+
 export function remove<T>(
   tree: ImmutableTreeT<T> | null,
   value: T,
@@ -188,15 +208,12 @@ export function remove<T>(
     if (tree.right === null) {
       return tree.left;
     }
-    let minTree = tree.right;
-    while (minTree.left) {
-      minTree = minTree.left;
-    }
+    const min = minValue(tree.right);
     newTree = {
-      value: minTree.value,
+      value: min,
       size: tree.size - 1,
       left: tree.left,
-      right: remove(tree.right, minTree.value, cmp, THROW),
+      right: remove(tree.right, min, cmp, THROW),
     };
     balanceLeft(newTree);
     return newTree;

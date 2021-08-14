@@ -121,6 +121,22 @@ iterate<T>(tree: ImmutableTreeT<T> | null): Generator<T, void, void>;
 
 Returns a JS iterator that traverses the values of the tree in order.
 
+### minValue
+
+```
+minValue<T>(tree: ImmutableTreeT<T>): T;
+```
+
+Returns the "smallest" (left-most) value in `tree`.
+
+### maxValue
+
+```
+maxValue<T>(tree: ImmutableTreeT<T>): T;
+```
+
+Returns the "largest" (right-most) value in `tree`.
+
 ## Example
 
 A tree always consists of at least one node with a value; an "empty" tree is

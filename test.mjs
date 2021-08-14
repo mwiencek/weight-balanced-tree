@@ -105,6 +105,11 @@ test('all', function (t) {
       'tree is in order',
     );
 
+    if (node !== null) {
+      t.equal(tree.minValue(node), 1, 'min value is 1');
+      t.equal(tree.maxValue(node), 31, 'max value is 31');
+    }
+
     shuffle(numbers);
 
     for (const num of numbers) {
