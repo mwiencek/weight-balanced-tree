@@ -168,24 +168,36 @@ function balanceRight<T>(tree: MutableTreeT<T>): void {
   }
 }
 
-export function minValue<T>(
+function minNode<T>(
   tree: ImmutableTreeT<T>,
-): T {
+): ImmutableTreeT<T> {
   let node = tree;
   while (node.left !== null) {
     node = node.left;
   }
-  return node.value;
+  return node;
+}
+
+export function minValue<T>(
+  tree: ImmutableTreeT<T>,
+): T {
+  return minNode(tree).value;
+}
+
+function maxNode<T>(
+  tree: ImmutableTreeT<T>,
+): ImmutableTreeT<T> {
+  let node = tree;
+  while (node.right !== null) {
+    node = node.right;
+  }
+  return node;
 }
 
 export function maxValue<T>(
   tree: ImmutableTreeT<T>,
 ): T {
-  let node = tree;
-  while (node.right !== null) {
-    node = node.right;
-  }
-  return node.value;
+  return maxNode(tree).value;
 }
 
 export function remove<T>(
@@ -340,4 +352,52 @@ export function* iterate<T>(
       cursor = cursor.right;
     }
   } while (stack.length || cursor !== null);
+}
+
+export function findNext<T, V = T>(
+  tree: ImmutableTreeT<T> | null,
+  value: V,
+  cmp: (V, T) => number,
+): ImmutableTreeT<T> | null {
+  let cursor = tree;
+  let largerParent = null;
+  while (cursor !== null) {
+    const order = cmp(value, cursor.value);
+    if (order === 0) {
+      break;
+    } else if (order < 0) {
+      largerParent = cursor;
+      cursor = cursor.left;
+    } else {
+      cursor = cursor.right;
+    }
+  }
+  if (cursor !== null && cursor.right !== null) {
+    return minNode(cursor.right);
+  }
+  return largerParent;
+}
+
+export function findPrev<T, V = T>(
+  tree: ImmutableTreeT<T> | null,
+  value: V,
+  cmp: (V, T) => number,
+): ImmutableTreeT<T> | null {
+  let cursor = tree;
+  let smallerParent = null;
+  while (cursor !== null) {
+    const order = cmp(value, cursor.value);
+    if (order === 0) {
+      break;
+    } else if (order < 0) {
+      cursor = cursor.left;
+    } else {
+      smallerParent = cursor;
+      cursor = cursor.right;
+    }
+  }
+  if (cursor !== null && cursor.left !== null) {
+    return maxNode(cursor.left);
+  }
+  return smallerParent;
 }

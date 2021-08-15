@@ -113,6 +113,34 @@ found.
 
 The `cmp` (comparator) function is the same as used for `insert`.
 
+### findNext
+
+```
+findNext<T, V = T>(
+  tree: ImmutableTreeT<T> | null,
+  value: V,
+  cmp: (V, T) => number,
+): ImmutableTreeT<T> | null;
+```
+
+Finds the branch of `tree` that follows `value` and returns it, or `null` if
+there is no such node.  `value` does not have to exist in the tree: if a set
+has 1 & 3, the next value from 2 is 3.
+
+### findPrev
+
+```
+findNext<T, V = T>(
+  tree: ImmutableTreeT<T> | null,
+  value: V,
+  cmp: (V, T) => number,
+): ImmutableTreeT<T> | null;
+```
+
+Finds the branch of `tree` that precedes `value` and returns it, or `null` if
+there is no such node.  `value` does not have to exist in the tree: if a set
+has 1 & 3, the previous value from 2 is 1.
+
 ### iterate
 
 ```

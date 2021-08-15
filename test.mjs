@@ -113,6 +113,22 @@ test('all', function (t) {
     shuffle(numbers);
 
     for (const num of numbers) {
+      const next = tree.findNext(node, num, cmpIntegers);
+      t.equal(
+        next === null ? null : next.value,
+        num < 31 ? (num + 1) : null,
+        'next node is found',
+      );
+
+      const prev = tree.findPrev(node, num, cmpIntegers);
+      t.equal(
+        prev === null ? null : prev.value,
+        num > 1 ? (num - 1) : null,
+        'prev node is found',
+      );
+    }
+
+    for (const num of numbers) {
       let foundNode = tree.find(node, num, cmpIntegers);
       t.ok(foundNode !== null && foundNode.value === num, 'existing node is found');
 
@@ -218,6 +234,41 @@ test('find with different value type', function (t) {
   const foundNode =
     tree.find(node, 'b', (x, value) => x.localeCompare(value.x));
   t.ok(foundNode !== null && foundNode.value.x === 'b')
+
+  t.end();
+});
+
+test('findNext/findPrev with non-existent values', function (t) {
+  const cmp = (a, b) => a - b;
+
+  let node = null;
+  node = tree.insert(node, 1, cmp, tree.NOOP);
+  node = tree.insert(node, 3, cmp, tree.NOOP);
+  node = tree.insert(node, 5, cmp, tree.NOOP);
+  node = tree.insert(node, 7, cmp, tree.NOOP);
+  node = tree.insert(node, 9, cmp, tree.NOOP);
+
+  t.equal(tree.findNext(node, 0, cmp)?.value, 1);
+  t.equal(tree.findNext(node, 1, cmp)?.value, 3);
+  t.equal(tree.findNext(node, 2, cmp)?.value, 3);
+  t.equal(tree.findNext(node, 3, cmp)?.value, 5);
+  t.equal(tree.findNext(node, 4, cmp)?.value, 5);
+  t.equal(tree.findNext(node, 5, cmp)?.value, 7);
+  t.equal(tree.findNext(node, 6, cmp)?.value, 7);
+  t.equal(tree.findNext(node, 7, cmp)?.value, 9);
+  t.equal(tree.findNext(node, 8, cmp)?.value, 9);
+  t.equal(tree.findNext(node, 9, cmp), null);
+
+  t.equal(tree.findPrev(node, 1, cmp), null);
+  t.equal(tree.findPrev(node, 2, cmp)?.value, 1);
+  t.equal(tree.findPrev(node, 3, cmp)?.value, 1);
+  t.equal(tree.findPrev(node, 4, cmp)?.value, 3);
+  t.equal(tree.findPrev(node, 5, cmp)?.value, 3);
+  t.equal(tree.findPrev(node, 6, cmp)?.value, 5);
+  t.equal(tree.findPrev(node, 7, cmp)?.value, 5);
+  t.equal(tree.findPrev(node, 8, cmp)?.value, 7);
+  t.equal(tree.findPrev(node, 9, cmp)?.value, 7);
+  t.equal(tree.findPrev(node, 10, cmp)?.value, 9);
 
   t.end();
 });
