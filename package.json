@@ -11,6 +11,7 @@
   "author": "Michael Wiencek <mwtuea@gmail.com>",
   "license": "MIT",
   "private": false,
+  "sideEffects": false,
   "type": "module",
   "dependencies": {},
   "devDependencies": {
