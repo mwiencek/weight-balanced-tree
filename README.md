@@ -18,25 +18,25 @@ References:
 ## API
 
 ```
-type ImmutableTreeT<+T> = {
+type ImmutableTree<+T> = {
   +value: T,
   +size: number,
-  +left: ImmutableTreeT<T> | null,
-  +right: ImmutableTreeT<T> | null,
+  +left: ImmutableTree<T> | null,
+  +right: ImmutableTree<T> | null,
 };
 
-type TreeActionT<T> =
-  (tree: ImmutableTreeT<T>, value: T) => ImmutableTreeT<T>;
+type TreeAction<T> =
+  (tree: ImmutableTree<T>, value: T) => ImmutableTree<T>;
 ```
 
 ### insert
 
 ```
 insert<T>(
-    tree: ImmutableTreeT<T> | null,
+    tree: ImmutableTree<T> | null,
     value: T,
     cmp: (T, T) => number,
-    duplicateAction: TreeActionT<T>,
+    duplicateAction: TreeAction<T>,
 ): ImmutableTree<T>;
 ```
 
@@ -65,10 +65,10 @@ There are several exports in the main module that can be used here:
 
 ```
 remove<T>(
-    tree: ImmutableTreeT<T> | null,
+    tree: ImmutableTree<T> | null,
     value: T,
     cmp: (T, T) => number,
-    notFoundAction: TreeActionT<T>,
+    notFoundAction: TreeAction<T>,
 ): ImmutableTree<T> | null;
 ```
 
@@ -102,7 +102,7 @@ As for `insert` above, you can use these exports from the main module for
 
 ```
 find<T>(
-    tree: ImmutableTreeT<T> | null,
+    tree: ImmutableTree<T> | null,
     value: T,
     cmp: (T, T) => number,
 ): ImmutableTree<T> | null;
@@ -117,10 +117,10 @@ The `cmp` (comparator) function is the same as used for `insert`.
 
 ```
 findNext<T, V = T>(
-  tree: ImmutableTreeT<T> | null,
+  tree: ImmutableTree<T> | null,
   value: V,
   cmp: (V, T) => number,
-): ImmutableTreeT<T> | null;
+): ImmutableTree<T> | null;
 ```
 
 Finds the branch of `tree` that follows `value` and returns it, or `null` if
@@ -131,10 +131,10 @@ has 1 & 3, the next value from 2 is 3.
 
 ```
 findNext<T, V = T>(
-  tree: ImmutableTreeT<T> | null,
+  tree: ImmutableTree<T> | null,
   value: V,
   cmp: (V, T) => number,
-): ImmutableTreeT<T> | null;
+): ImmutableTree<T> | null;
 ```
 
 Finds the branch of `tree` that precedes `value` and returns it, or `null` if
@@ -144,7 +144,7 @@ has 1 & 3, the previous value from 2 is 1.
 ### iterate
 
 ```
-iterate<T>(tree: ImmutableTreeT<T> | null): Generator<T, void, void>;
+iterate<T>(tree: ImmutableTree<T> | null): Generator<T, void, void>;
 ```
 
 Returns a JS iterator that traverses the values of the tree in order.
@@ -152,7 +152,7 @@ Returns a JS iterator that traverses the values of the tree in order.
 ### minValue
 
 ```
-minValue<T>(tree: ImmutableTreeT<T>): T;
+minValue<T>(tree: ImmutableTree<T>): T;
 ```
 
 Returns the "smallest" (left-most) value in `tree`.
@@ -160,7 +160,7 @@ Returns the "smallest" (left-most) value in `tree`.
 ### maxValue
 
 ```
-maxValue<T>(tree: ImmutableTreeT<T>): T;
+maxValue<T>(tree: ImmutableTree<T>): T;
 ```
 
 Returns the "largest" (right-most) value in `tree`.

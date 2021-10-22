@@ -1,9 +1,9 @@
 // @flow strict
 
-import type {ImmutableTreeT} from './types';
+import type {ImmutableTree} from './types';
 
 export default function* iterate<T>(
-  tree: ImmutableTreeT<T> | null,
+  tree: ImmutableTree<T> | null,
 ): Generator<T, void, void> {
   const stack = [];
   let cursor = tree;

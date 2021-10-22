@@ -1,10 +1,10 @@
 // @flow strict
 
 import maxNode from './maxNode.mjs';
-import type {ImmutableTreeT} from './types';
+import type {ImmutableTree} from './types';
 
 export default function maxValue<T>(
-  tree: ImmutableTreeT<T>,
+  tree: ImmutableTree<T>,
 ): T {
   return maxNode(tree).value;
 }

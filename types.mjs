@@ -1,21 +1,21 @@
 // @flow strict
 
-export type ImmutableTreeT<+T> = {
+export type ImmutableTree<+T> = {
   +value: T,
   +size: number,
-  +left: ImmutableTreeT<T> | null,
-  +right: ImmutableTreeT<T> | null,
+  +left: ImmutableTree<T> | null,
+  +right: ImmutableTree<T> | null,
 };
 
-export type MutableTreeT<T> = {
+export type MutableTree<T> = {
   value: T,
   size: number,
-  left: ImmutableTreeT<T> | null,
-  right: ImmutableTreeT<T> | null,
+  left: ImmutableTree<T> | null,
+  right: ImmutableTree<T> | null,
 };
 
-export type TreeActionT<T> =
-  (tree: ImmutableTreeT<T>, value: T) => ImmutableTreeT<T>;
+export type TreeAction<T> =
+  (tree: ImmutableTree<T>, value: T) => ImmutableTree<T>;
 
-export type SomeTreeActionT =
-  <T>(tree: ImmutableTreeT<T>, value: T) => ImmutableTreeT<T>;
+export type SomeTreeAction =
+  <T>(tree: ImmutableTree<T>, value: T) => ImmutableTree<T>;

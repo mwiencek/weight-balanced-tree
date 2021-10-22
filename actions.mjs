@@ -1,18 +1,18 @@
 // @flow strict
 
-import type {ImmutableTreeT, SomeTreeActionT} from './types';
+import type {ImmutableTree, SomeTreeAction} from './types';
 
-export const NOOP: SomeTreeActionT =
-  <T>(tree: ImmutableTreeT<T>): ImmutableTreeT<T> => tree;
+export const NOOP: SomeTreeAction =
+  <T>(tree: ImmutableTree<T>): ImmutableTree<T> => tree;
 
-export const REPLACE: SomeTreeActionT =
-  <T>(tree: ImmutableTreeT<T>, value: T): ImmutableTreeT<T> => ({
+export const REPLACE: SomeTreeAction =
+  <T>(tree: ImmutableTree<T>, value: T): ImmutableTree<T> => ({
     value,
     size: tree.size,
     left: tree.left,
     right: tree.right,
   });
 
-export const THROW: SomeTreeActionT = () => {
+export const THROW: SomeTreeAction = () => {
   throw new Error('');
 };

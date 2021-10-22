@@ -1,6 +1,6 @@
 // @flow strict
 
-import type {MutableTreeT} from './types';
+import type {MutableTree} from './types';
 
 /*
  * DELTA and RATIO are taken from GHC:
@@ -9,7 +9,7 @@ import type {MutableTreeT} from './types';
 const DELTA = 3;
 const RATIO = 2;
 
-export function rotateLeft<T>(a: MutableTreeT<T>): void {
+export function rotateLeft<T>(a: MutableTree<T>): void {
   const b = a.right;
   /*:: invariant(b); */
   const c = b.right;
@@ -26,7 +26,7 @@ export function rotateLeft<T>(a: MutableTreeT<T>): void {
   a.right = c;
 }
 
-export function rotateRight<T>(c: MutableTreeT<T>): void {
+export function rotateRight<T>(c: MutableTree<T>): void {
   const b = c.left;
   /*:: invariant(b); */
   const a = b.left;
@@ -43,7 +43,7 @@ export function rotateRight<T>(c: MutableTreeT<T>): void {
   c.right = right;
 }
 
-export function rotateLeftRight<T>(tree: MutableTreeT<T>): void {
+export function rotateLeftRight<T>(tree: MutableTree<T>): void {
   const a = tree.left;
   /*:: invariant(a); */
   const b = a.right;
@@ -68,7 +68,7 @@ export function rotateLeftRight<T>(tree: MutableTreeT<T>): void {
   tree.right = right;
 }
 
-export function rotateRightLeft<T>(tree: MutableTreeT<T>): void {
+export function rotateRightLeft<T>(tree: MutableTree<T>): void {
   const c = tree.right;
   /*:: invariant(c); */
   const b = c.left;
@@ -93,7 +93,7 @@ export function rotateRightLeft<T>(tree: MutableTreeT<T>): void {
   tree.right = right;
 }
 
-export function balanceLeft<T>(tree: MutableTreeT<T>): void {
+export function balanceLeft<T>(tree: MutableTree<T>): void {
   const left = tree.left;
   const right = tree.right;
   const leftSize = (left === null ? 0 : left.size);
@@ -113,7 +113,7 @@ export function balanceLeft<T>(tree: MutableTreeT<T>): void {
   }
 }
 
-export function balanceRight<T>(tree: MutableTreeT<T>): void {
+export function balanceRight<T>(tree: MutableTree<T>): void {
   const left = tree.left;
   const right = tree.right;
   const leftSize = (left === null ? 0 : left.size);

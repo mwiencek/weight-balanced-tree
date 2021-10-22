@@ -1,13 +1,13 @@
 // @flow strict
 
 import minNode from './minNode.mjs';
-import type {ImmutableTreeT} from './types';
+import type {ImmutableTree} from './types';
 
 export default function findNext<T, V = T>(
-  tree: ImmutableTreeT<T> | null,
+  tree: ImmutableTree<T> | null,
   value: V,
   cmp: (V, T) => number,
-): ImmutableTreeT<T> | null {
+): ImmutableTree<T> | null {
   let cursor = tree;
   let largerParent = null;
   while (cursor !== null) {

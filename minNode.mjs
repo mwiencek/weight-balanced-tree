@@ -1,10 +1,10 @@
 // @flow strict
 
-import type {ImmutableTreeT} from './types';
+import type {ImmutableTree} from './types';
 
 export default function minNode<T>(
-  tree: ImmutableTreeT<T>,
-): ImmutableTreeT<T> {
+  tree: ImmutableTree<T>,
+): ImmutableTree<T> {
   let node = tree;
   while (node.left !== null) {
     node = node.left;

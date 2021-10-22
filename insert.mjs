@@ -1,14 +1,14 @@
 // @flow strict
 
 import {balanceLeft, balanceRight} from './balance.mjs';
-import type {ImmutableTreeT, TreeActionT} from './types';
+import type {ImmutableTree, TreeAction} from './types';
 
 export default function insert<T>(
-  tree: ImmutableTreeT<T> | null,
+  tree: ImmutableTree<T> | null,
   value: T,
   cmp: (T, T) => number,
-  duplicateAction: TreeActionT<T>,
-): ImmutableTreeT<T> {
+  duplicateAction: TreeAction<T>,
+): ImmutableTree<T> {
   if (tree === null) {
     return {
       value,

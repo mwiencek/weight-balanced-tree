@@ -1,12 +1,12 @@
 // @flow strict
 
-import type {ImmutableTreeT} from './types';
+import type {ImmutableTree} from './types';
 
 export default function find<T, V = T>(
-  tree: ImmutableTreeT<T> | null,
+  tree: ImmutableTree<T> | null,
   value: V,
   cmp: (V, T) => number,
-): ImmutableTreeT<T> | null {
+): ImmutableTree<T> | null {
   let cursor = tree;
   while (cursor !== null) {
     const order = cmp(value, cursor.value);

@@ -16,14 +16,14 @@ function shuffle(array: Array<number>): void {
   }
 }
 
-function countSize(node: tree.ImmutableTreeT<mixed> | null): number {
+function countSize(node: tree.ImmutableTree<mixed> | null): number {
   if (node === null) {
     return 0;
   }
   return 1 + countSize(node.left) + countSize(node.right);
 }
 
-function checkBalance(node: tree.ImmutableTreeT<mixed>): boolean {
+function checkBalance(node: tree.ImmutableTree<mixed>): boolean {
   if (
     (node.left === null || node.left.size === 1) &&
     (node.right === null || node.right.size === 1)
@@ -38,7 +38,7 @@ function checkBalance(node: tree.ImmutableTreeT<mixed>): boolean {
 
 function checkTreeInvariants(
   t: tape$Context,
-  node: tree.ImmutableTreeT<number> | null,
+  node: tree.ImmutableTree<number> | null,
 ): void {
   if (node === null) {
     return;
@@ -68,7 +68,7 @@ function checkTreeInvariants(
 }
 
 function treeToString(
-  node: tree.ImmutableTreeT<mixed> | null,
+  node: tree.ImmutableTree<mixed> | null,
 ): string {
   if (node === null) {
     return '';
