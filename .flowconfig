@@ -3,6 +3,7 @@
 [include]
 
 [libs]
+./vars.mjs
 
 [lints]
 all=error
