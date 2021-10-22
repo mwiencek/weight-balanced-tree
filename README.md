@@ -228,7 +228,7 @@ removal (immutable-js Map.delete) x 32,387 ops/sec ±0.23% (93 runs sampled)
 removal (plain object) x 274 ops/sec ±0.89% (92 runs sampled)
 ```
 
-You can run `./build.sh && node benchmark.mjs` yourself.
+You can run `node benchmark.mjs` yourself.
 
 ## Changelog
 

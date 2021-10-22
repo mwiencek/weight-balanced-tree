@@ -17,7 +17,6 @@
   "devDependencies": {
     "benchmark": "2.1.4",
     "flow-bin": "0.162.1",
-    "flow-remove-types": "2.162.1",
     "hamt_plus": "1.0.2",
     "immutable": "4.0.0",
     "tape": "5.3.1"

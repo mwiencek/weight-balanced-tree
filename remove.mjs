@@ -3,20 +3,22 @@
 import {THROW} from './actions.mjs';
 import {balanceLeft, balanceRight} from "./balance.mjs";
 import minValue from './minValue.mjs';
-import type {ImmutableTree, MutableTree, TreeAction} from './types';
+/*::
+import type {ImmutableTree, MutableTree, TreeAction} from './types.mjs';
+*/
 
-export default function remove<T>(
-  tree: ImmutableTree<T> | null,
-  value: T,
-  cmp: (T, T) => number,
-  notFoundAction: TreeAction<T>,
-): ImmutableTree<T> | null {
+export default function remove/*:: <T> */(
+  tree/*: ImmutableTree<T> | null */,
+  value/*: T */,
+  cmp/*: (T, T) => number */,
+  notFoundAction/*: TreeAction<T> */,
+)/*: ImmutableTree<T> | null */ {
   if (tree === null) {
     return null;
   }
 
   const order = cmp(value, tree.value);
-  let newTree: MutableTree<T> | null = null;
+  let newTree/*: MutableTree<T> | null */ = null;
 
   if (order === 0) {
     if (tree.left === null) {

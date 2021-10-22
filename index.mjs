@@ -9,4 +9,6 @@ export {default as maxValue} from './maxValue.mjs';
 export {default as minValue} from './minValue.mjs';
 export {default as remove} from './remove.mjs';
 export * from './actions.mjs';
+/*::
 export * from './types.mjs';
+*/

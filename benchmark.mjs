@@ -2,7 +2,7 @@ import Benchmark from 'benchmark';
 import hamt from 'hamt_plus';
 import * as Immutable from 'immutable';
 
-import * as wbt from './build/index.mjs';
+import * as wbt from './index.mjs';
 
 const suite = new Benchmark.Suite();
 

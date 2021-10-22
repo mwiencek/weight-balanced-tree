@@ -1,10 +1,12 @@
 // @flow strict
 
-import type {ImmutableTree} from './types';
+/*::
+import type {ImmutableTree} from './types.mjs';
+*/
 
-export default function* iterate<T>(
-  tree: ImmutableTree<T> | null,
-): Generator<T, void, void> {
+export default function* iterate/*:: <T> */(
+  tree/*: ImmutableTree<T> | null */,
+)/*: Generator<T, void, void> */ {
   const stack = [];
   let cursor = tree;
   do {

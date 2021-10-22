@@ -1,5 +1,6 @@
 // @flow strict
 
+/*::
 export type ImmutableTree<+T> = {
   +value: T,
   +size: number,
@@ -19,3 +20,4 @@ export type TreeAction<T> =
 
 export type SomeTreeAction =
   <T>(tree: ImmutableTree<T>, value: T) => ImmutableTree<T>;
+*/

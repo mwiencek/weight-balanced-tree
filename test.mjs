@@ -4,11 +4,11 @@ import test from 'tape';
 
 import * as tree from './index.mjs';
 
-function cmpIntegers(a: number, b: number): number {
+function cmpIntegers(a/*: number */, b/*: number */)/*: number */ {
   return a - b;
 }
 
-function shuffle(array: Array<number>): void {
+function shuffle(array/*: Array<number> */)/*: void */ {
   for (let i = array.length - 1; i > 0; i--) {
     const j = Math.floor(Math.random() * (i + 1));
     // $FlowIssue[unsupported-syntax]
@@ -16,14 +16,18 @@ function shuffle(array: Array<number>): void {
   }
 }
 
-function countSize(node: tree.ImmutableTree<mixed> | null): number {
+function countSize(
+  node/*: tree.ImmutableTree<mixed> | null */,
+)/*: number */ {
   if (node === null) {
     return 0;
   }
   return 1 + countSize(node.left) + countSize(node.right);
 }
 
-function checkBalance(node: tree.ImmutableTree<mixed>): boolean {
+function checkBalance(
+  node/*: tree.ImmutableTree<mixed> */,
+)/*: boolean */ {
   if (
     (node.left === null || node.left.size === 1) &&
     (node.right === null || node.right.size === 1)
@@ -37,9 +41,9 @@ function checkBalance(node: tree.ImmutableTree<mixed>): boolean {
 }
 
 function checkTreeInvariants(
-  t: tape$Context,
-  node: tree.ImmutableTree<number> | null,
-): void {
+  t/*: tape$Context */,
+  node/*: tree.ImmutableTree<number> | null */,
+)/*: void */ {
   if (node === null) {
     return;
   }
@@ -68,8 +72,8 @@ function checkTreeInvariants(
 }
 
 function treeToString(
-  node: tree.ImmutableTree<mixed> | null,
-): string {
+  node/*: tree.ImmutableTree<mixed> | null */,
+)/*: string */ {
   if (node === null) {
     return '';
   }
