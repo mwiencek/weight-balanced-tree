@@ -1,4 +1,5 @@
 import Benchmark from 'benchmark';
+import hamt from 'hamt_plus';
 import * as Immutable from 'immutable';
 
 import * as wbt from './build/index.mjs';
@@ -19,6 +20,12 @@ for (const pair of asciiTable) {
 
 const prefilledImmutableMap = Immutable.Map(asciiTable);
 
+const prefilledHamtPlusHash = hamt.empty.beginMutation();
+for (const pair of asciiTable) {
+  prefilledHamtPlusHash.set(pair[0], pair[1]);
+}
+prefilledHamtPlusHash.endMutation();
+
 const prefilledPlainObject = Object.fromEntries(asciiTable);
 
 suite.add('insertion (wbt-flow)', function () {
@@ -35,10 +42,32 @@ suite.add('insertion (immutable-js Map.set)', function () {
   }
 });
 
+suite.add('insertion (hamt_plus)', function () {
+  let hash = hamt.empty;
+  for (const pair of asciiTable) {
+    hash = hash.set(pair[0], pair[1]);
+  }
+});
+
+suite.add('insertion (hamt_plus with mutation)', function () {
+  let hash = hamt.empty.beginMutation();
+  for (const pair of asciiTable) {
+    hash.set(pair[0], pair[1]);
+  }
+  hash.endMutation();
+});
+
 suite.add('insertion (plain object)', function () {
   let object = {};
   for (const pair of asciiTable) {
     object = {...object};
+    object[pair[0]] = pair[1];
+  }
+});
+
+suite.add('insertion (plain object with mutation)', function () {
+  let object = {};
+  for (const pair of asciiTable) {
     object[pair[0]] = pair[1];
   }
 });
@@ -52,6 +81,12 @@ suite.add('find/get (wbt-flow)', function () {
 suite.add('find/get (immutable-js Map.get)', function () {
   for (const pair of asciiTable) {
     prefilledImmutableMap.get(pair[0]);
+  }
+});
+
+suite.add('find/get (hamt_plus)', function () {
+  for (const pair of asciiTable) {
+    prefilledHamtPlusHash.get(pair[0]);
   }
 });
 
@@ -72,6 +107,21 @@ suite.add('removal (wbt-flow)', function () {
   for (const pair of asciiTable) {
     tree = wbt.remove(tree, pair, compareKeys, wbt.THROW);
   }
+});
+
+suite.add('removal (hamt_plus)', function () {
+  let hash = prefilledHamtPlusHash;
+  for (const pair of asciiTable) {
+    hash = hash.remove(pair[0]);
+  }
+});
+
+suite.add('removal (hamt_plus with transaction)', function () {
+  let hash = prefilledHamtPlusHash.beginMutation();
+  for (const pair of asciiTable) {
+    hash = hash.remove(pair[0]);
+  }
+  hash.endMutation();
 });
 
 suite.add('removal (immutable-js Map.delete)', function () {

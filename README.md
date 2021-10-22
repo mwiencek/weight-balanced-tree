@@ -199,24 +199,33 @@ Performance will largely depend on the size of your data and the cost of your
 comparator function.  [benchmark.mjs](benchmark.mjs) tests an ASCII table with
 uniform-length string keys and a simple string comparator function.
 
-Comparisons against plain objects and `Immutable.Map` from
-[immutable-js](https://immutable-js.com/) are included.  If you're not using
-the tree as a map, these numbers may be irrelevant, and are a bit
-apples-to-oranges as only the tree allows traversing items in sorted order.
+Comparisons against plain objects, [Immutable.Map](https://immutable-js.com/),
+and [hamt_plus](https://github.com/mattbierner/hamt_plus) are included.
+Please note that this is testing the weight-balanced tree *as a map*.  The
+tree is of course ordered, while these other data structures cannot keep a
+list of items in order.  However, I thought it would still be interesting to
+see how it can perform against unordered collections in that respect.
 
 
 ```
-insertion (wbt-flow) x 32,676 ops/sec ±0.29% (93 runs sampled)
-insertion (immutable-js Map.set) x 34,208 ops/sec ±1.63% (94 runs sampled)
-insertion (plain object) x 1,953 ops/sec ±0.65% (96 runs sampled)
-find/get (wbt-flow) x 72,919 ops/sec ±0.12% (94 runs sampled)
-find/get (immutable-js Map.get) x 223,716 ops/sec ±0.23% (96 runs sampled)
-find/get (plain object) x 228,418 ops/sec ±0.06% (95 runs sampled)
-find/get (array find) x 11,018 ops/sec ±0.19% (95 runs sampled)
-removal (wbt-flow) x 51,277 ops/sec ±0.66% (95 runs sampled)
-removal (immutable-js Map.delete) x 35,322 ops/sec ±1.26% (95 runs sampled)
-removal (plain object) x 286 ops/sec ±0.59% (90 runs sampled)
-Fastest is find/get (plain object)
+insertion (wbt-flow) x 32,667 ops/sec ±0.44% (91 runs sampled)
+insertion (immutable-js Map.set) x 33,330 ops/sec ±0.85% (99 runs sampled)
+insertion (hamt_plus) x 36,974 ops/sec ±0.14% (96 runs sampled)
+insertion (hamt_plus with mutation) x 59,840 ops/sec ±0.94% (94 runs sampled)
+insertion (plain object) x 1,955 ops/sec ±0.68% (96 runs sampled)
+insertion (plain object with mutation) x 85,843 ops/sec ±0.80% (95 runs sampled)
+
+find/get (wbt-flow) x 59,212 ops/sec ±0.20% (96 runs sampled)
+find/get (immutable-js Map.get) x 166,634 ops/sec ±0.76% (97 runs sampled)
+find/get (hamt_plus) x 224,289 ops/sec ±0.17% (98 runs sampled)
+find/get (plain object) x 212,563 ops/sec ±0.49% (92 runs sampled)
+find/get (array find) x 9,590 ops/sec ±0.39% (93 runs sampled)
+
+removal (wbt-flow) x 53,767 ops/sec ±1.15% (96 runs sampled)
+removal (hamt_plus) x 34,228 ops/sec ±1.35% (96 runs sampled)
+removal (hamt_plus with transaction) x 45,077 ops/sec ±0.40% (98 runs sampled)
+removal (immutable-js Map.delete) x 32,387 ops/sec ±0.23% (93 runs sampled)
+removal (plain object) x 274 ops/sec ±0.89% (92 runs sampled)
 ```
 
 You can run `./build.sh && node benchmark.mjs` yourself.
