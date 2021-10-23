@@ -101,11 +101,7 @@ export function balanceLeft/*:: <T> */(tree/*: MutableTree<T> */)/*: void */ {
   const leftSize = (left === null ? 0 : left.size);
   const rightSize = (right === null ? 0 : right.size);
 
-  if ((leftSize + rightSize) < 2) {
-    return;
-  }
-
-  if (leftSize > (DELTA * rightSize)) {
+  if ((leftSize + rightSize) >= 2 && leftSize > (DELTA * rightSize)) {
     /*:: invariant(left); */
     if ((left.right === null ? 0 : left.right.size) < (RATIO * (left.left === null ? 0 : left.left.size))) {
       rotateRight(tree);
@@ -121,11 +117,7 @@ export function balanceRight/*:: <T> */(tree/*: MutableTree<T> */)/*: void */ {
   const leftSize = (left === null ? 0 : left.size);
   const rightSize = (right === null ? 0 : right.size);
 
-  if ((leftSize + rightSize) < 2) {
-    return;
-  }
-
-  if (rightSize > (DELTA * leftSize)) {
+  if ((leftSize + rightSize) >= 2 && rightSize > (DELTA * leftSize)) {
     /*:: invariant(right); */
     if ((right.left === null ? 0 : right.left.size) < (RATIO * (right.right === null ? 0 : right.right.size))) {
       rotateLeft(tree);
