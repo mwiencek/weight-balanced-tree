@@ -1,5 +1,15 @@
 # Changelog
 
+## v0.1.0 (2021-10-23)
+
+ * Renamed the package from `wbt-flow` to `weight-balanced-tree`.
+ * Split the source code into separate modules.
+ * Removed the 'T' suffix from type names.
+ * Added TypeScript definitions.
+ * Changed all Flow types to use comment-syntax, so that source files
+   can be executed directly in Node.
+ * Improved test coverage slightly (now 100%).
+
 ## v0.0.5 (2021-08-15)
 
  * Added `minValue` and `maxValue`.
