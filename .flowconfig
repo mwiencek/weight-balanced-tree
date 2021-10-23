@@ -1,4 +1,5 @@
 [ignore]
+*.d.ts
 
 [include]
 

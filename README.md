@@ -1,6 +1,6 @@
 # wbt-flow
 
-Persistent weight-balanced (bounded balance) tree written in Flow (Flowtype).
+A persistent weight-balanced (bounded balance) tree.
 
 References:
 
@@ -10,6 +10,8 @@ References:
     Accessed at http://groups.csail.mit.edu/mac/users/adams/BB/92-10.ps
 
  2. [GHC's Data.Map.Internal](https://gitlab.haskell.org/ghc/packages/containers/-/blob/f00aa02/containers/src/Data/Map/Internal.hs).
+
+Written in Flow, but TypeScript definitions are included too.
 
 ## Installation
 
