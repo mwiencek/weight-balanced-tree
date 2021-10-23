@@ -15,6 +15,7 @@
   "dependencies": {},
   "devDependencies": {
     "benchmark": "2.1.4",
+    "c8": "7.10.0",
     "flow-bin": "0.162.1",
     "hamt_plus": "1.0.2",
     "immutable": "4.0.0",

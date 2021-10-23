@@ -144,6 +144,9 @@ test('all', function (t) {
     }
 
     t.ok(node === null, 'tree is empty');
+
+    node = tree.remove(node, 0, cmpIntegers, tree.NOOP);
+    t.ok(node === null, 'tree is still empty');
   }
 
   t.end();
@@ -158,6 +161,7 @@ test('actions', function (t) {
   const xa2 = {x: 'a', y: '2'};
   const xb1 = {x: 'b', y: '1'};
   const xb2 = {x: 'b', y: '2'};
+  const xb3 = {x: '', y: '1'};
 
   node = tree.insert(node, xa1, compareX, tree.NOOP);
 
@@ -184,9 +188,11 @@ test('actions', function (t) {
     'exception is thrown with duplicateAction = THROW (root node)',
   );
 
+  // Insert a node into the right subtree
   node = tree.insert(node, xb1, compareX, tree.NOOP);
 
   prevNode = node;
+  // This tests duplicateAction = NOOP on the right subtree
   node = tree.insert(node, xb1, compareX, tree.NOOP);
   t.ok(node === prevNode, 'tree is unmodified with duplicateAction = NOOP (non-root node)');
 
@@ -199,6 +205,14 @@ test('actions', function (t) {
   node = tree.insert(node, xb2, compareX, (tree, value) => ({...tree, value: {x: value.x, y: tree.value.x + tree.value.y}}));
   t.ok(node !== prevNode, 'tree is modified with duplicateAction = function (non-root node)');
   t.ok(node !== null && node.right !== null && node.right.value.y === 'b2', 'tree value is modified with duplicateAction = function (non-root node)');
+
+  // Insert a node into the left subtree
+  node = tree.insert(node, xb3, compareX, tree.THROW);
+
+  prevNode = node;
+  // This tests duplicateAction = NOOP on the left subtree
+  node = tree.insert(node, xb3, compareX, tree.NOOP);
+  t.ok(node === prevNode, 'tree is unmodified with duplicateAction = NOOP (non-root node)');
 
   t.throws(
     function () {
