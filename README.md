@@ -1,4 +1,4 @@
-# wbt-flow
+# weight-balanced-tree
 
 A persistent weight-balanced (bounded balance) tree.
 
@@ -15,7 +15,7 @@ Written in Flow, but TypeScript definitions are included too.
 
 ## Installation
 
-`npm install wbt-flow` or `yarn add wbt-flow`.
+`npm install weight-balanced-tree` or `yarn add weight-balanced-tree`.
 
 ## API
 
@@ -178,7 +178,7 @@ datum stored per node, for maps you can store a `[key, value]` tuple, or store
 
 
 ```JavaScript
-import * as wbt from 'wbt-flow';
+import * as wbt from 'weight-balanced-tree';
 
 const compareInt = (a, b) => (a - b);
 const insertInt = (list, int) => wbt.insert(list, int, compareInt);
@@ -210,20 +210,20 @@ see how it can perform against unordered collections in that respect.
 
 
 ```
-insertion (wbt-flow) x 32,667 ops/sec ±0.44% (91 runs sampled)
+insertion (weight-balanced-tree) x 32,667 ops/sec ±0.44% (91 runs sampled)
 insertion (immutable-js Map.set) x 33,330 ops/sec ±0.85% (99 runs sampled)
 insertion (hamt_plus) x 36,974 ops/sec ±0.14% (96 runs sampled)
 insertion (hamt_plus with mutation) x 59,840 ops/sec ±0.94% (94 runs sampled)
 insertion (plain object) x 1,955 ops/sec ±0.68% (96 runs sampled)
 insertion (plain object with mutation) x 85,843 ops/sec ±0.80% (95 runs sampled)
 
-find/get (wbt-flow) x 59,212 ops/sec ±0.20% (96 runs sampled)
+find/get (weight-balanced-tree) x 59,212 ops/sec ±0.20% (96 runs sampled)
 find/get (immutable-js Map.get) x 166,634 ops/sec ±0.76% (97 runs sampled)
 find/get (hamt_plus) x 224,289 ops/sec ±0.17% (98 runs sampled)
 find/get (plain object) x 212,563 ops/sec ±0.49% (92 runs sampled)
 find/get (array find) x 9,590 ops/sec ±0.39% (93 runs sampled)
 
-removal (wbt-flow) x 53,767 ops/sec ±1.15% (96 runs sampled)
+removal (weight-balanced-tree) x 53,767 ops/sec ±1.15% (96 runs sampled)
 removal (hamt_plus) x 34,228 ops/sec ±1.35% (96 runs sampled)
 removal (hamt_plus with transaction) x 45,077 ops/sec ±0.40% (98 runs sampled)
 removal (immutable-js Map.delete) x 32,387 ops/sec ±0.23% (93 runs sampled)

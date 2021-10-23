@@ -28,7 +28,7 @@ prefilledHamtPlusHash.endMutation();
 
 const prefilledPlainObject = Object.fromEntries(asciiTable);
 
-suite.add('insertion (wbt-flow)', function () {
+suite.add('insertion (weight-balanced-tree)', function () {
   let tree = null;
   for (const pair of asciiTable) {
     tree = wbt.insert(tree, pair, compareKeys, wbt.THROW);
@@ -72,7 +72,7 @@ suite.add('insertion (plain object with mutation)', function () {
   }
 });
 
-suite.add('find/get (wbt-flow)', function () {
+suite.add('find/get (weight-balanced-tree)', function () {
   for (const pair of asciiTable) {
     wbt.find(prefilledTree, pair, compareKeys);
   }
@@ -102,7 +102,7 @@ suite.add('find/get (array find)', function () {
   }
 });
 
-suite.add('removal (wbt-flow)', function () {
+suite.add('removal (weight-balanced-tree)', function () {
   let tree = prefilledTree;
   for (const pair of asciiTable) {
     tree = wbt.remove(tree, pair, compareKeys, wbt.THROW);

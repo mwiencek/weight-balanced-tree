@@ -1,5 +1,5 @@
 {
-  "name": "wbt-flow",
+  "name": "weight-balanced-tree",
   "version": "0.0.6-dev",
   "description": "A persistent weight-balanced (bounded balance) tree.",
   "keywords": [
