@@ -232,6 +232,12 @@ removal (plain object) x 274 ops/sec ±0.89% (92 runs sampled)
 
 You can run `node benchmark.mjs` yourself.
 
+## Tests
+
+Run `node tests.mjs`.
+
+To test the .d.ts files, run `./node_modules/.bin/tsd`.
+
 ## Changelog
 
 See [CHANGELOG.md](CHANGELOG.md).
