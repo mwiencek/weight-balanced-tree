@@ -1,7 +1,7 @@
 // @flow strict
 
 import {THROW} from './actions.mjs';
-import {balanceLeft, balanceRight} from "./balance.mjs";
+import {balanceLeft, balanceRight} from './balance.mjs';
 import minValue from './minValue.mjs';
 /*::
 import type {ImmutableTree, MutableTree, TreeAction} from './types.mjs';
