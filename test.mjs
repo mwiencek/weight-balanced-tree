@@ -110,6 +110,8 @@ test('all', function (t) {
     );
 
     if (node !== null) {
+      t.equal(tree.minNode(node).value, 1, 'min node value is 1');
+      t.equal(tree.maxNode(node).value, 31, 'max node value is 31');
       t.equal(tree.minValue(node), 1, 'min value is 1');
       t.equal(tree.maxValue(node), 31, 'max value is 31');
     }

@@ -151,6 +151,14 @@ iterate<T>(tree: ImmutableTree<T> | null): Generator<T, void, void>;
 
 Returns a JS iterator that traverses the values of the tree in order.
 
+### minNode
+
+```
+minNode<T>(tree: ImmutableTree<T>): ImmutableTree<T>;
+```
+
+Returns the "smallest" (left-most) node in `tree`.
+
 ### minValue
 
 ```
@@ -159,6 +167,16 @@ minValue<T>(tree: ImmutableTree<T>): T;
 
 Returns the "smallest" (left-most) value in `tree`.
 
+This is equivalent to `minNode(tree).value`.
+
+### maxNode
+
+```
+maxNode<T>(tree: ImmutableTree<T>): ImmutableTree<T>;
+```
+
+Returns the "largest" (right-most) node in `tree`.
+
 ### maxValue
 
 ```
@@ -166,6 +184,8 @@ maxValue<T>(tree: ImmutableTree<T>): T;
 ```
 
 Returns the "largest" (right-most) value in `tree`.
+
+This is equivalent to `maxNode(tree).value`.
 
 ## Example
 
