@@ -262,7 +262,7 @@ You can run `node benchmark.mjs` yourself.
 
 ## Tests
 
-Run `./node_modules/.bin/c8 node tests.mjs`.
+Run `./node_modules/.bin/c8 node test.mjs`.
 
 To test the .d.ts files, run `./node_modules/.bin/tsd`.
 

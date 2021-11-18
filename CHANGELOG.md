@@ -15,7 +15,7 @@
  * Added `minValue` and `maxValue`.
  * Added `findNext` and `findPrev`.
  * Removed uses of the unclear `any` type.
- * Fixed Flow errors in tests.mjs.
+ * Fixed Flow errors in test.mjs.
  * Added `"sideEffects": false` to package.json.
 
 ## v0.0.4 (2021-08-12)
