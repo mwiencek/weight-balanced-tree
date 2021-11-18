@@ -93,6 +93,8 @@ test('all', function (t) {
     oneToThirtyOne.push(i);
   }
 
+  const thirtyOneToOne = oneToThirtyOne.slice(0).reverse();
+
   const numbers = oneToThirtyOne.slice(0);
 
   for (let i = 0; i < 5; i++) {
@@ -107,6 +109,12 @@ test('all', function (t) {
       Array.from(tree.iterate(node)),
       oneToThirtyOne,
       'tree is in order',
+    );
+
+    t.deepEqual(
+      Array.from(tree.reverseIterate(node)),
+      thirtyOneToOne,
+      'tree is in order (reversed)',
     );
 
     if (node !== null) {

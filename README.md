@@ -151,6 +151,14 @@ iterate<T>(tree: ImmutableTree<T> | null): Generator<T, void, void>;
 
 Returns a JS iterator that traverses the values of the tree in order.
 
+### reverseIterate
+
+```
+reverseIterate<T>(tree: ImmutableTree<T> | null): Generator<T, void, void>;
+```
+
+Returns a JS iterator that traverses the values of the tree in reverse order.
+
 ### minNode
 
 ```

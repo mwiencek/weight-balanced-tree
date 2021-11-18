@@ -14,6 +14,7 @@ import iterate from './iterate';
 import maxValue from './maxValue';
 import minValue from './minValue';
 import remove from './remove';
+import reverseIterate from './reverseIterate';
 
 expectType<types.SomeTreeAction>(actions.NOOP);
 expectType<types.SomeTreeAction>(actions.REPLACE);
@@ -29,6 +30,7 @@ declare function cmpNumberAndString(a: number, b: string): number;
 // Basic usage
 expectType<types.ImmutableTree<string>>(insert<string>(stringTree, '', cmpStrings, actions.NOOP));
 expectType<Generator<string, undefined, undefined>>(iterate<string>(stringTree));
+expectType<Generator<string, undefined, undefined>>(reverseIterate<string>(stringTree));
 expectType<types.ImmutableTree<string> | null>(find<string>(stringTree, '', cmpStrings));
 expectType<types.ImmutableTree<string> | null>(findNext<string>(stringTree, '', cmpStrings));
 expectType<types.ImmutableTree<string> | null>(findPrev<string>(stringTree, '', cmpStrings));
@@ -44,6 +46,7 @@ expectType<types.ImmutableTree<string> | null>(findPrev<string, number>(stringTr
 // Wrong tree type
 expectError<types.ImmutableTree<number>>(insert<number>(stringTree, '', cmpNumbers, actions.NOOP));
 expectError<Generator<number, undefined, undefined>>(iterate<number>(stringTree));
+expectError<Generator<number, undefined, undefined>>(reverseIterate<number>(stringTree));
 expectError<types.ImmutableTree<number> | null>(find<number>(stringTree, 0, cmpNumbers));
 expectError<number>(maxValue<number>(nonNullStringTree));
 expectError<number>(minValue<number>(nonNullStringTree));
@@ -68,6 +71,7 @@ expectType<typeof findNext>(wbt.findNext);
 expectType<typeof findPrev>(wbt.findPrev);
 expectType<typeof insert>(wbt.insert);
 expectType<typeof iterate>(wbt.iterate);
+expectType<typeof reverseIterate>(wbt.reverseIterate);
 expectType<typeof maxValue>(wbt.maxValue);
 expectType<typeof minValue>(wbt.minValue);
 expectType<typeof remove>(wbt.remove);
