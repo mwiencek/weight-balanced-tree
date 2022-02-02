@@ -1,5 +1,11 @@
 # Changelog
 
+## v0.1.1 (2022-02-01)
+
+ * Exported and documented `minNode` and `maxNode`.
+ * Added `reverseIterate`.
+ * Fixed some references to test.mjs.
+
 ## v0.1.0 (2021-10-23)
 
  * Renamed the package from `wbt-flow` to `weight-balanced-tree`.
