@@ -7,6 +7,9 @@
    `NOOP`, `REPLACE`, or `THROW` for you, respectively.
  * Added `removeIfExists` and `removeOrThrowIfNotExists`.  Like above, these
    pass `NOOP` and `THROW` for you.
+ * Added `create`: given a value, creates a tree of size 1 holding that
+   value.  This is slightly more convenient than constructing the object
+   yourself, as in `{value, left: null, right: null, size: 1}`.
 
 ## v0.1.1 (2022-02-01)
 

@@ -388,3 +388,14 @@ test('removeOrThrowIfNotExists', function (t) {
 
   t.end();
 });
+
+test('create', function (t) {
+  const node = tree.create(1);
+  t.deepEqual(node, {
+    left: null,
+    right: null,
+    size: 1,
+    value: 1,
+  });
+  t.end();
+});
