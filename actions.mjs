@@ -9,10 +9,10 @@ export const NOOP/*: SomeTreeAction */ =
 
 export const REPLACE/*: SomeTreeAction */ =
   /*:: <T> */(tree/*: ImmutableTree<T> */, value/*: T */)/*: ImmutableTree<T> */ => ({
-    value,
-    size: tree.size,
     left: tree.left,
     right: tree.right,
+    size: tree.size,
+    value,
   });
 
 export const THROW/*: SomeTreeAction */ = () => {
@@ -24,10 +24,10 @@ export function replaceWith/*:: <T> */(
 )/*: TreeAction<T> */ {
   return function (tree/*: ImmutableTree<T> */, newValue/*: T */)/*: ImmutableTree<T> */ {
     return {
-      value: getValue(tree.value, newValue),
-      size: tree.size,
       left: tree.left,
       right: tree.right,
+      size: tree.size,
+      value: getValue(tree.value, newValue),
     };
   };
 }

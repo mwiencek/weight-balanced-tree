@@ -14,10 +14,10 @@ export default function insert/*:: <T> */(
 )/*: ImmutableTree<T> */ {
   if (tree === null) {
     return {
-      value,
-      size: 1,
       left: null,
       right: null,
+      size: 1,
+      value,
     };
   }
 
@@ -36,10 +36,10 @@ export default function insert/*:: <T> */(
       return tree;
     }
     const newTree = {
-      value: tree.value,
-      size: newLeftBranch.size + (right === null ? 0 : right.size) + 1,
       left: newLeftBranch,
       right,
+      size: newLeftBranch.size + (right === null ? 0 : right.size) + 1,
+      value: tree.value,
     };
     balanceLeft(newTree);
     return newTree;
@@ -49,10 +49,10 @@ export default function insert/*:: <T> */(
       return tree;
     }
     const newTree = {
-      value: tree.value,
-      size: (left === null ? 0 : left.size) + newRightBranch.size + 1,
       left,
       right: newRightBranch,
+      size: (left === null ? 0 : left.size) + newRightBranch.size + 1,
+      value: tree.value,
     };
     balanceRight(newTree);
     return newTree;

@@ -29,10 +29,10 @@ export default function remove/*:: <T> */(
     }
     const min = minValue(tree.right);
     newTree = {
-      value: min,
-      size: tree.size - 1,
       left: tree.left,
       right: remove(tree.right, min, cmp, THROW),
+      size: tree.size - 1,
+      value: min,
     };
     balanceLeft(newTree);
     return newTree;
@@ -45,20 +45,20 @@ export default function remove/*:: <T> */(
     if (left !== null) {
       left = remove(left, value, cmp, notFoundAction);
       newTree = {
-        value: tree.value,
-        size: (left === null ? 0 : left.size) + (right === null ? 0 : right.size) + 1,
         left,
         right,
+        size: (left === null ? 0 : left.size) + (right === null ? 0 : right.size) + 1,
+        value: tree.value,
       };
       balanceRight(newTree);
     }
   } else if (right !== null) {
     right = remove(right, value, cmp, notFoundAction);
     newTree = {
-      value: tree.value,
-      size: (left === null ? 0 : left.size) + (right === null ? 0 : right.size) + 1,
       left,
       right,
+      size: (left === null ? 0 : left.size) + (right === null ? 0 : right.size) + 1,
+      value: tree.value,
     };
     balanceLeft(newTree);
   }

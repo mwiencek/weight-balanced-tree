@@ -2,17 +2,17 @@
 
 /*::
 export type ImmutableTree<+T> = {
-  +value: T,
-  +size: number,
   +left: ImmutableTree<T> | null,
   +right: ImmutableTree<T> | null,
+  +size: number,
+  +value: T,
 };
 
 export type MutableTree<T> = {
-  value: T,
-  size: number,
   left: ImmutableTree<T> | null,
   right: ImmutableTree<T> | null,
+  size: number,
+  value: T,
 };
 
 export type TreeAction<T> =

@@ -17,15 +17,15 @@ export function rotateLeft/*:: <T> */(a/*: MutableTree<T> */)/*: void */ {
   const c = b.right;
   /*:: invariant(c); */
   const left = {
-    value: a.value,
-    size: (a.left === null ? 0 : a.left.size) + (b.left === null ? 0 : b.left.size) + 1,
     left: a.left,
     right: b.left,
+    size: (a.left === null ? 0 : a.left.size) + (b.left === null ? 0 : b.left.size) + 1,
+    value: a.value,
   };
-  a.value = b.value;
-  a.size = left.size + c.size + 1;
   a.left = left;
   a.right = c;
+  a.size = left.size + c.size + 1;
+  a.value = b.value;
 }
 
 export function rotateRight/*:: <T> */(c/*: MutableTree<T> */)/*: void */ {
@@ -34,15 +34,15 @@ export function rotateRight/*:: <T> */(c/*: MutableTree<T> */)/*: void */ {
   const a = b.left;
   /*:: invariant(a); */
   const right = {
-    value: c.value,
-    size: (b.right === null ? 0 : b.right.size) + (c.right === null ? 0 : c.right.size) + 1,
     left: b.right,
     right: c.right,
+    size: (b.right === null ? 0 : b.right.size) + (c.right === null ? 0 : c.right.size) + 1,
+    value: c.value,
   };
-  c.value = b.value;
-  c.size = a.size + right.size + 1;
   c.left = a;
   c.right = right;
+  c.size = a.size + right.size + 1;
+  c.value = b.value;
 }
 
 export function rotateLeftRight/*:: <T> */(tree/*: MutableTree<T> */)/*: void */ {
@@ -53,21 +53,21 @@ export function rotateLeftRight/*:: <T> */(tree/*: MutableTree<T> */)/*: void */
   const c = b.right;
   /*:: invariant(c); */
   const left = {
-    value: a.value,
-    size: (a.left === null ? 0 : a.left.size) + (b.left === null ? 0 : b.left.size) + 1,
     left: a.left,
     right: b.left,
+    size: (a.left === null ? 0 : a.left.size) + (b.left === null ? 0 : b.left.size) + 1,
+    value: a.value,
   };
   const right = {
-    value: tree.value,
-    size: (c === null ? 0 : c.size) + (tree.right === null ? 0 : tree.right.size) + 1,
     left: c,
     right: tree.right,
+    size: (c === null ? 0 : c.size) + (tree.right === null ? 0 : tree.right.size) + 1,
+    value: tree.value,
   };
-  tree.value = b.value;
-  tree.size = left.size + right.size + 1;
   tree.left = left;
   tree.right = right;
+  tree.size = left.size + right.size + 1;
+  tree.value = b.value;
 }
 
 export function rotateRightLeft/*:: <T> */(tree/*: MutableTree<T> */)/*: void */ {
@@ -78,21 +78,21 @@ export function rotateRightLeft/*:: <T> */(tree/*: MutableTree<T> */)/*: void */
   const a = b.left;
   /*:: invariant(a); */
   const right = {
-    value: c.value,
-    size: (b.right === null ? 0 : b.right.size) + (c.right === null ? 0 : c.right.size) + 1,
     left: b.right,
     right: c.right,
+    size: (b.right === null ? 0 : b.right.size) + (c.right === null ? 0 : c.right.size) + 1,
+    value: c.value,
   };
   const left = {
-    value: tree.value,
-    size: (tree.left === null ? 0 : tree.left.size) + (a === null ? 0 : a.size) + 1,
     left: tree.left,
     right: a,
+    size: (tree.left === null ? 0 : tree.left.size) + (a === null ? 0 : a.size) + 1,
+    value: tree.value,
   };
-  tree.value = b.value;
-  tree.size = left.size + right.size + 1;
   tree.left = left;
   tree.right = right;
+  tree.size = left.size + right.size + 1;
+  tree.value = b.value;
 }
 
 export function balanceLeft/*:: <T> */(tree/*: MutableTree<T> */)/*: void */ {

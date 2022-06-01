@@ -21,10 +21,10 @@ Written in Flow, but TypeScript definitions are included too.
 
 ```
 type ImmutableTree<+T> = {
-  +value: T,
-  +size: number,
   +left: ImmutableTree<T> | null,
   +right: ImmutableTree<T> | null,
+  +size: number,
+  +value: T,
 };
 
 type TreeAction<T> =
