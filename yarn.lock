@@ -460,10 +460,10 @@ find-up@^5.0.0:
     locate-path "^6.0.0"
     path-exists "^4.0.0"
 
-flow-bin@0.162.1:
-  version "0.162.1"
-  resolved "https://registry.yarnpkg.com/flow-bin/-/flow-bin-0.162.1.tgz#5aaac790dab8664ce363fd0f09764fb9f0daed20"
-  integrity sha512-gFNWkEzBuQ9YzQcPKcVL16V5MZixbiQ+Kn867iwaCfs1TAFuhQQcng4vX3Rtyd7JI3O+g8jToEX7pEDhdzG80Q==
+flow-bin@0.179.0:
+  version "0.179.0"
+  resolved "https://registry.yarnpkg.com/flow-bin/-/flow-bin-0.179.0.tgz#a9afbedda1687726296bfc8bd34247a6aae34d4f"
+  integrity sha512-odCiPkX5Vjrgupqxq2cjib0GtzAjGRHVkLk4TG15N4B+Fd2ghb8HSW6zrdX9GwaXrsuocxm5+oVzkaaUYUf+Pg==
 
 for-each@^0.3.3:
   version "0.3.3"
