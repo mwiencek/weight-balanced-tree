@@ -1,5 +1,6 @@
 // @flow strict
 
+import {NOOP, REPLACE, THROW} from './actions.mjs';
 import {balanceLeft, balanceRight} from './balance.mjs';
 /*::
 import type {ImmutableTree, TreeAction} from './types.mjs';
@@ -56,4 +57,28 @@ export default function insert/*:: <T> */(
     balanceRight(newTree);
     return newTree;
   }
+}
+
+export function insertIfNotExists/*:: <T> */(
+  tree/*: ImmutableTree<T> | null */,
+  value/*: T */,
+  cmp/*: (T, T) => number */,
+)/*: ImmutableTree<T> */ {
+  return insert(tree, value, cmp, NOOP);
+}
+
+export function insertOrReplaceIfExists/*:: <T> */(
+  tree/*: ImmutableTree<T> | null */,
+  value/*: T */,
+  cmp/*: (T, T) => number */,
+)/*: ImmutableTree<T> */ {
+  return insert(tree, value, cmp, REPLACE);
+}
+
+export function insertOrThrowIfExists/*:: <T> */(
+  tree/*: ImmutableTree<T> | null */,
+  value/*: T */,
+  cmp/*: (T, T) => number */,
+)/*: ImmutableTree<T> */ {
+  return insert(tree, value, cmp, THROW);
 }

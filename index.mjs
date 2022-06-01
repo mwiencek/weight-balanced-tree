@@ -3,7 +3,12 @@
 export {default as find} from './find.mjs';
 export {default as findNext} from './findNext.mjs';
 export {default as findPrev} from './findPrev.mjs';
-export {default as insert} from './insert.mjs';
+export {
+  default as insert,
+  insertIfNotExists,
+  insertOrReplaceIfExists,
+  insertOrThrowIfExists,
+} from './insert.mjs';
 export {default as iterate} from './iterate.mjs';
 export {default as maxNode} from './maxNode.mjs';
 export {default as maxValue} from './maxValue.mjs';

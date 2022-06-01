@@ -300,3 +300,59 @@ test('findNext/findPrev with non-existent values', function (t) {
 
   t.end();
 });
+
+test('insertIfNotExists', function (t) {
+  const cmp = (a, b) => a - b;
+
+  let node = null;
+  node = tree.insertIfNotExists(node, 1, cmp);
+  t.equal(tree.find(node, 1, cmp)?.value, 1);
+  t.equal(node.size, 1);
+  node = tree.insertIfNotExists(node, 2, cmp);
+  t.equal(tree.find(node, 2, cmp)?.value, 2);
+  t.equal(node.size, 2);
+  node = tree.insertIfNotExists(node, 2, cmp);
+  t.equal(tree.find(node, 2, cmp)?.value, 2);
+  t.equal(node.size, 2);
+
+  t.end();
+});
+
+test('insertOrReplaceIfExists', function (t) {
+  const cmp = (a, b) => a.value - b.value;
+
+  let v1 = {id: 1, value: 1};
+  let v2 = {id: 2, value: 1};
+
+  let node = null;
+  node = tree.insertOrReplaceIfExists(node, v1, cmp);
+  t.equal(tree.find(node, v1, cmp)?.value.id, 1);
+  t.equal(node.size, 1);
+  node = tree.insertOrReplaceIfExists(node, v2, cmp);
+  t.equal(tree.find(node, v2, cmp)?.value.id, 2);
+  t.equal(node.size, 1);
+
+  t.end();
+});
+
+test('insertOrThrowIfExists', function (t) {
+  const cmp = (a, b) => a.value - b.value;
+
+  let v1 = {id: 1, value: 1};
+  let v2 = {id: 2, value: 1};
+
+  let node = null;
+  node = tree.insertOrThrowIfExists(node, v1, cmp);
+  t.equal(tree.find(node, v1, cmp)?.value.id, 1);
+  t.equal(node.size, 1);
+  t.throws(
+    function () {
+      node = tree.insertOrThrowIfExists(node, v2, cmp);
+    },
+    /^Error$/,
+    'exception is thrown with insertOrThrowIfExists',
+  );
+  t.equal(node.size, 1);
+
+  t.end();
+});

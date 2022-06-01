@@ -1,5 +1,11 @@
 # Changelog
 
+## v0.2.0 (unreleased)
+
+ * Added `insertIfNotExists`, `insertOrReplaceIfExists`,
+   and `insertOrThrowIfExists`.  These are the same as `insert`, but pass
+   `NOOP`, `REPLACE`, or `THROW` for you, respectively.
+
 ## v0.1.1 (2022-02-01)
 
  * Exported and documented `minNode` and `maxNode`.

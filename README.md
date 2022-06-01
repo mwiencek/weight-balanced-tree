@@ -63,6 +63,10 @@ There are several exports in the main module that can be used here:
  * `THROW`, which throws an exception.  It doesn't provide any meaningful error
    message, though, so you'd better write your own if needed.
 
+The helper functions `insertIfNotExists`, `insertOrReplaceIfExists`,
+and `insertOrThrowIfExists` are also exported; these call `insert` with
+`NOOP`, `REPLACE`, or `THROW` for `duplicateAction`, respectively.
+
 ### remove
 
 ```
