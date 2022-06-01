@@ -87,9 +87,8 @@ tree).
 The `cmp` (comparator) function is the same as used for `insert`.
 
 The optional `notFoundAction` determines what should happen when `value`
-is not found in the tree.  The default action, `NOOP`, returns `tree` back
-unmodified.  The only other supported action is `THROW`, which throws an
-exception.
+is not found in the tree.  The two supported actions are `NOOP`, which
+returns `tree` back unmodified, and `THROW`, which throws an exception.
 
 `notFoundAction` is a function that determines what should happen when `value`
 is not found in the tree.  This is required.  The passed-in function receives
