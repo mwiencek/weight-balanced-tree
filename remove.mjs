@@ -1,6 +1,6 @@
 // @flow strict
 
-import {THROW} from './actions.mjs';
+import {NOOP, THROW} from './actions.mjs';
 import {balanceLeft, balanceRight} from './balance.mjs';
 import minValue from './minValue.mjs';
 /*::
@@ -68,4 +68,20 @@ export default function remove/*:: <T> */(
   }
 
   return newTree;
+}
+
+export function removeIfExists/*:: <T> */(
+  tree/*: ImmutableTree<T> | null */,
+  value/*: T */,
+  cmp/*: (T, T) => number */,
+)/*: ImmutableTree<T> | null */ {
+  return remove(tree, value, cmp, NOOP);
+}
+
+export function removeOrThrowIfNotExists/*:: <T> */(
+  tree/*: ImmutableTree<T> | null */,
+  value/*: T */,
+  cmp/*: (T, T) => number */,
+)/*: ImmutableTree<T> | null */ {
+  return remove(tree, value, cmp, THROW);
 }

@@ -5,6 +5,8 @@
  * Added `insertIfNotExists`, `insertOrReplaceIfExists`,
    and `insertOrThrowIfExists`.  These are the same as `insert`, but pass
    `NOOP`, `REPLACE`, or `THROW` for you, respectively.
+ * Added `removeIfExists` and `removeOrThrowIfNotExists`.  Like above, these
+   pass `NOOP` and `THROW` for you.
 
 ## v0.1.1 (2022-02-01)
 

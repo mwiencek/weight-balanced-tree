@@ -104,6 +104,9 @@ As for `insert` above, you can use these exports from the main module for
    will also return the tree root back unmodified.
  * `THROW`, which throws an exception.
 
+The helper functions `removeIfExists` and `removeOrThrowIfNotExists` are also exported;
+these call `remove` with `NOOP` or `THROW` for `notFoundAction`, respectively.
+
 ### find
 
 ```

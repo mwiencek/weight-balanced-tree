@@ -17,7 +17,10 @@ import insert, {
 import iterate from './iterate';
 import maxValue from './maxValue';
 import minValue from './minValue';
-import remove from './remove';
+import remove, {
+  removeIfExists,
+  removeOrThrowIfNotExists,
+} from './remove';
 import reverseIterate from './reverseIterate';
 
 expectType<types.SomeTreeAction>(actions.NOOP);
@@ -44,6 +47,8 @@ expectType<types.ImmutableTree<string> | null>(findPrev<string>(stringTree, '', 
 expectType<string>(maxValue<string>(nonNullStringTree));
 expectType<string>(minValue<string>(nonNullStringTree));
 expectType<types.ImmutableTree<string> | null>(remove<string>(stringTree, '', cmpStrings, actions.NOOP));
+expectType<types.ImmutableTree<string> | null>(removeIfExists<string>(stringTree, '', cmpStrings));
+expectType<types.ImmutableTree<string> | null>(removeOrThrowIfNotExists<string>(stringTree, '', cmpStrings));
 
 // Value type override
 expectType<types.ImmutableTree<string> | null>(find<string, number>(stringTree, 0, cmpNumberAndString));
@@ -63,6 +68,8 @@ expectError<number>(minValue<number>(nonNullStringTree));
 expectError<string>(maxValue<string>(stringTree));
 expectError<string>(minValue<string>(stringTree));
 expectError<types.ImmutableTree<number> | null>(remove<number>(stringTree, '', cmpNumbers, actions.NOOP));
+expectError<types.ImmutableTree<number> | null>(removeIfExists<number>(stringTree, '', cmpNumbers));
+expectError<types.ImmutableTree<number> | null>(removeOrThrowIfNotExists<number>(stringTree, '', cmpNumbers));
 
 // Wrong comparator function type
 expectError<types.ImmutableTree<string> | null>(find<string>(stringTree, '', cmpNumbers));
@@ -70,6 +77,8 @@ expectError<types.ImmutableTree<string> | null>(findNext<string>(stringTree, '',
 expectError<types.ImmutableTree<string> | null>(findPrev<string>(stringTree, '', cmpNumbers));
 expectError<types.ImmutableTree<string>>(insert<string>(stringTree, '', cmpNumbers, actions.NOOP));
 expectError<types.ImmutableTree<string> | null>(remove<string>(stringTree, '', cmpNumbers, actions.NOOP));
+expectError<types.ImmutableTree<string> | null>(removeIfExists<string>(stringTree, '', cmpNumbers));
+expectError<types.ImmutableTree<string> | null>(removeOrThrowIfNotExists<string>(stringTree, '', cmpNumbers));
 
 // Value type override + wrong comparator function type
 expectError<types.ImmutableTree<string> | null>(find<string, number>(stringTree, 0, cmpStrings));
@@ -88,6 +97,8 @@ expectType<typeof reverseIterate>(wbt.reverseIterate);
 expectType<typeof maxValue>(wbt.maxValue);
 expectType<typeof minValue>(wbt.minValue);
 expectType<typeof remove>(wbt.remove);
+expectType<typeof removeIfExists>(wbt.removeIfExists);
+expectType<typeof removeOrThrowIfNotExists>(wbt.removeOrThrowIfNotExists);
 expectType<types.SomeTreeAction>(wbt.NOOP);
 expectType<types.SomeTreeAction>(wbt.REPLACE);
 expectType<types.SomeTreeAction>(wbt.THROW);

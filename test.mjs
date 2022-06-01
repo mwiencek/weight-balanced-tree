@@ -356,3 +356,35 @@ test('insertOrThrowIfExists', function (t) {
 
   t.end();
 });
+
+test('removeIfExists', function (t) {
+  const cmp = (a, b) => a - b;
+
+  let node = null;
+  node = tree.insertIfNotExists(node, 1, cmp);
+  node = tree.removeIfExists(node, 2, cmp);
+  t.equal(node?.size, 1);
+  node = tree.removeIfExists(node, 1, cmp);
+  t.equal(node, null);
+
+  t.end();
+});
+
+test('removeOrThrowIfNotExists', function (t) {
+  const cmp = (a, b) => a - b;
+
+  let node = null;
+  node = tree.insertIfNotExists(node, 1, cmp);
+  t.throws(
+    function () {
+      node = tree.removeOrThrowIfNotExists(node, 2, cmp);
+    },
+    /^Error$/,
+    'exception is thrown with removeOrThrowIfNotExists',
+  );
+  t.equal(node?.size, 1);
+  node = tree.removeOrThrowIfNotExists(node, 1, cmp);
+  t.equal(node, null);
+
+  t.end();
+});

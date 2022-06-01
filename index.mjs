@@ -14,7 +14,11 @@ export {default as maxNode} from './maxNode.mjs';
 export {default as maxValue} from './maxValue.mjs';
 export {default as minNode} from './minNode.mjs';
 export {default as minValue} from './minValue.mjs';
-export {default as remove} from './remove.mjs';
+export {
+  default as remove,
+  removeIfExists,
+  removeOrThrowIfNotExists,
+} from './remove.mjs';
 export {default as reverseIterate} from './reverseIterate.mjs';
 export * from './actions.mjs';
 /*::
