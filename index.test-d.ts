@@ -13,6 +13,7 @@ import insert, {
   NOOP,
   REPLACE,
   THROW,
+  insertByKey,
   insertIfNotExists,
   insertOrReplaceIfExists,
   insertOrThrowIfExists,
@@ -22,6 +23,7 @@ import insert, {
 } from './insert';
 import type {
   InsertConflictHandler,
+  InsertNotFoundHandler,
 } from './insert';
 import iterate from './iterate';
 import maxValue from './maxValue';
@@ -107,6 +109,7 @@ expectType<typeof find>(wbt.find);
 expectType<typeof findNext>(wbt.findNext);
 expectType<typeof findPrev>(wbt.findPrev);
 expectType<typeof insert>(wbt.insert);
+expectType<typeof insertByKey>(wbt.insertByKey);
 expectType<typeof insertIfNotExists>(wbt.insertIfNotExists);
 expectType<typeof insertOrReplaceIfExists>(wbt.insertOrReplaceIfExists);
 expectType<typeof insertOrThrowIfExists>(wbt.insertOrThrowIfExists);
@@ -117,4 +120,5 @@ expectType<typeof minValue>(wbt.minValue);
 expectType<typeof remove>(wbt.remove);
 expectType<typeof removeIfExists>(wbt.removeIfExists);
 expectType<typeof removeOrThrowIfNotExists>(wbt.removeOrThrowIfNotExists);
-expectType<InsertConflictHandler<number>>((a: number, b: number) => a + b);
+expectType<InsertConflictHandler<string, number>>((a: string, b: number) => a + String(b));
+expectType<InsertNotFoundHandler<string, number>>((a: number) => String(a));

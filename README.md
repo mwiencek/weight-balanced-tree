@@ -27,8 +27,11 @@ type ImmutableTree<+T> = {
   +value: T,
 };
 
-type InsertConflictHandler<T> =
-  (existingTreeValue: T, value: T) => T;
+type InsertConflictHandler<T, K> =
+  (existingTreeValue: T, key: K) => T;
+
+type InsertNotFoundHandler<T, K> =
+  (key: T) => T;
 ```
 
 ### insert
@@ -38,7 +41,7 @@ insert<T>(
     tree: ImmutableTree<T> | null,
     value: T,
     cmp: (T, T) => number,
-    onConflict?: InsertConflictHandler<T>,
+    onConflict?: InsertConflictHandler<T, T>,
 ): ImmutableTree<T>;
 ```
 
@@ -58,7 +61,8 @@ first argument, and the value you passed to `insert` as its second argument.
 
 `onConflict` is expected to return a final value to be inserted, or throw an
 error if the value shouldn't exist.  This allows you to merge both values in
-some way if needed.
+some way if needed.  However, the returned value must have the same sort
+order as before.
 
 If you return `existingTreeValue` from `onConflict`, `insert` will return the
 same `tree` reference back.  `Object.is` is used to determine if the value
@@ -81,6 +85,78 @@ these options for you:
  * `insertOrReplaceIfExists` (passes `onConflictUseGivenValue` for you)
 
 `insertOrThrowIfExists` is an alias of `insert`.
+
+### insertByKey
+
+```
+insertByKey<T, K>(
+    tree: ImmutableTree<T> | null,
+    key: K,
+    cmp: (key: K, treeValue: T) => number,
+    onConflict: InsertConflictHandler<T, K>,
+    onNotFound: InsertNotFoundHandler<T, K>,
+): ImmutableTree<T>;
+```
+
+This is a generalized version of `insert` (which calls `insertByKey` under
+the hood).  The main difference is that it takes a `key` of type `K` instead
+of a `value` of type `T`, and allows you to construct a value when `key` is
+not found.
+
+This is particularly convenient where you're using the tree as a map. and the
+keys are properties of the items being mapped.
+
+`onNotFound` handles the key-not-found case.  It only receives one argument,
+the `key` you passed to `insertByKey`.  Like `onConflict`, you are expected to
+return a final value of type `T` to be inserted.
+
+`onNotFound` is useful in at least a couple scenarios:
+
+  * You want to create the value to insert lazily, only if it doesn't exist.
+
+  * You want to throw an error if the value doesn't exist (because you expect
+    to replace it).
+
+Here's an example of sorting/mapping objects by a simple key property and
+lazily creating them:
+
+```TypeScript
+interface Item {
+  readonly key: number;
+}
+
+function compareKeyWithItemKey(key: number, item: Item): number {
+  return key - item.key;
+}
+
+function onNotFoundCreateItemFromKey(key: number): Item {
+  return {key};
+}
+
+insertByKey<Item, number>(
+  tree,
+  /* key = */ 1,
+  compareKeyWithItemKey,
+  onConflictThrowError,
+  onNotFoundCreateItemFromKey,
+);
+
+// a "find or insert" implementation:
+
+let item2;
+insertByKey<Item, number>(
+  tree,
+  /* key = */ 1,
+  compareKeyWithItemKey,
+  (existingItem: Item) => {
+    item2 = existingItem;
+  },
+  (key: number) => {
+    item2 = onNotFoundCreateItemFromKey(key);
+    return item2;
+  },
+);
+```
 
 ### remove
 

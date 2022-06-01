@@ -4,9 +4,20 @@ import {balanceLeft, balanceRight} from './balance.mjs';
 /*::
 import type {ImmutableTree} from './types.mjs';
 
-export type InsertConflictHandler<T> =
-  (existingTreeValue: T, value: T) => T;
+export type InsertConflictHandler<T, K> =
+  (existingTreeValue: T, key: K) => T;
+
+export type InsertNotFoundHandler<T, K> =
+  (key: K) => T;
 */
+
+function checkOrder(order/*: number */)/*: void */ {
+  if (order !== 0) {
+    throw new Error(
+      'The relative ordering of the value to insert has changed.',
+    );
+  }
+}
 
 export function onConflictThrowError()/*: empty */ {
   // If this is expected, provide your own `onConflict` handler.
@@ -14,37 +25,50 @@ export function onConflictThrowError()/*: empty */ {
 }
 
 export const onConflictKeepTreeValue =
-  /*:: <T> */(treeValue/*: T */, givenValue/*: T */)/*: T */ => treeValue;
+  /*:: <T, K> */(treeValue/*: T */, givenValue/*: K */)/*: T */ => treeValue;
 
 export const onConflictUseGivenValue =
   /*:: <T> */(treeValue/*: T */, givenValue/*: T */)/*: T */ => givenValue;
+
+export function onNotFoundUseGivenValue/*:: <T> */(
+  givenValue/*: T */,
+)/*: T */ {
+  return givenValue;
+}
 
 // Aliases for backwards compatibility.
 export const NOOP = onConflictKeepTreeValue;
 export const THROW = onConflictThrowError;
 export const REPLACE = onConflictUseGivenValue;
 
-export default function insert/*:: <T> */(
+export function insertByKey/*:: <T, K> */(
   tree/*: ImmutableTree<T> | null */,
-  value/*: T */,
-  cmp/*: (T, T) => number */,
-  onConflict/*:: ?: InsertConflictHandler<T> */ = onConflictThrowError,
+  key/*: K */,
+  cmp/*: (K, T) => number */,
+  onConflict/*: InsertConflictHandler<T, K> */,
+  onNotFound/*: InsertNotFoundHandler<T, K> */,
 )/*: ImmutableTree<T> */ {
   if (tree === null) {
+    const valueToInsert = onNotFound(key);
+    if (!Object.is(valueToInsert, key)) {
+      checkOrder(cmp(key, valueToInsert));
+    }
     return {
       left: null,
       right: null,
       size: 1,
-      value,
+      value: valueToInsert,
     };
   }
 
-  const order = cmp(value, tree.value);
+  const order = cmp(key, tree.value);
 
   if (order === 0) {
-    const valueToInsert = onConflict(tree.value, value);
+    const valueToInsert = onConflict(tree.value, key);
     if (Object.is(valueToInsert, tree.value)) {
       return tree;
+    } else {
+      checkOrder(cmp(key, valueToInsert));
     }
     return {
       left: tree.left,
@@ -58,7 +82,7 @@ export default function insert/*:: <T> */(
   const right = tree.right;
 
   if (order < 0) {
-    const newLeftBranch = insert(left, value, cmp, onConflict);
+    const newLeftBranch = insertByKey(left, key, cmp, onConflict, onNotFound);
     if (newLeftBranch === left) {
       return tree;
     }
@@ -71,7 +95,7 @@ export default function insert/*:: <T> */(
     balanceLeft(newTree);
     return newTree;
   } else {
-    const newRightBranch = insert(right, value, cmp, onConflict);
+    const newRightBranch = insertByKey(right, key, cmp, onConflict, onNotFound);
     if (newRightBranch === right) {
       return tree;
     }
@@ -86,12 +110,33 @@ export default function insert/*:: <T> */(
   }
 }
 
+export default function insert/*:: <T> */(
+  tree/*: ImmutableTree<T> | null */,
+  value/*: T */,
+  cmp/*: (T, T) => number */,
+  onConflict/*:: ?: InsertConflictHandler<T, T> */ = onConflictThrowError,
+)/*: ImmutableTree<T> */ {
+  return insertByKey/*:: <T, T> */(
+    tree,
+    value,
+    cmp,
+    onConflict,
+    onNotFoundUseGivenValue,
+  );
+}
+
 export function insertIfNotExists/*:: <T> */(
   tree/*: ImmutableTree<T> | null */,
   value/*: T */,
   cmp/*: (T, T) => number */,
 )/*: ImmutableTree<T> */ {
-  return insert(tree, value, cmp, onConflictKeepTreeValue);
+  return insertByKey/*:: <T, T> */(
+    tree,
+    value,
+    cmp,
+    onConflictKeepTreeValue,
+    onNotFoundUseGivenValue,
+  );
 }
 
 export function insertOrReplaceIfExists/*:: <T> */(
@@ -99,7 +144,13 @@ export function insertOrReplaceIfExists/*:: <T> */(
   value/*: T */,
   cmp/*: (T, T) => number */,
 )/*: ImmutableTree<T> */ {
-  return insert(tree, value, cmp, onConflictUseGivenValue);
+  return insertByKey/*:: <T, T> */(
+    tree,
+    value,
+    cmp,
+    onConflictUseGivenValue,
+    onNotFoundUseGivenValue,
+  );
 }
 
 export function insertOrThrowIfExists/*:: <T> */(
@@ -107,5 +158,11 @@ export function insertOrThrowIfExists/*:: <T> */(
   value/*: T */,
   cmp/*: (T, T) => number */,
 )/*: ImmutableTree<T> */ {
-  return insert(tree, value, cmp, onConflictThrowError);
+  return insertByKey/*:: <T, T> */(
+    tree,
+    value,
+    cmp,
+    onConflictThrowError,
+    onNotFoundUseGivenValue,
+  );
 }

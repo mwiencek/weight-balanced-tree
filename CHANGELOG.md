@@ -2,6 +2,9 @@
 
 ## v0.3.0 (unreleased)
 
+ * Added `insertByKey`, which allows for insertions using a key of type `K`
+   instead of a value of type `T`.  It accepts an `onNotFound` handler which
+   lets you lazily construct a `T` for insertion.
  * Fixed a bug in `remove` that caused a new tree to be returned if the value
    to remove didn't exist.
  * Renamed `duplicateAction` to `onConflict` in the typings and

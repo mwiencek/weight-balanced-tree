@@ -9,6 +9,7 @@ export {
   REPLACE,
   THROW,
   default as insert,
+  insertByKey,
   insertIfNotExists,
   insertOrReplaceIfExists,
   insertOrThrowIfExists,

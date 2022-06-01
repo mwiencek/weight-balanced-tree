@@ -7,6 +7,7 @@ import {
   NOOP,
   REPLACE,
   THROW,
+  insertByKey,
   onConflictKeepTreeValue,
   onConflictThrowError,
   onConflictUseGivenValue,
@@ -382,5 +383,129 @@ test('create', function (t) {
     size: 1,
     value: 1,
   });
+  t.end();
+});
+
+test('insert with onConflict', function (t) {
+  /*:: type Item = {+key: number, +value: number}; */
+
+  const cmp = (a/*: Item */, b/*: Item */) => a.key - b.key;
+  const cmpKeyWithItem = (key/*: number */, item/*: Item */) => key - item.key;
+
+  let v1 = {key: 1, value: 10};
+  let node = tree.create(v1);
+
+  node = tree.insert(
+    node,
+    {key: 1, value: 100},
+    cmp,
+    (treeValue, newValue) => {
+      t.equal(treeValue, v1);
+      t.deepEqual(newValue, {key: 1, value: 100});
+      v1 = {key: 1, value: 1000};
+      return v1;
+    },
+  );
+  t.equal(tree.find(node, 1, cmpKeyWithItem)?.value, v1);
+  t.deepEqual(v1, {key: 1, value: 1000});
+
+  t.throws(
+    function () {
+      node = tree.insert(
+        node,
+        v1,
+        cmp,
+        () => {
+          return {key: 2, value: 20};
+        },
+      );
+    },
+    /^Error: The relative ordering of the value to insert has changed\.$/,
+  );
+  t.end();
+});
+
+test('insertByKey', function (t) {
+  /*:: type Item = {+key: number, +value: number}; */
+
+  const cmp = (a/*: Item */, b/*: Item */) => a.key - b.key;
+  const cmpKeyWithItem = (key/*: number */, item/*: Item */) => key - item.key;
+
+  const v1 = {key: 1, value: 10};
+  const v2 = {key: 2, value: 20};
+
+  let node = tree.create(v1);
+
+  node = insertByKey(
+    node,
+    v2,
+    cmp,
+    onConflictThrowError,
+    (newItem) => {
+      t.equal(newItem, v2);
+      return v2;
+    },
+  );
+  t.equal(tree.find(node, v2, cmp)?.value, v2);
+
+  node = insertByKey(
+    node,
+    3,
+    cmpKeyWithItem,
+    onConflictThrowError,
+    (newKey) => {
+      return {key: newKey, value: newKey * 10};
+    },
+  );
+  let v3 = tree.find(node, 3, cmpKeyWithItem)?.value;
+  t.deepEqual(v3, {key: 3, value: 30});
+
+  node = insertByKey(
+    node,
+    3,
+    cmpKeyWithItem,
+    onConflictKeepTreeValue,
+    (newKey) => {
+      return {key: newKey, value: newKey * 10};
+    },
+  );
+  t.deepEqual(
+    tree.find(node, 3, cmpKeyWithItem)?.value,
+    v3,
+    'existing tree value it kept',
+  );
+
+  node = insertByKey(
+    node,
+    3,
+    cmpKeyWithItem,
+    (treeValue, key) => {
+      v3 = {key, value: key * 10};
+      return v3;
+    },
+    () => {
+      throw new Error('unexpected');
+    },
+  );
+  t.deepEqual(
+    tree.find(node, 3, cmpKeyWithItem)?.value,
+    v3,
+    'new tree value is used',
+  );
+
+  t.throws(
+    function () {
+      node = insertByKey(
+        node,
+        {key: 4, value: 40},
+        cmp,
+        onConflictKeepTreeValue,
+        (newValue) => {
+          return {key: 5, value: 50};
+        },
+      );
+    },
+    /^Error: The relative ordering of the value to insert has changed\.$/,
+  );
   t.end();
 });
