@@ -1,6 +1,6 @@
 # Changelog
 
-## v0.2.0 (unreleased)
+## v0.2.0 (2022-05-31)
 
  * Added `insertIfNotExists`, `insertOrReplaceIfExists`,
    and `insertOrThrowIfExists`.  These are the same as `insert`, but pass
