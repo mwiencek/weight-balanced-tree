@@ -202,6 +202,43 @@ Returns the "largest" (right-most) value in `tree`.
 
 This is equivalent to `maxNode(tree).value`.
 
+### replaceWith
+
+```
+replaceWith<T>(getValue: (oldValue: T, newValue: T) => T): TreeAction<T>;
+```
+
+Returns a function that behaves like the `REPLACE` action, but allows you to
+compute a *new* or *combined* replacement value, via the `getValue` callback,
+based on the old and new values.
+
+This is useful if you want to attempt inserting with an initial value, but
+if there's an existing node, merge the values in some way.
+
+It's equivalent to the following when used with `insert`, but is more
+succinct.
+
+```JavaScript
+insert(
+  tree,
+  computeValueToInsert(),
+  cmp,
+  (existingNode, valueToInsert) => ({
+    ...existingNode,
+    value: mergeValues(existingNode.value, valueToInsert),
+  }),
+);
+
+// is equivalent to
+
+insert(
+  tree,
+  computeValueToInsert(),
+  cmp,
+  replaceWith(mergeValues),
+);
+```
+
 ## Example
 
 A tree always consists of at least one node with a value; an "empty" tree is

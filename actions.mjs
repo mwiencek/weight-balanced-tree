@@ -1,7 +1,7 @@
 // @flow strict
 
 /*::
-import type {ImmutableTree, SomeTreeAction} from './types.mjs';
+import type {ImmutableTree, SomeTreeAction, TreeAction} from './types.mjs';
 */
 
 export const NOOP/*: SomeTreeAction */ =
@@ -18,3 +18,16 @@ export const REPLACE/*: SomeTreeAction */ =
 export const THROW/*: SomeTreeAction */ = () => {
   throw new Error('');
 };
+
+export function replaceWith/*:: <T> */(
+  getValue/*: (oldValue: T, newValue: T) => T */,
+)/*: TreeAction<T> */ {
+  return function (tree/*: ImmutableTree<T> */, newValue/*: T */)/*: ImmutableTree<T> */ {
+    return {
+      value: getValue(tree.value, newValue),
+      size: tree.size,
+      left: tree.left,
+      right: tree.right,
+    };
+  };
+}

@@ -399,3 +399,26 @@ test('create', function (t) {
   });
   t.end();
 });
+
+test('replaceWith', function (t) {
+  const cmp = (a, b) => a.value - b.value;
+
+  const v1 = {id: 1, value: 1};
+  const v2 = {id: 2, value: 1};
+
+  let node = null;
+
+  node = tree.insert(node, v1, cmp, tree.NOOP);
+  node = tree.insert(
+    node,
+    v2,
+    cmp,
+    tree.replaceWith((oldValue, newValue) => {
+      t.equal(oldValue, v1);
+      t.equal(newValue, v2);
+      return {id: 3, value: 1};
+    }),
+  );
+  t.equal(tree.find(node, v1, cmp)?.value.id, 3);
+  t.end();
+});

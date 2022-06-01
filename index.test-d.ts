@@ -38,6 +38,7 @@ declare function cmpNumberAndString(a: number, b: string): number;
 // Basic usage
 expectType<types.ImmutableTree<string>>(create<string>(''));
 expectType<types.ImmutableTree<string>>(insert<string>(stringTree, '', cmpStrings, actions.NOOP));
+expectType<types.ImmutableTree<string>>(insert<string>(stringTree, '', cmpStrings, actions.replaceWith((a: string, b: string) => a + b)));
 expectType<types.ImmutableTree<string>>(insertIfNotExists<string>(stringTree, '', cmpStrings));
 expectType<types.ImmutableTree<string>>(insertOrReplaceIfExists<string>(stringTree, '', cmpStrings));
 expectType<types.ImmutableTree<string>>(insertOrThrowIfExists<string>(stringTree, '', cmpStrings));
@@ -106,3 +107,6 @@ expectType<typeof removeOrThrowIfNotExists>(wbt.removeOrThrowIfNotExists);
 expectType<types.SomeTreeAction>(wbt.NOOP);
 expectType<types.SomeTreeAction>(wbt.REPLACE);
 expectType<types.SomeTreeAction>(wbt.THROW);
+expectType<typeof wbt.replaceWith>(actions.replaceWith);
+expectType<<T>(getValue: (oldValue: T, newValue: T) => T) => types.TreeAction<T>>(wbt.replaceWith);
+expectType<types.TreeAction<number>>(wbt.replaceWith((a: number, b: number) => a + b));
