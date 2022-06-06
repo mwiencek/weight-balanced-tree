@@ -67,9 +67,7 @@ you return is the same as `existingTreeValue`.
 If `onConflict` is not specified, the default action is to throw an error.
 There are several exports in [insert.mjs](insert.mjs) that can be used here:
 
- * `onConflictThrowError` (the default), which throws an exception.  It
-   doesn't provide any meaningful error message, though, so you'd better
-   write your own if needed.
+ * `onConflictThrowError` (the default), which throws an exception.
  * `onConflictKeepTreeValue`, which just returns the existing tree value back
    unmodified.  In this case, `insert` will also return the same tree
    reference back.

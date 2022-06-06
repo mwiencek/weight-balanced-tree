@@ -9,7 +9,8 @@ export type InsertConflictHandler<T> =
 */
 
 export function onConflictThrowError()/*: empty */ {
-  throw new Error('');
+  // If this is expected, provide your own `onConflict` handler.
+  throw new Error('The value given to insert already exists in the tree.');
 }
 
 export const onConflictKeepTreeValue =

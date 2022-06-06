@@ -289,21 +289,21 @@ test('insertOrThrowIfExists', function (t) {
       function () {
         node = tree.insertOrThrowIfExists(node, {value: num}, cmp);
       },
-      /^Error$/,
+      /^Error: The value given to insert already exists in the tree\.$/,
       'exception is thrown with insertOrThrowIfExists',
     );
     t.throws(
       function () {
         node = tree.insert(node, {value: num}, cmp, onConflictThrowError);
       },
-      /^Error$/,
+      /^Error: The value given to insert already exists in the tree\.$/,
       'exception is thrown with insert plus onConflictThrowError',
     );
     t.throws(
       function () {
         node = tree.insert(node, {value: num}, cmp);
       },
-      /^Error$/,
+      /^Error: The value given to insert already exists in the tree\.$/,
       'exception is thrown with insert by default',
     );
   }
