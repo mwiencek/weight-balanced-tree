@@ -105,7 +105,7 @@ suite.add('find/get (array find)', function () {
 suite.add('removal (weight-balanced-tree)', function () {
   let tree = prefilledTree;
   for (const pair of asciiTable) {
-    tree = wbt.remove(tree, pair, compareKeys, wbt.THROW);
+    tree = wbt.remove(tree, pair, compareKeys);
   }
 });
 

@@ -74,7 +74,6 @@ remove<T>(
     tree: ImmutableTree<T> | null,
     value: T,
     cmp: (T, T) => number,
-    notFoundAction: TreeAction<T>,
 ): ImmutableTree<T> | null;
 ```
 
@@ -89,25 +88,13 @@ tree).
 
 The `cmp` (comparator) function is the same as used for `insert`.
 
-The optional `notFoundAction` determines what should happen when `value`
-is not found in the tree.  The two supported actions are `NOOP`, which
-returns `tree` back unmodified, and `THROW`, which throws an exception.
+`removeIfExists` is an alias of `remove`.
 
-`notFoundAction` is a function that determines what should happen when `value`
-is not found in the tree.  This is required.  The passed-in function receives
-the tree node where `remove` dead-ended as its first argument, and `value` as
-its second argument.  The return value is a tree node that replaces the
-dead-end one if the reference is different.
+### removeOrThrowIfNotExists
 
-As for `insert` above, you can use these exports from the main module for
-`notFoundAction`:
+Like `remove`, but throws an error if `value` does not exist in the tree.
 
- * `NOOP`, which just returns the node back unmodified.  In this case, `remove`
-   will also return the tree root back unmodified.
- * `THROW`, which throws an exception.
-
-The helper functions `removeIfExists` and `removeOrThrowIfNotExists` are also exported;
-these call `remove` with `NOOP` or `THROW` for `notFoundAction`, respectively.
+This simply checks if the tree returned from `remove` is the same reference.
 
 ### find
 

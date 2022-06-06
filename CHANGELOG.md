@@ -6,6 +6,10 @@
    to remove didn't exist.
  * Renamed `duplicateAction` to `onConflict` in the typings and
    documentation.
+ * Removed the `notFoundAction` argument from `remove`.  You can detect
+   whether the value to remove isn't found based on whether the tree is
+   modified.  There's no use to the feature that allows you to modify the
+   tree via this function.
 
 ## v0.2.0 (2022-05-31)
 

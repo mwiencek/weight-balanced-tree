@@ -1,17 +1,15 @@
 // @flow strict
 
-import {NOOP, THROW} from './actions.mjs';
 import {balanceLeft, balanceRight} from './balance.mjs';
 import minValue from './minValue.mjs';
 /*::
-import type {ImmutableTree, MutableTree, TreeAction} from './types.mjs';
+import type {ImmutableTree, MutableTree} from './types.mjs';
 */
 
 export default function remove/*:: <T> */(
   tree/*: ImmutableTree<T> | null */,
   value/*: T */,
   cmp/*: (T, T) => number */,
-  notFoundAction/*: TreeAction<T> */,
 )/*: ImmutableTree<T> | null */ {
   if (tree === null) {
     return null;
@@ -30,7 +28,7 @@ export default function remove/*:: <T> */(
     const min = minValue(tree.right);
     newTree = {
       left: tree.left,
-      right: remove(tree.right, min, cmp, THROW),
+      right: remove(tree.right, min, cmp),
       size: tree.size - 1,
       value: min,
     };
@@ -43,7 +41,7 @@ export default function remove/*:: <T> */(
 
   if (order < 0) {
     if (left !== null) {
-      const newLeft = remove(left, value, cmp, notFoundAction);
+      const newLeft = remove(left, value, cmp);
       if (newLeft === left) {
         return tree;
       }
@@ -56,7 +54,7 @@ export default function remove/*:: <T> */(
       balanceRight(newTree);
     }
   } else if (right !== null) {
-    const newRight = remove(right, value, cmp, notFoundAction);
+    const newRight = remove(right, value, cmp);
     if (newRight === right) {
       return tree;
     }
@@ -70,24 +68,26 @@ export default function remove/*:: <T> */(
   }
 
   if (newTree === null) {
-    return notFoundAction(tree, value);
+    return tree;
   }
 
   return newTree;
 }
 
-export function removeIfExists/*:: <T> */(
-  tree/*: ImmutableTree<T> | null */,
-  value/*: T */,
-  cmp/*: (T, T) => number */,
-)/*: ImmutableTree<T> | null */ {
-  return remove(tree, value, cmp, NOOP);
-}
+export const removeIfExists/*: <T> (
+  tree: ImmutableTree<T> | null,
+  value: T,
+  cmp: (T, T) => number,
+) => ImmutableTree<T> | null */ = remove;
 
 export function removeOrThrowIfNotExists/*:: <T> */(
   tree/*: ImmutableTree<T> | null */,
   value/*: T */,
   cmp/*: (T, T) => number */,
 )/*: ImmutableTree<T> | null */ {
-  return remove(tree, value, cmp, THROW);
+  const newTree = remove(tree, value, cmp);
+  if (newTree === tree) {
+    throw new Error('The value given to remove does not exist in the tree.');
+  }
+  return newTree;
 }

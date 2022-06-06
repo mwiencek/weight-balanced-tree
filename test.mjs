@@ -146,7 +146,7 @@ test('all', function (t) {
       let foundNode = tree.find(node, num, cmpIntegers);
       t.ok(foundNode !== null && foundNode.value === num, 'existing node is found');
 
-      node = tree.remove(node, num, cmpIntegers, tree.NOOP);
+      node = tree.remove(node, num, cmpIntegers);
       checkTreeInvariants(t, node);
 
       foundNode = tree.find(node, num, cmpIntegers);
@@ -155,7 +155,7 @@ test('all', function (t) {
 
     t.ok(node === null, 'tree is empty');
 
-    node = tree.remove(node, 0, cmpIntegers, tree.NOOP);
+    node = tree.remove(node, 0, cmpIntegers);
     t.ok(node === null, 'tree is still empty');
   }
 
@@ -230,20 +230,6 @@ test('actions', function (t) {
     },
     /^Error$/,
     'exception is thrown with onConflict = THROW (non-root node)',
-  );
-
-  node = tree.remove(node, xb1, compareX, tree.NOOP);
-
-  prevNode = node;
-  node = tree.remove(node, xb1, compareX, tree.NOOP);
-  t.ok(prevNode === node, 'tree is unmodified with notFoundAction = NOOP');
-
-  t.throws(
-    function () {
-      node = tree.remove(node, xb1, compareX, tree.THROW);
-    },
-    /^Error$/,
-    'exception is thrown with notFoundAction = THROW',
   );
 
   t.end();
@@ -373,13 +359,12 @@ test('removeIfExists', function (t) {
 test('removeOrThrowIfNotExists', function (t) {
   const cmp = (a, b) => a - b;
 
-  let node = null;
-  node = tree.insertIfNotExists(node, 1, cmp);
+  let node = tree.create(1);
   t.throws(
     function () {
       node = tree.removeOrThrowIfNotExists(node, 2, cmp);
     },
-    /^Error$/,
+    /^Error: The value given to remove does not exist in the tree\.$/,
     'exception is thrown with removeOrThrowIfNotExists',
   );
   t.equal(node?.size, 1);
@@ -397,7 +382,7 @@ test('remove returns the same tree back if there is no value to remove', functio
 
   const origNode = node;
   for (const num of oneToThirtyOne) {
-    node = tree.remove(node, num + 31, cmpIntegers, tree.NOOP);
+    node = tree.remove(node, num + 31, cmpIntegers);
     t.equal(node, origNode);
   }
 

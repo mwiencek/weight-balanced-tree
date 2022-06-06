@@ -49,7 +49,7 @@ expectType<types.ImmutableTree<string> | null>(findNext<string>(stringTree, '', 
 expectType<types.ImmutableTree<string> | null>(findPrev<string>(stringTree, '', cmpStrings));
 expectType<string>(maxValue<string>(nonNullStringTree));
 expectType<string>(minValue<string>(nonNullStringTree));
-expectType<types.ImmutableTree<string> | null>(remove<string>(stringTree, '', cmpStrings, actions.NOOP));
+expectType<types.ImmutableTree<string> | null>(remove<string>(stringTree, '', cmpStrings));
 expectType<types.ImmutableTree<string> | null>(removeIfExists<string>(stringTree, '', cmpStrings));
 expectType<types.ImmutableTree<string> | null>(removeOrThrowIfNotExists<string>(stringTree, '', cmpStrings));
 
@@ -71,7 +71,7 @@ expectError<number>(maxValue<number>(nonNullStringTree));
 expectError<number>(minValue<number>(nonNullStringTree));
 expectError<string>(maxValue<string>(stringTree));
 expectError<string>(minValue<string>(stringTree));
-expectError<types.ImmutableTree<number> | null>(remove<number>(stringTree, '', cmpNumbers, actions.NOOP));
+expectError<types.ImmutableTree<number> | null>(remove<number>(stringTree, '', cmpNumbers));
 expectError<types.ImmutableTree<number> | null>(removeIfExists<number>(stringTree, '', cmpNumbers));
 expectError<types.ImmutableTree<number> | null>(removeOrThrowIfNotExists<number>(stringTree, '', cmpNumbers));
 
@@ -80,7 +80,7 @@ expectError<types.ImmutableTree<string> | null>(find<string>(stringTree, '', cmp
 expectError<types.ImmutableTree<string> | null>(findNext<string>(stringTree, '', cmpNumbers));
 expectError<types.ImmutableTree<string> | null>(findPrev<string>(stringTree, '', cmpNumbers));
 expectError<types.ImmutableTree<string>>(insert<string>(stringTree, '', cmpNumbers, actions.NOOP));
-expectError<types.ImmutableTree<string> | null>(remove<string>(stringTree, '', cmpNumbers, actions.NOOP));
+expectError<types.ImmutableTree<string> | null>(remove<string>(stringTree, '', cmpNumbers));
 expectError<types.ImmutableTree<string> | null>(removeIfExists<string>(stringTree, '', cmpNumbers));
 expectError<types.ImmutableTree<string> | null>(removeOrThrowIfNotExists<string>(stringTree, '', cmpNumbers));
 
