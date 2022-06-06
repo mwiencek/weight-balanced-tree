@@ -101,7 +101,7 @@ test('all', function (t) {
     let node = null;
 
     for (const num of numbers) {
-      node = tree.insert(node, num, cmpIntegers, tree.NOOP);
+      node = tree.insert(node, num, cmpIntegers);
       checkTreeInvariants(t, node);
     }
 
@@ -242,8 +242,8 @@ test('find with different value type', function (t) {
   const xb = {x: 'b'};
 
   let node = null;
-  node = tree.insert(node, xa, compareX, tree.NOOP);
-  node = tree.insert(node, xb, compareX, tree.NOOP);
+  node = tree.insert(node, xa, compareX);
+  node = tree.insert(node, xb, compareX);
 
   const foundNode =
     tree.find(node, 'b', (x, value) => x.localeCompare(value.x));
@@ -256,11 +256,11 @@ test('findNext/findPrev with non-existent values', function (t) {
   const cmp = (a, b) => a - b;
 
   let node = null;
-  node = tree.insert(node, 1, cmp, tree.NOOP);
-  node = tree.insert(node, 3, cmp, tree.NOOP);
-  node = tree.insert(node, 5, cmp, tree.NOOP);
-  node = tree.insert(node, 7, cmp, tree.NOOP);
-  node = tree.insert(node, 9, cmp, tree.NOOP);
+  node = tree.insert(node, 1, cmp);
+  node = tree.insert(node, 3, cmp);
+  node = tree.insert(node, 5, cmp);
+  node = tree.insert(node, 7, cmp);
+  node = tree.insert(node, 9, cmp);
 
   t.equal(tree.findNext(node, 0, cmp)?.value, 1);
   t.equal(tree.findNext(node, 1, cmp)?.value, 3);
