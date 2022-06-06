@@ -10,6 +10,7 @@ import equals from './equals';
 import find from './find';
 import findNext from './findNext';
 import findPrev from './findPrev';
+import fromDistinctAscArray from './fromDistinctAscArray';
 import insert, {
   NOOP,
   REPLACE,
@@ -61,6 +62,7 @@ expectType<boolean>(equals<string>(stringTree, stringTree, cmpStrings));
 expectType<types.ImmutableTree<string> | null>(find<string>(stringTree, '', cmpStrings));
 expectType<types.ImmutableTree<string> | null>(findNext<string>(stringTree, '', cmpStrings));
 expectType<types.ImmutableTree<string> | null>(findPrev<string>(stringTree, '', cmpStrings));
+expectType<types.ImmutableTree<string> | null>(fromDistinctAscArray<string>(['']));
 expectType<string>(maxValue<string>(nonNullStringTree));
 expectType<string>(minValue<string>(nonNullStringTree));
 expectType<types.ImmutableTree<string> | null>(remove<string>(stringTree, '', cmpStrings));
@@ -82,6 +84,7 @@ expectError<Generator<number, undefined, undefined>>(iterate<number>(stringTree)
 expectError<Generator<number, undefined, undefined>>(reverseIterate<number>(stringTree));
 expectError<boolean>(equals<number>(stringTree, stringTree, cmpStrings));
 expectError<types.ImmutableTree<number> | null>(find<number>(stringTree, 0, cmpNumbers));
+expectError<types.ImmutableTree<number>>(fromDistinctAscArray<number>(['']));
 expectError<number>(maxValue<number>(nonNullStringTree));
 expectError<number>(minValue<number>(nonNullStringTree));
 expectError<string>(maxValue<string>(stringTree));
@@ -113,6 +116,7 @@ expectType<typeof equals>(wbt.equals);
 expectType<typeof find>(wbt.find);
 expectType<typeof findNext>(wbt.findNext);
 expectType<typeof findPrev>(wbt.findPrev);
+expectType<typeof fromDistinctAscArray>(wbt.fromDistinctAscArray);
 expectType<typeof insert>(wbt.insert);
 expectType<typeof insertByKey>(wbt.insertByKey);
 expectType<typeof insertIfNotExists>(wbt.insertIfNotExists);

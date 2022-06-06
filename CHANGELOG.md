@@ -6,6 +6,8 @@
    instead of a value of type `T`.  It accepts an `onNotFound` handler which
    lets you lazily construct a `T` for insertion.
  * Added `equals` to determine if two trees contain the same values.
+ * Added `fromDistinctAscArray`: given a sorted array of values, constructs
+   a new balanced tree containing those values.
  * Fixed a bug in `remove` that caused a new tree to be returned if the value
    to remove didn't exist.
  * Renamed `duplicateAction` to `onConflict` in the typings and

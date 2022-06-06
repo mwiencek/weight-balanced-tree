@@ -142,6 +142,18 @@ suite.add('removal (array)', function () {
   }
 });
 
+suite.add('create from sorted array (weight-balanced-tree)', function () {
+  wbt.fromDistinctAscArray(asciiTable);
+});
+
+suite.add('create from sorted array (Immutable.List)', function () {
+  Immutable.List(asciiTable);
+});
+
+suite.add('create from sorted array (array)', function () {
+  asciiTable.slice(0);
+});
+
 suite.on('cycle', function(event) {
   console.log(String(event.target));
 });

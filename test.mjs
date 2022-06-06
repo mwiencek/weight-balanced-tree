@@ -530,3 +530,11 @@ test('equals', function (t) {
 
   t.end();
 });
+
+test('fromDistinctAscArray', function (t) {
+  const cmp = (a, b) => a - b;
+
+  const node = tree.fromDistinctAscArray(oneToThirtyOne);
+  t.ok(checkTreeInvariants(node, cmp), 'tree is valid and balanced');
+  t.end();
+});

@@ -242,6 +242,21 @@ Finds the branch of `tree` that precedes `value` and returns it, or `null` if
 there is no such node.  `value` does not have to exist in the tree: if a set
 has 1 & 3, the previous value from 2 is 1.
 
+### fromDistinctAscArray
+
+```
+fromDistinctAscArray<T>(
+  array: $ReadOnlyArray<T>,
+): ImmutableTree<T> | null;
+```
+
+If `array` is sorted and contains only unique values, then this returns a new,
+valid, and balanced tree with the values from `array`.  (This is faster than
+building the tree value-by-value with `insert`.)
+
+If `array` is not sorted or contains duplicate values, then this returns an
+invalid tree.  (Do not do this.)
+
 ### iterate
 
 ```
