@@ -22,7 +22,7 @@ export default function insert/*:: <T> */(
   tree/*: ImmutableTree<T> | null */,
   value/*: T */,
   cmp/*: (T, T) => number */,
-  onConflict/*: InsertConflictHandler<T> */,
+  onConflict/*:: ?: InsertConflictHandler<T> */ = THROW,
 )/*: ImmutableTree<T> */ {
   if (tree === null) {
     return {

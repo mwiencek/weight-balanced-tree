@@ -15,7 +15,7 @@ export default function insert<T>(
   tree: ImmutableTree<T> | null,
   value: T,
   cmp: (a: T, b: T) => number,
-  onConflict: InsertConflictHandler<T>,
+  onConflict?: InsertConflictHandler<T>,
 ): ImmutableTree<T>;
 
 export function insertIfNotExists<T>(

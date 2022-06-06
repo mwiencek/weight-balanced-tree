@@ -15,7 +15,7 @@ const compareKeys = (a, b) => a[0] < b[0] ? -1 : (a[0] > b[0] ? 1 : 0);
 
 let prefilledTree = null;
 for (const pair of asciiTable) {
-  prefilledTree = wbt.insert(prefilledTree, pair, compareKeys, wbt.THROW);
+  prefilledTree = wbt.insert(prefilledTree, pair, compareKeys);
 }
 
 const prefilledImmutableMap = Immutable.Map(asciiTable);
@@ -31,7 +31,7 @@ const prefilledPlainObject = Object.fromEntries(asciiTable);
 suite.add('insertion (weight-balanced-tree)', function () {
   let tree = null;
   for (const pair of asciiTable) {
-    tree = wbt.insert(tree, pair, compareKeys, wbt.THROW);
+    tree = wbt.insert(tree, pair, compareKeys);
   }
 });
 

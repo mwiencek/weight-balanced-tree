@@ -38,7 +38,7 @@ insert<T>(
     tree: ImmutableTree<T> | null,
     value: T,
     cmp: (T, T) => number,
-    onConflict: InsertConflictHandler<T>,
+    onConflict?: InsertConflictHandler<T>,
 ): ImmutableTree<T>;
 ```
 
@@ -52,10 +52,9 @@ The `cmp` (comparator) function is used to order the values.  It works the
 same as the comparator you'd pass to `Array.prototype.sort`, and should
 never change for a particular tree.
 
-`onConflict` is a function that determines what should happen when `value`
-already exists in the tree.  This is required.  It receives the existing tree
-value as its first argument, and the value you passed to `insert` as its
-second argument.
+`onConflict` allows you to configure what happens when `value` already exists
+in the tree according to `cmp`.  It receives the existing tree value as its
+first argument, and the value you passed to `insert` as its second argument.
 
 `onConflict` is expected to return a final value to be inserted, or throw an
 error if the value shouldn't exist.  This allows you to merge both values in
@@ -65,14 +64,16 @@ If you return `existingTreeValue` from `onConflict`, `insert` will return the
 same `tree` reference back.  `Object.is` is used to determine if the value
 you return is the same as `existingTreeValue`.
 
+If `onConflict` is not specified, the default action is to throw an error.
 There are several exports in the main module that can be used here:
 
+ * `THROW` (the default), which throws an exception.  It doesn't provide any
+   meaningful error message, though, so you'd better write your own if
+   needed.
  * `NOOP`, which just returns the existing tree value back unmodified.  In
    this case, `insert` will also return the same tree reference back.
  * `REPLACE`, which replaces the existing tree value with the value given to
    `insert`.
- * `THROW`, which throws an exception.  It doesn't provide any meaningful
-   error message, though, so you'd better write your own if needed.
 
 The helper functions `insertIfNotExists`, `insertOrReplaceIfExists`,
 and `insertOrThrowIfExists` are also exported; these call `insert` with

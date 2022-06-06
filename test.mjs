@@ -217,7 +217,7 @@ test('actions', function (t) {
   t.ok(node !== null && node.right !== null && node.right.value.y === 'b2', 'tree value is modified with onConflict = function (non-root node)');
 
   // Insert a node into the left subtree
-  node = tree.insert(node, xb3, compareX, tree.THROW);
+  node = tree.insert(node, xb3, compareX);
 
   prevNode = node;
   // This tests onConflict = NOOP on the left subtree
@@ -377,7 +377,7 @@ test('removeOrThrowIfNotExists', function (t) {
 test('remove returns the same tree back if there is no value to remove', function (t) {
   let node = null;
   for (const num of oneToThirtyOne) {
-    node = tree.insert(node, num, cmpIntegers, tree.THROW);
+    node = tree.insert(node, num, cmpIntegers);
   }
 
   const origNode = node;
