@@ -43,21 +43,27 @@ export default function remove/*:: <T> */(
 
   if (order < 0) {
     if (left !== null) {
-      left = remove(left, value, cmp, notFoundAction);
+      const newLeft = remove(left, value, cmp, notFoundAction);
+      if (newLeft === left) {
+        return tree;
+      }
       newTree = {
-        left,
+        left: newLeft,
         right,
-        size: (left === null ? 0 : left.size) + (right === null ? 0 : right.size) + 1,
+        size: (newLeft === null ? 0 : newLeft.size) + (right === null ? 0 : right.size) + 1,
         value: tree.value,
       };
       balanceRight(newTree);
     }
   } else if (right !== null) {
-    right = remove(right, value, cmp, notFoundAction);
+    const newRight = remove(right, value, cmp, notFoundAction);
+    if (newRight === right) {
+      return tree;
+    }
     newTree = {
       left,
-      right,
-      size: (left === null ? 0 : left.size) + (right === null ? 0 : right.size) + 1,
+      right: newRight,
+      size: (left === null ? 0 : left.size) + (newRight === null ? 0 : newRight.size) + 1,
       value: tree.value,
     };
     balanceLeft(newTree);

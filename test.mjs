@@ -4,6 +4,12 @@ import test from 'tape';
 
 import * as tree from './index.mjs';
 
+const oneToThirtyOne = [];
+
+for (let i = 1; i <= 31; i++) {
+  oneToThirtyOne.push(i);
+}
+
 function cmpIntegers(a/*: number */, b/*: number */)/*: number */ {
   return a - b;
 }
@@ -87,12 +93,6 @@ function treeToString(
 }
 
 test('all', function (t) {
-  const oneToThirtyOne = [];
-
-  for (let i = 1; i <= 31; i++) {
-    oneToThirtyOne.push(i);
-  }
-
   const thirtyOneToOne = oneToThirtyOne.slice(0).reverse();
 
   const numbers = oneToThirtyOne.slice(0);
@@ -385,6 +385,21 @@ test('removeOrThrowIfNotExists', function (t) {
   t.equal(node?.size, 1);
   node = tree.removeOrThrowIfNotExists(node, 1, cmp);
   t.equal(node, null);
+
+  t.end();
+});
+
+test('remove returns the same tree back if there is no value to remove', function (t) {
+  let node = null;
+  for (const num of oneToThirtyOne) {
+    node = tree.insert(node, num, cmpIntegers, tree.THROW);
+  }
+
+  const origNode = node;
+  for (const num of oneToThirtyOne) {
+    node = tree.remove(node, num + 31, cmpIntegers, tree.NOOP);
+    t.equal(node, origNode);
+  }
 
   t.end();
 });

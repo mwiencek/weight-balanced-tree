@@ -81,6 +81,9 @@ remove<T>(
 Returns a new version of `tree` with `value` removed.  The old version is not
 modified.
 
+If `value` is not found in the tree, the same tree reference is returned
+back.
+
 If this was the last value in `tree`, `null` is returned (indicating an empty
 tree).
 

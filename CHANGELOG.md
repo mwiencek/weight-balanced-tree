@@ -1,5 +1,10 @@
 # Changelog
 
+## v0.3.0 (unreleased)
+
+ * Fixed a bug in `remove` that caused a new tree to be returned if the value
+   to remove didn't exist.
+
 ## v0.2.0 (2022-05-31)
 
  * Added `insertIfNotExists`, `insertOrReplaceIfExists`,
