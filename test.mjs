@@ -186,7 +186,7 @@ test('actions', function (t) {
   t.ok(node !== null && node.value === xa2, 'tree value is modified with onConflict = REPLACE (root node)');
 
   prevNode = node;
-  node = tree.insert(node, xa2, compareX, (tree, value) => ({...tree, value: {x: value.x, y: tree.value.x + tree.value.y}}));
+  node = tree.insert(node, xa2, compareX, (existingValue, value) => ({x: value.x, y: existingValue.x + existingValue.y}));
   t.ok(node !== prevNode, 'tree is modified with onConflict = function (root node)');
   t.ok(node !== null && node.value.y === 'a2', 'tree value is modified with onConflict = function (root node)');
 
@@ -212,7 +212,7 @@ test('actions', function (t) {
   t.ok(node !== null && node.right !== null && node.right.value === xb2, 'tree value is modified with onConflict = REPLACE (non-root node)');
 
   prevNode = node;
-  node = tree.insert(node, xb2, compareX, (tree, value) => ({...tree, value: {x: value.x, y: tree.value.x + tree.value.y}}));
+  node = tree.insert(node, xb2, compareX, (existingValue, value) => ({x: value.x, y: existingValue.x + existingValue.y}));
   t.ok(node !== prevNode, 'tree is modified with onConflict = function (non-root node)');
   t.ok(node !== null && node.right !== null && node.right.value.y === 'b2', 'tree value is modified with onConflict = function (non-root node)');
 
@@ -397,28 +397,5 @@ test('create', function (t) {
     size: 1,
     value: 1,
   });
-  t.end();
-});
-
-test('replaceWith', function (t) {
-  const cmp = (a, b) => a.value - b.value;
-
-  const v1 = {id: 1, value: 1};
-  const v2 = {id: 2, value: 1};
-
-  let node = null;
-
-  node = tree.insert(node, v1, cmp, tree.NOOP);
-  node = tree.insert(
-    node,
-    v2,
-    cmp,
-    tree.replaceWith((oldValue, newValue) => {
-      t.equal(oldValue, v1);
-      t.equal(newValue, v2);
-      return {id: 3, value: 1};
-    }),
-  );
-  t.equal(tree.find(node, v1, cmp)?.value.id, 3);
   t.end();
 });

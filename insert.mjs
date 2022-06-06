@@ -24,7 +24,16 @@ export default function insert/*:: <T> */(
   const order = cmp(value, tree.value);
 
   if (order === 0) {
-    return onConflict(tree, value);
+    const valueToInsert = onConflict(tree.value, value);
+    if (Object.is(valueToInsert, tree.value)) {
+      return tree;
+    }
+    return {
+      left: tree.left,
+      right: tree.right,
+      size: 1,
+      value: valueToInsert,
+    };
   }
 
   const left = tree.left;

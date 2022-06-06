@@ -28,7 +28,7 @@ type ImmutableTree<+T> = {
 };
 
 type TreeAction<T> =
-  (tree: ImmutableTree<T>, value: T) => ImmutableTree<T>;
+  (existingTreeValue: T, value: T) => T;
 ```
 
 ### insert
@@ -50,18 +50,26 @@ change for a particular tree.  (It's recommended to create utility functions
 for each type of tree that always pass the same comparator.)
 
 `onConflict` is a function that determines what should happen when `value`
-already exists in the tree.  This is required.  The passed-in function receives
-the existing tree node that conflicts with `value` as its first argument, and
-`value` as its second argument.  The return value is a tree node that replaces
-the existing one if the reference is different.
+already exists in the tree.  This is required.  It receives the existing tree
+value as its first argument, and the value you passed to `insert` as its
+second argument.
+
+`onConflict` is expected to return a final value to be inserted, or throw an
+error if the value shouldn't exist.  This allows you to merge both values in
+some way if needed.
+
+If you return `existingTreeValue` from `onConflict`, `insert` will return the
+same `tree` reference back.  `Object.is` is used to determine if the value
+you return is the same as `existingTreeValue`.
 
 There are several exports in the main module that can be used here:
 
- * `NOOP`, which just returns the node back unmodified.  In this case, `insert`
-   will also return the tree root back unmodified.
- * `REPLACE`, which returns a new tree node with the value replaced.
- * `THROW`, which throws an exception.  It doesn't provide any meaningful error
-   message, though, so you'd better write your own if needed.
+ * `NOOP`, which just returns the existing tree value back unmodified.  In
+   this case, `insert` will also return the same tree reference back.
+ * `REPLACE`, which replaces the existing tree value with the value given to
+   `insert`.
+ * `THROW`, which throws an exception.  It doesn't provide any meaningful
+   error message, though, so you'd better write your own if needed.
 
 The helper functions `insertIfNotExists`, `insertOrReplaceIfExists`,
 and `insertOrThrowIfExists` are also exported; these call `insert` with
@@ -190,43 +198,6 @@ maxValue<T>(tree: ImmutableTree<T>): T;
 Returns the "largest" (right-most) value in `tree`.
 
 This is equivalent to `maxNode(tree).value`.
-
-### replaceWith
-
-```
-replaceWith<T>(getValue: (oldValue: T, newValue: T) => T): TreeAction<T>;
-```
-
-Returns a function that behaves like the `REPLACE` action, but allows you to
-compute a *new* or *combined* replacement value, via the `getValue` callback,
-based on the old and new values.
-
-This is useful if you want to attempt inserting with an initial value, but
-if there's an existing node, merge the values in some way.
-
-It's equivalent to the following when used with `insert`, but is more
-succinct.
-
-```JavaScript
-insert(
-  tree,
-  computeValueToInsert(),
-  cmp,
-  (existingNode, valueToInsert) => ({
-    ...existingNode,
-    value: mergeValues(existingNode.value, valueToInsert),
-  }),
-);
-
-// is equivalent to
-
-insert(
-  tree,
-  computeValueToInsert(),
-  cmp,
-  replaceWith(mergeValues),
-);
-```
 
 ## Example
 

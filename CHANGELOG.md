@@ -6,6 +6,9 @@
    to remove didn't exist.
  * Renamed `duplicateAction` to `onConflict` in the typings and
    documentation.
+ * Changed `onConflict` to receive the existing tree value as its first
+   argument, rather than the node itself.
+ * Removed `replaceWith`, which is no longer useful with the above change.
  * Removed the `notFoundAction` argument from `remove`.  You can detect
    whether the value to remove isn't found based on whether the tree is
    modified.  There's no use to the feature that allows you to modify the

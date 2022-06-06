@@ -16,8 +16,8 @@ export type MutableTree<T> = {
 };
 
 export type TreeAction<T> =
-  (tree: ImmutableTree<T>, value: T) => ImmutableTree<T>;
+  (existingTreeValue: T, value: T) => T;
 
 export type SomeTreeAction =
-  <T>(tree: ImmutableTree<T>, value: T) => ImmutableTree<T>;
+  <T>(existingTreeValue: T, value: T) => T;
 */
