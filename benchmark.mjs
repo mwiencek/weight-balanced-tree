@@ -11,7 +11,11 @@ for (let i = 0; i < 128; i++) {
   asciiTable.push(['ascii-' + String(i), String.fromCharCode(i)]);
 }
 
-const compareKeys = (a, b) => a[0] < b[0] ? -1 : (a[0] > b[0] ? 1 : 0);
+const compareKeys = (a, b) => {
+  const ai = parseInt(a[0].slice(6), 10);
+  const bi = parseInt(b[0].slice(6), 10);
+  return ai < bi ? -1 : (ai > bi ? 1 : 0);
+};
 
 let prefilledTree = null;
 for (const pair of asciiTable) {
