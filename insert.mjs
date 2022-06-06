@@ -10,7 +10,7 @@ export default function insert/*:: <T> */(
   tree/*: ImmutableTree<T> | null */,
   value/*: T */,
   cmp/*: (T, T) => number */,
-  duplicateAction/*: TreeAction<T> */,
+  onConflict/*: TreeAction<T> */,
 )/*: ImmutableTree<T> */ {
   if (tree === null) {
     return {
@@ -24,14 +24,14 @@ export default function insert/*:: <T> */(
   const order = cmp(value, tree.value);
 
   if (order === 0) {
-    return duplicateAction(tree, value);
+    return onConflict(tree, value);
   }
 
   const left = tree.left;
   const right = tree.right;
 
   if (order < 0) {
-    const newLeftBranch = insert(left, value, cmp, duplicateAction);
+    const newLeftBranch = insert(left, value, cmp, onConflict);
     if (newLeftBranch === left) {
       return tree;
     }
@@ -44,7 +44,7 @@ export default function insert/*:: <T> */(
     balanceLeft(newTree);
     return newTree;
   } else {
-    const newRightBranch = insert(right, value, cmp, duplicateAction);
+    const newRightBranch = insert(right, value, cmp, onConflict);
     if (newRightBranch === right) {
       return tree;
     }

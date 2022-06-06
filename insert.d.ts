@@ -4,7 +4,7 @@ export default function insert<T>(
   tree: ImmutableTree<T> | null,
   value: T,
   cmp: (a: T, b: T) => number,
-  duplicateAction: TreeAction<T>,
+  onConflict: TreeAction<T>,
 ): ImmutableTree<T>;
 
 export function insertIfNotExists<T>(

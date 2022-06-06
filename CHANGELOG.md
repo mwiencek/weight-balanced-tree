@@ -4,6 +4,8 @@
 
  * Fixed a bug in `remove` that caused a new tree to be returned if the value
    to remove didn't exist.
+ * Renamed `duplicateAction` to `onConflict` in the typings and
+   documentation.
 
 ## v0.2.0 (2022-05-31)
 

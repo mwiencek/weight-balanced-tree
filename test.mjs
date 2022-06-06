@@ -177,59 +177,59 @@ test('actions', function (t) {
 
   let prevNode = node;
   node = tree.insert(node, xa2, compareX, tree.NOOP);
-  t.ok(node === prevNode, 'tree is unmodified with duplicateAction = NOOP (root node)');
-  t.ok(node !== null && node.value === xa1, 'tree value is unmodified with duplicateAction = NOOP (root node)');
+  t.ok(node === prevNode, 'tree is unmodified with onConflict = NOOP (root node)');
+  t.ok(node !== null && node.value === xa1, 'tree value is unmodified with onConflict = NOOP (root node)');
 
   prevNode = node;
   node = tree.insert(node, xa2, compareX, tree.REPLACE);
-  t.ok(node !== prevNode, 'tree is modified with duplicateAction = REPLACE (root node)');
-  t.ok(node !== null && node.value === xa2, 'tree value is modified with duplicateAction = REPLACE (root node)');
+  t.ok(node !== prevNode, 'tree is modified with onConflict = REPLACE (root node)');
+  t.ok(node !== null && node.value === xa2, 'tree value is modified with onConflict = REPLACE (root node)');
 
   prevNode = node;
   node = tree.insert(node, xa2, compareX, (tree, value) => ({...tree, value: {x: value.x, y: tree.value.x + tree.value.y}}));
-  t.ok(node !== prevNode, 'tree is modified with duplicateAction = function (root node)');
-  t.ok(node !== null && node.value.y === 'a2', 'tree value is modified with duplicateAction = function (root node)');
+  t.ok(node !== prevNode, 'tree is modified with onConflict = function (root node)');
+  t.ok(node !== null && node.value.y === 'a2', 'tree value is modified with onConflict = function (root node)');
 
   t.throws(
     function () {
       node = tree.insert(node, xa1, compareX, tree.THROW);
     },
     /^Error$/,
-    'exception is thrown with duplicateAction = THROW (root node)',
+    'exception is thrown with onConflict = THROW (root node)',
   );
 
   // Insert a node into the right subtree
   node = tree.insert(node, xb1, compareX, tree.NOOP);
 
   prevNode = node;
-  // This tests duplicateAction = NOOP on the right subtree
+  // This tests onConflict = NOOP on the right subtree
   node = tree.insert(node, xb1, compareX, tree.NOOP);
-  t.ok(node === prevNode, 'tree is unmodified with duplicateAction = NOOP (non-root node)');
+  t.ok(node === prevNode, 'tree is unmodified with onConflict = NOOP (non-root node)');
 
   prevNode = node;
   node = tree.insert(node, xb2, compareX, tree.REPLACE);
-  t.ok(node !== prevNode, 'tree is modified with duplicateAction = REPLACE (non-root node)');
-  t.ok(node !== null && node.right !== null && node.right.value === xb2, 'tree value is modified with duplicateAction = REPLACE (non-root node)');
+  t.ok(node !== prevNode, 'tree is modified with onConflict = REPLACE (non-root node)');
+  t.ok(node !== null && node.right !== null && node.right.value === xb2, 'tree value is modified with onConflict = REPLACE (non-root node)');
 
   prevNode = node;
   node = tree.insert(node, xb2, compareX, (tree, value) => ({...tree, value: {x: value.x, y: tree.value.x + tree.value.y}}));
-  t.ok(node !== prevNode, 'tree is modified with duplicateAction = function (non-root node)');
-  t.ok(node !== null && node.right !== null && node.right.value.y === 'b2', 'tree value is modified with duplicateAction = function (non-root node)');
+  t.ok(node !== prevNode, 'tree is modified with onConflict = function (non-root node)');
+  t.ok(node !== null && node.right !== null && node.right.value.y === 'b2', 'tree value is modified with onConflict = function (non-root node)');
 
   // Insert a node into the left subtree
   node = tree.insert(node, xb3, compareX, tree.THROW);
 
   prevNode = node;
-  // This tests duplicateAction = NOOP on the left subtree
+  // This tests onConflict = NOOP on the left subtree
   node = tree.insert(node, xb3, compareX, tree.NOOP);
-  t.ok(node === prevNode, 'tree is unmodified with duplicateAction = NOOP (non-root node)');
+  t.ok(node === prevNode, 'tree is unmodified with onConflict = NOOP (non-root node)');
 
   t.throws(
     function () {
       node = tree.insert(node, xb1, compareX, tree.THROW);
     },
     /^Error$/,
-    'exception is thrown with duplicateAction = THROW (non-root node)',
+    'exception is thrown with onConflict = THROW (non-root node)',
   );
 
   node = tree.remove(node, xb1, compareX, tree.NOOP);

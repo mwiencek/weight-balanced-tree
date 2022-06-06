@@ -38,7 +38,7 @@ insert<T>(
     tree: ImmutableTree<T> | null,
     value: T,
     cmp: (T, T) => number,
-    duplicateAction: TreeAction<T>,
+    onConflict: TreeAction<T>,
 ): ImmutableTree<T>;
 ```
 
@@ -49,7 +49,7 @@ The `cmp` (comparator) function is used to order the values.  This should never
 change for a particular tree.  (It's recommended to create utility functions
 for each type of tree that always pass the same comparator.)
 
-`duplicateAction` is a function that determines what should happen when `value`
+`onConflict` is a function that determines what should happen when `value`
 already exists in the tree.  This is required.  The passed-in function receives
 the existing tree node that conflicts with `value` as its first argument, and
 `value` as its second argument.  The return value is a tree node that replaces
@@ -65,7 +65,7 @@ There are several exports in the main module that can be used here:
 
 The helper functions `insertIfNotExists`, `insertOrReplaceIfExists`,
 and `insertOrThrowIfExists` are also exported; these call `insert` with
-`NOOP`, `REPLACE`, or `THROW` for `duplicateAction`, respectively.
+`NOOP`, `REPLACE`, or `THROW` for `onConflict`, respectively.
 
 ### remove
 
