@@ -2,6 +2,7 @@
 
 import test from 'tape';
 
+import checkTreeInvariants from './checkTreeInvariants.mjs';
 import * as tree from './index.mjs';
 import {
   NOOP,
@@ -31,76 +32,6 @@ function shuffle(array/*: Array<number> */)/*: void */ {
   }
 }
 
-function countSize(
-  node/*: tree.ImmutableTree<mixed> | null */,
-)/*: number */ {
-  if (node === null) {
-    return 0;
-  }
-  return 1 + countSize(node.left) + countSize(node.right);
-}
-
-function checkBalance(
-  node/*: tree.ImmutableTree<mixed> */,
-)/*: boolean */ {
-  if (
-    (node.left === null || node.left.size === 1) &&
-    (node.right === null || node.right.size === 1)
-  ) {
-    return true;
-  }
-  return (
-    (node.left === null ? 0 : node.left.size) <= (3 * (node.right === null ? 0 : node.right.size)) &&
-    (node.right === null ? 0 : node.right.size) <= (3 * (node.left === null ? 0 : node.left.size))
-  );
-}
-
-function checkTreeInvariants(
-  t/*: tape$Context */,
-  node/*: tree.ImmutableTree<number> | null */,
-)/*: void */ {
-  if (node === null) {
-    return;
-  }
-
-  const actualSize = countSize(node);
-  if (node.size !== actualSize) {
-    t.comment('wrong tree size: ' + treeToString(node));
-  }
-  t.equal(node.size, actualSize, 'stored size is correct');
-
-  const isBalanced = checkBalance(node);
-  if (!isBalanced) {
-    t.comment('unbalanced tree: ' + treeToString(node));
-  }
-  t.ok(isBalanced, 'node is balanced');
-
-  if (node.left) {
-    t.ok(node.left.value < node.value, 'left node has a smaller value');
-    checkTreeInvariants(t, node.left);
-  }
-
-  if (node.right) {
-    t.ok(node.right.value > node.value, 'right node has a larger value');
-    checkTreeInvariants(t, node.right);
-  }
-}
-
-function treeToString(
-  node/*: tree.ImmutableTree<mixed> | null */,
-)/*: string */ {
-  if (node === null) {
-    return '';
-  }
-  const leftTree = treeToString(node.left);
-  const rightTree = treeToString(node.right);
-  return (
-    String(node.value) + ' ' + String(node.size) +
-    (leftTree ? '(' + leftTree + ')' : '') +
-    (rightTree ? '(' + rightTree + ')' : '')
-  );
-}
-
 test('all', function (t) {
   const thirtyOneToOne = oneToThirtyOne.slice(0).reverse();
 
@@ -111,7 +42,7 @@ test('all', function (t) {
 
     for (const num of numbers) {
       node = tree.insert(node, num, cmpIntegers);
-      checkTreeInvariants(t, node);
+      t.ok(checkTreeInvariants(node, cmpIntegers), 'tree is valid and balanced');
     }
 
     t.deepEqual(
@@ -156,7 +87,7 @@ test('all', function (t) {
       t.ok(foundNode !== null && foundNode.value === num, 'existing node is found');
 
       node = tree.remove(node, num, cmpIntegers);
-      checkTreeInvariants(t, node);
+      t.ok(checkTreeInvariants(node, cmpIntegers), 'tree is valid and balanced');
 
       foundNode = tree.find(node, num, cmpIntegers);
       t.ok(foundNode === null, 'removed node is not found');
