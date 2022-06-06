@@ -4,7 +4,7 @@ import {balanceLeft, balanceRight} from './balance.mjs';
 /*::
 import type {ImmutableTree} from './types.mjs';
 
-export type TreeAction<T> =
+export type InsertConflictHandler<T> =
   (existingTreeValue: T, value: T) => T;
 */
 
@@ -22,7 +22,7 @@ export default function insert/*:: <T> */(
   tree/*: ImmutableTree<T> | null */,
   value/*: T */,
   cmp/*: (T, T) => number */,
-  onConflict/*: TreeAction<T> */,
+  onConflict/*: InsertConflictHandler<T> */,
 )/*: ImmutableTree<T> */ {
   if (tree === null) {
     return {

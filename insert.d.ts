@@ -1,6 +1,6 @@
 import type {ImmutableTree} from './types';
 
-export type TreeAction<T> =
+export type InsertConflictHandler<T> =
   (existingTreeValue: T, value: T) => T;
 
 export function THROW(): never;
@@ -15,7 +15,7 @@ export default function insert<T>(
   tree: ImmutableTree<T> | null,
   value: T,
   cmp: (a: T, b: T) => number,
-  onConflict: TreeAction<T>,
+  onConflict: InsertConflictHandler<T>,
 ): ImmutableTree<T>;
 
 export function insertIfNotExists<T>(

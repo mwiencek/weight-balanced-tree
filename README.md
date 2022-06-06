@@ -27,7 +27,7 @@ type ImmutableTree<+T> = {
   +value: T,
 };
 
-type TreeAction<T> =
+type InsertConflictHandler<T> =
   (existingTreeValue: T, value: T) => T;
 ```
 
@@ -38,7 +38,7 @@ insert<T>(
     tree: ImmutableTree<T> | null,
     value: T,
     cmp: (T, T) => number,
-    onConflict: TreeAction<T>,
+    onConflict: InsertConflictHandler<T>,
 ): ImmutableTree<T>;
 ```
 

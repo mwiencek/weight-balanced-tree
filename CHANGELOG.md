@@ -6,6 +6,8 @@
    to remove didn't exist.
  * Renamed `duplicateAction` to `onConflict` in the typings and
    documentation.
+ * Renamed the `TreeAction` type to `InsertConflictHandler` and moved it to
+   insert.mjs.
  * Changed `onConflict` to receive the existing tree value as its first
    argument, rather than the node itself.
  * Removed `replaceWith`, which is no longer useful with the above change.

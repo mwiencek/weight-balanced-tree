@@ -18,7 +18,7 @@ import insert, {
   insertOrThrowIfExists,
 } from './insert';
 import type {
-  TreeAction,
+  InsertConflictHandler,
 } from './insert';
 import iterate from './iterate';
 import maxValue from './maxValue';
@@ -108,4 +108,4 @@ expectType<typeof minValue>(wbt.minValue);
 expectType<typeof remove>(wbt.remove);
 expectType<typeof removeIfExists>(wbt.removeIfExists);
 expectType<typeof removeOrThrowIfNotExists>(wbt.removeOrThrowIfNotExists);
-expectType<TreeAction<number>>((a: number, b: number) => a + b);
+expectType<InsertConflictHandler<number>>((a: number, b: number) => a + b);
