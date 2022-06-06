@@ -16,6 +16,9 @@ import insert, {
   insertIfNotExists,
   insertOrReplaceIfExists,
   insertOrThrowIfExists,
+  onConflictKeepTreeValue,
+  onConflictThrowError,
+  onConflictUseGivenValue,
 } from './insert';
 import type {
   InsertConflictHandler,
@@ -38,7 +41,13 @@ declare function cmpNumberAndString(a: number, b: string): number;
 
 // Basic usage
 expectType<types.ImmutableTree<string>>(create<string>(''));
+expectType<types.ImmutableTree<string>>(insert<string>(stringTree, '', cmpStrings));
 expectType<types.ImmutableTree<string>>(insert<string>(stringTree, '', cmpStrings, NOOP));
+expectType<types.ImmutableTree<string>>(insert<string>(stringTree, '', cmpStrings, REPLACE));
+expectType<types.ImmutableTree<string>>(insert<string>(stringTree, '', cmpStrings, THROW));
+expectType<types.ImmutableTree<string>>(insert<string>(stringTree, '', cmpStrings, onConflictKeepTreeValue));
+expectType<types.ImmutableTree<string>>(insert<string>(stringTree, '', cmpStrings, onConflictThrowError));
+expectType<types.ImmutableTree<string>>(insert<string>(stringTree, '', cmpStrings, onConflictUseGivenValue));
 expectType<types.ImmutableTree<string>>(insert<string>(stringTree, '', cmpStrings, (a: string, b: string) => a + b));
 expectType<types.ImmutableTree<string>>(insertIfNotExists<string>(stringTree, '', cmpStrings));
 expectType<types.ImmutableTree<string>>(insertOrReplaceIfExists<string>(stringTree, '', cmpStrings));

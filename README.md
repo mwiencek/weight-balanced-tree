@@ -65,19 +65,24 @@ same `tree` reference back.  `Object.is` is used to determine if the value
 you return is the same as `existingTreeValue`.
 
 If `onConflict` is not specified, the default action is to throw an error.
-There are several exports in the main module that can be used here:
+There are several exports in [insert.mjs](insert.mjs) that can be used here:
 
- * `THROW` (the default), which throws an exception.  It doesn't provide any
-   meaningful error message, though, so you'd better write your own if
-   needed.
- * `NOOP`, which just returns the existing tree value back unmodified.  In
-   this case, `insert` will also return the same tree reference back.
- * `REPLACE`, which replaces the existing tree value with the value given to
-   `insert`.
+ * `onConflictThrowError` (the default), which throws an exception.  It
+   doesn't provide any meaningful error message, though, so you'd better
+   write your own if needed.
+ * `onConflictKeepTreeValue`, which just returns the existing tree value back
+   unmodified.  In this case, `insert` will also return the same tree
+   reference back.
+ * `onConflictUseGivenValue`, which replaces the existing tree value with the
+   value given to `insert`.
 
-The helper functions `insertIfNotExists`, `insertOrReplaceIfExists`,
-and `insertOrThrowIfExists` are also exported; these call `insert` with
-`NOOP`, `REPLACE`, or `THROW` for `onConflict`, respectively.
+There are also some convenience functions available that call `insert` with
+these options for you:
+
+ * `insertIfNotExists` (passes `onConflictKeepTreeValue` for you)
+ * `insertOrReplaceIfExists` (passes `onConflictUseGivenValue` for you)
+
+`insertOrThrowIfExists` is an alias of `insert`.
 
 ### remove
 

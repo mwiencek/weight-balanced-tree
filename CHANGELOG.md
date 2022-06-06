@@ -10,8 +10,13 @@
    insert.mjs.
  * Changed `onConflict` to receive the existing tree value as its first
    argument, rather than the node itself.
- * Made `onConflict` for `insert` default to `THROW`. 
  * Removed `replaceWith`, which is no longer useful with the above change.
+ * Added new aliases for the existing `onConflict` handlers `THROW`, `NOOP`,
+   and `REPLACE`.  They're named `onConflictThrowError`,
+   `onConflictKeepTreeValue`, and `onConflictUseGivenValue` respectively, and
+   are exported from insert.mjs.  The previous aliases remain exported
+   from index.mjs.
+ * Made `onConflict` for `insert` default to `onConflictThrowError`.
  * Removed the `notFoundAction` argument from `remove`.  You can detect
    whether the value to remove isn't found based on whether the tree is
    modified.  There's no use to the feature that allows you to modify the

@@ -8,21 +8,26 @@ export type InsertConflictHandler<T> =
   (existingTreeValue: T, value: T) => T;
 */
 
-export function THROW()/*: empty */ {
+export function onConflictThrowError()/*: empty */ {
   throw new Error('');
 }
 
-export const NOOP =
+export const onConflictKeepTreeValue =
   /*:: <T> */(treeValue/*: T */, givenValue/*: T */)/*: T */ => treeValue;
 
-export const REPLACE =
+export const onConflictUseGivenValue =
   /*:: <T> */(treeValue/*: T */, givenValue/*: T */)/*: T */ => givenValue;
+
+// Aliases for backwards compatibility.
+export const NOOP = onConflictKeepTreeValue;
+export const THROW = onConflictThrowError;
+export const REPLACE = onConflictUseGivenValue;
 
 export default function insert/*:: <T> */(
   tree/*: ImmutableTree<T> | null */,
   value/*: T */,
   cmp/*: (T, T) => number */,
-  onConflict/*:: ?: InsertConflictHandler<T> */ = THROW,
+  onConflict/*:: ?: InsertConflictHandler<T> */ = onConflictThrowError,
 )/*: ImmutableTree<T> */ {
   if (tree === null) {
     return {
@@ -85,7 +90,7 @@ export function insertIfNotExists/*:: <T> */(
   value/*: T */,
   cmp/*: (T, T) => number */,
 )/*: ImmutableTree<T> */ {
-  return insert(tree, value, cmp, NOOP);
+  return insert(tree, value, cmp, onConflictKeepTreeValue);
 }
 
 export function insertOrReplaceIfExists/*:: <T> */(
@@ -93,7 +98,7 @@ export function insertOrReplaceIfExists/*:: <T> */(
   value/*: T */,
   cmp/*: (T, T) => number */,
 )/*: ImmutableTree<T> */ {
-  return insert(tree, value, cmp, REPLACE);
+  return insert(tree, value, cmp, onConflictUseGivenValue);
 }
 
 export function insertOrThrowIfExists/*:: <T> */(
@@ -101,5 +106,5 @@ export function insertOrThrowIfExists/*:: <T> */(
   value/*: T */,
   cmp/*: (T, T) => number */,
 )/*: ImmutableTree<T> */ {
-  return insert(tree, value, cmp, THROW);
+  return insert(tree, value, cmp, onConflictThrowError);
 }

@@ -3,6 +3,14 @@
 import test from 'tape';
 
 import * as tree from './index.mjs';
+import {
+  NOOP,
+  REPLACE,
+  THROW,
+  onConflictKeepTreeValue,
+  onConflictThrowError,
+  onConflictUseGivenValue,
+} from './insert.mjs';
 
 const oneToThirtyOne = [];
 
@@ -162,6 +170,16 @@ test('all', function (t) {
   t.end();
 });
 
+test('onConflict export aliases', function (t) {
+  t.equal(NOOP, onConflictKeepTreeValue);
+  t.equal(REPLACE, onConflictUseGivenValue);
+  t.equal(THROW, onConflictThrowError);
+  t.equal(tree.NOOP, NOOP);
+  t.equal(tree.REPLACE, REPLACE);
+  t.equal(tree.THROW, THROW);
+  t.end();
+});
+
 test('find with different value type', function (t) {
   const compareX = (a, b) => a.x.localeCompare(b.x);
 
@@ -219,9 +237,9 @@ test('insertIfNotExists', function (t) {
 
   let node = null;
   for (const num of oneToThirtyOne) {
-    node = tree.insert(node, {value: num}, cmp, NOOP);
+    node = tree.insert(node, {value: num}, cmp, onConflictKeepTreeValue);
 
-    const sameNode1 = tree.insert(node, {value: num}, cmp, NOOP);
+    const sameNode1 = tree.insert(node, {value: num}, cmp, onConflictKeepTreeValue);
     t.equal(node, sameNode1);
 
     const sameNode2 = tree.insertIfNotExists(node, {value: num}, cmp);
@@ -230,7 +248,7 @@ test('insertIfNotExists', function (t) {
 
   const finalNode = node;
   for (const num of oneToThirtyOne) {
-    node = tree.insert(node, {value: num}, cmp, NOOP);
+    node = tree.insert(node, {value: num}, cmp, onConflictKeepTreeValue);
     node = tree.insertIfNotExists(node, {value: num}, cmp);
   }
   t.equal(node, finalNode);
@@ -244,10 +262,10 @@ test('insertOrReplaceIfExists', function (t) {
 
   let node = null;
   for (const num of oneToThirtyOne) {
-    node = tree.insert(node, {value: num}, cmp, REPLACE);
+    node = tree.insert(node, {value: num}, cmp, onConflictUseGivenValue);
 
     const newValue1 = {value: num};
-    const newNode1 = tree.insert(node, newValue1, cmp, REPLACE);
+    const newNode1 = tree.insert(node, newValue1, cmp, onConflictUseGivenValue);
     t.notEqual(node, newNode1);
     t.equal(tree.find(newNode1, {value: num}, cmp)?.value, newValue1);
 
@@ -276,7 +294,7 @@ test('insertOrThrowIfExists', function (t) {
     );
     t.throws(
       function () {
-        node = tree.insert(node, {value: num}, cmp, THROW);
+        node = tree.insert(node, {value: num}, cmp, onConflictThrowError);
       },
       /^Error$/,
       'exception is thrown with insert plus onConflictThrowError',
