@@ -45,6 +45,9 @@ insert<T>(
 Returns a new version of `tree` with `value` inserted.  The old version is not
 modified.
 
+Pass `null` for `tree` to create a new tree.  (This module has no such thing
+as a tree of size 0.)
+
 The `cmp` (comparator) function is used to order the values.  This should never
 change for a particular tree.  (It's recommended to create utility functions
 for each type of tree that always pass the same comparator.)
