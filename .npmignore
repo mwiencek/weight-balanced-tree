@@ -4,4 +4,5 @@ checkTreeInvariants.mjs
 compareIntegers.mjs
 coverage/
 flow-typed/
+shuffle.mjs
 test.mjs

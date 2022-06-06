@@ -14,19 +14,12 @@ import {
   onConflictThrowError,
   onConflictUseGivenValue,
 } from './insert.mjs';
+import shuffle from './shuffle.mjs';
 
 const oneToThirtyOne = [];
 
 for (let i = 1; i <= 31; i++) {
   oneToThirtyOne.push(i);
-}
-
-function shuffle(array/*: Array<number> */)/*: void */ {
-  for (let i = array.length - 1; i > 0; i--) {
-    const j = Math.floor(Math.random() * (i + 1));
-    // $FlowIssue[unsupported-syntax]
-    [array[i], array[j]] = [array[j], array[i]];
-  }
 }
 
 test('all', function (t) {

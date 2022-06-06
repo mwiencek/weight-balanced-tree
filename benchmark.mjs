@@ -2,12 +2,19 @@ import Benchmark from 'benchmark';
 import * as Immutable from 'immutable';
 
 import * as wbt from './index.mjs';
+import shuffle from './shuffle.mjs';
 
 const suite = new Benchmark.Suite();
 
 const asciiTable = [];
 for (let i = 0; i < 128; i++) {
   asciiTable.push(['ascii-' + String(i), String.fromCharCode(i)]);
+}
+
+function copyAndShuffleAsciiTable() {
+  const asciiTableCopy = asciiTable.slice(0);
+  shuffle(asciiTableCopy);
+  return asciiTableCopy;
 }
 
 const compareKeys = (a, b) => {
@@ -82,22 +89,28 @@ for (const pair of asciiTable) {
 const prefilledImmutableList = Immutable.List(asciiTable);
 
 suite.add('insertion (weight-balanced-tree)', function () {
+  const asciiTableCopy = copyAndShuffleAsciiTable();
+
   let tree = null;
-  for (const pair of asciiTable) {
+  for (const pair of asciiTableCopy) {
     tree = wbt.insert(tree, pair, compareKeys);
   }
 });
 
 suite.add('insertion (Immutable.List)', function () {
+  const asciiTableCopy = copyAndShuffleAsciiTable();
+
   let list = Immutable.List();
-  for (const pair of asciiTable) {
+  for (const pair of asciiTableCopy) {
     list = sortedFindOrInsertImmutableList(list, pair, compareKeys);
   }
 });
 
 suite.add('insertion (array)', function () {
+  const asciiTableCopy = copyAndShuffleAsciiTable();
+
   let array = [];
-  for (const pair of asciiTable) {
+  for (const pair of asciiTableCopy) {
     array = sortedFindOrInsertArray(array, pair, compareKeys);
   }
 });
