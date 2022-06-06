@@ -1,4 +1,7 @@
-import type {ImmutableTree, TreeAction} from './types';
+import type {ImmutableTree} from './types';
+
+export type TreeAction<T> =
+  (existingTreeValue: T, value: T) => T;
 
 export function THROW(): never;
 

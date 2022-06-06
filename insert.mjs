@@ -2,7 +2,10 @@
 
 import {balanceLeft, balanceRight} from './balance.mjs';
 /*::
-import type {ImmutableTree, TreeAction} from './types.mjs';
+import type {ImmutableTree} from './types.mjs';
+
+export type TreeAction<T> =
+  (existingTreeValue: T, value: T) => T;
 */
 
 export function THROW()/*: empty */ {

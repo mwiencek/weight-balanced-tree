@@ -17,6 +17,9 @@ import insert, {
   insertOrReplaceIfExists,
   insertOrThrowIfExists,
 } from './insert';
+import type {
+  TreeAction,
+} from './insert';
 import iterate from './iterate';
 import maxValue from './maxValue';
 import minValue from './minValue';
@@ -105,4 +108,4 @@ expectType<typeof minValue>(wbt.minValue);
 expectType<typeof remove>(wbt.remove);
 expectType<typeof removeIfExists>(wbt.removeIfExists);
 expectType<typeof removeOrThrowIfNotExists>(wbt.removeOrThrowIfNotExists);
-expectType<types.TreeAction<number>>((a: number, b: number) => a + b);
+expectType<TreeAction<number>>((a: number, b: number) => a + b);

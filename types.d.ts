@@ -11,6 +11,3 @@ export interface MutableTree<T> {
   size: number;
   value: T;
 }
-
-export type TreeAction<T> =
-  (existingTreeValue: T, value: T) => T;
