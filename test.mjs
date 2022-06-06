@@ -162,79 +162,6 @@ test('all', function (t) {
   t.end();
 });
 
-test('actions', function (t) {
-  let node = null;
-
-  const compareX = (a, b) => a.x.localeCompare(b.x);
-
-  const xa1 = {x: 'a', y: '1'};
-  const xa2 = {x: 'a', y: '2'};
-  const xb1 = {x: 'b', y: '1'};
-  const xb2 = {x: 'b', y: '2'};
-  const xb3 = {x: '', y: '1'};
-
-  node = tree.insert(node, xa1, compareX, tree.NOOP);
-
-  let prevNode = node;
-  node = tree.insert(node, xa2, compareX, tree.NOOP);
-  t.ok(node === prevNode, 'tree is unmodified with onConflict = NOOP (root node)');
-  t.ok(node !== null && node.value === xa1, 'tree value is unmodified with onConflict = NOOP (root node)');
-
-  prevNode = node;
-  node = tree.insert(node, xa2, compareX, tree.REPLACE);
-  t.ok(node !== prevNode, 'tree is modified with onConflict = REPLACE (root node)');
-  t.ok(node !== null && node.value === xa2, 'tree value is modified with onConflict = REPLACE (root node)');
-
-  prevNode = node;
-  node = tree.insert(node, xa2, compareX, (existingValue, value) => ({x: value.x, y: existingValue.x + existingValue.y}));
-  t.ok(node !== prevNode, 'tree is modified with onConflict = function (root node)');
-  t.ok(node !== null && node.value.y === 'a2', 'tree value is modified with onConflict = function (root node)');
-
-  t.throws(
-    function () {
-      node = tree.insert(node, xa1, compareX, tree.THROW);
-    },
-    /^Error$/,
-    'exception is thrown with onConflict = THROW (root node)',
-  );
-
-  // Insert a node into the right subtree
-  node = tree.insert(node, xb1, compareX, tree.NOOP);
-
-  prevNode = node;
-  // This tests onConflict = NOOP on the right subtree
-  node = tree.insert(node, xb1, compareX, tree.NOOP);
-  t.ok(node === prevNode, 'tree is unmodified with onConflict = NOOP (non-root node)');
-
-  prevNode = node;
-  node = tree.insert(node, xb2, compareX, tree.REPLACE);
-  t.ok(node !== prevNode, 'tree is modified with onConflict = REPLACE (non-root node)');
-  t.ok(node !== null && node.right !== null && node.right.value === xb2, 'tree value is modified with onConflict = REPLACE (non-root node)');
-
-  prevNode = node;
-  node = tree.insert(node, xb2, compareX, (existingValue, value) => ({x: value.x, y: existingValue.x + existingValue.y}));
-  t.ok(node !== prevNode, 'tree is modified with onConflict = function (non-root node)');
-  t.ok(node !== null && node.right !== null && node.right.value.y === 'b2', 'tree value is modified with onConflict = function (non-root node)');
-
-  // Insert a node into the left subtree
-  node = tree.insert(node, xb3, compareX);
-
-  prevNode = node;
-  // This tests onConflict = NOOP on the left subtree
-  node = tree.insert(node, xb3, compareX, tree.NOOP);
-  t.ok(node === prevNode, 'tree is unmodified with onConflict = NOOP (non-root node)');
-
-  t.throws(
-    function () {
-      node = tree.insert(node, xb1, compareX, tree.THROW);
-    },
-    /^Error$/,
-    'exception is thrown with onConflict = THROW (non-root node)',
-  );
-
-  t.end();
-});
-
 test('find with different value type', function (t) {
   const compareX = (a, b) => a.x.localeCompare(b.x);
 
@@ -288,70 +215,110 @@ test('findNext/findPrev with non-existent values', function (t) {
 });
 
 test('insertIfNotExists', function (t) {
-  const cmp = (a, b) => a - b;
+  const cmp = (a, b) => a.value - b.value;
 
   let node = null;
-  node = tree.insertIfNotExists(node, 1, cmp);
-  t.equal(tree.find(node, 1, cmp)?.value, 1);
-  t.equal(node.size, 1);
-  node = tree.insertIfNotExists(node, 2, cmp);
-  t.equal(tree.find(node, 2, cmp)?.value, 2);
-  t.equal(node.size, 2);
-  node = tree.insertIfNotExists(node, 2, cmp);
-  t.equal(tree.find(node, 2, cmp)?.value, 2);
-  t.equal(node.size, 2);
+  for (const num of oneToThirtyOne) {
+    node = tree.insert(node, {value: num}, cmp, NOOP);
 
+    const sameNode1 = tree.insert(node, {value: num}, cmp, NOOP);
+    t.equal(node, sameNode1);
+
+    const sameNode2 = tree.insertIfNotExists(node, {value: num}, cmp);
+    t.equal(node, sameNode2);
+  }
+
+  const finalNode = node;
+  for (const num of oneToThirtyOne) {
+    node = tree.insert(node, {value: num}, cmp, NOOP);
+    node = tree.insertIfNotExists(node, {value: num}, cmp);
+  }
+  t.equal(node, finalNode);
+
+  t.equal(node?.size, 31);
   t.end();
 });
 
 test('insertOrReplaceIfExists', function (t) {
   const cmp = (a, b) => a.value - b.value;
 
-  let v1 = {id: 1, value: 1};
-  let v2 = {id: 2, value: 1};
-
   let node = null;
-  node = tree.insertOrReplaceIfExists(node, v1, cmp);
-  t.equal(tree.find(node, v1, cmp)?.value.id, 1);
-  t.equal(node.size, 1);
-  node = tree.insertOrReplaceIfExists(node, v2, cmp);
-  t.equal(tree.find(node, v2, cmp)?.value.id, 2);
-  t.equal(node.size, 1);
+  for (const num of oneToThirtyOne) {
+    node = tree.insert(node, {value: num}, cmp, REPLACE);
 
+    const newValue1 = {value: num};
+    const newNode1 = tree.insert(node, newValue1, cmp, REPLACE);
+    t.notEqual(node, newNode1);
+    t.equal(tree.find(newNode1, {value: num}, cmp)?.value, newValue1);
+
+    const newValue2 = {value: num};
+    const newNode2 = tree.insertOrReplaceIfExists(node, newValue2, cmp);
+    t.notEqual(node, newNode2);
+    t.equal(tree.find(newNode2, {value: num}, cmp)?.value, newValue2);
+  }
+
+  t.equal(node?.size, 31);
   t.end();
 });
 
 test('insertOrThrowIfExists', function (t) {
   const cmp = (a, b) => a.value - b.value;
 
-  let v1 = {id: 1, value: 1};
-  let v2 = {id: 2, value: 1};
-
   let node = null;
-  node = tree.insertOrThrowIfExists(node, v1, cmp);
-  t.equal(tree.find(node, v1, cmp)?.value.id, 1);
-  t.equal(node.size, 1);
-  t.throws(
-    function () {
-      node = tree.insertOrThrowIfExists(node, v2, cmp);
-    },
-    /^Error$/,
-    'exception is thrown with insertOrThrowIfExists',
-  );
-  t.equal(node.size, 1);
+  for (const num of oneToThirtyOne) {
+    node = tree.insert(node, {value: num}, cmp);
+    t.throws(
+      function () {
+        node = tree.insertOrThrowIfExists(node, {value: num}, cmp);
+      },
+      /^Error$/,
+      'exception is thrown with insertOrThrowIfExists',
+    );
+    t.throws(
+      function () {
+        node = tree.insert(node, {value: num}, cmp, THROW);
+      },
+      /^Error$/,
+      'exception is thrown with insert plus onConflictThrowError',
+    );
+    t.throws(
+      function () {
+        node = tree.insert(node, {value: num}, cmp);
+      },
+      /^Error$/,
+      'exception is thrown with insert by default',
+    );
+  }
 
+  t.equal(node?.size, 31);
   t.end();
 });
 
 test('removeIfExists', function (t) {
   const cmp = (a, b) => a - b;
 
-  let node = null;
-  node = tree.insertIfNotExists(node, 1, cmp);
-  node = tree.removeIfExists(node, 2, cmp);
-  t.equal(node?.size, 1);
-  node = tree.removeIfExists(node, 1, cmp);
-  t.equal(node, null);
+  let node = tree.create(1);
+  node = tree.insert(node, 2, cmp);
+
+  const origNode = node;
+  node = tree.removeIfExists(node, 3, cmp);
+  t.equal(node, origNode);
+  node = tree.remove(node, 3, cmp);
+  t.equal(node, origNode);
+  const node2 = tree.removeIfExists(node, 2, cmp);
+  t.equal(node2?.size, 1);
+  t.equal(node2?.value, 1);
+  const node3 = tree.remove(node, 2, cmp);
+  t.equal(node3?.size, 1);
+  t.equal(node3?.value, 1);
+  const node4 = tree.removeIfExists(node2, 1, cmp);
+  t.equal(node4, null);
+  const node5 = tree.remove(node3, 1, cmp);
+  t.equal(node5, null);
+  const node6 = tree.removeIfExists(null, 1, cmp);
+  t.equal(node6, null);
+  const node7 = tree.remove(null, 1, cmp);
+  t.equal(node7, null);
 
   t.end();
 });
