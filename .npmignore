@@ -1,6 +1,7 @@
 benchmark.mjs
 CHANGELOG.md
 checkTreeInvariants.mjs
+compareIntegers.mjs
 coverage/
 flow-typed/
 test.mjs

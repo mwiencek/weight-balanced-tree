@@ -3,6 +3,7 @@
 import test from 'tape';
 
 import checkTreeInvariants from './checkTreeInvariants.mjs';
+import compareIntegers from './compareIntegers.mjs';
 import * as tree from './index.mjs';
 import {
   NOOP,
@@ -18,10 +19,6 @@ const oneToThirtyOne = [];
 
 for (let i = 1; i <= 31; i++) {
   oneToThirtyOne.push(i);
-}
-
-function cmpIntegers(a/*: number */, b/*: number */)/*: number */ {
-  return a - b;
 }
 
 function shuffle(array/*: Array<number> */)/*: void */ {
@@ -41,8 +38,8 @@ test('all', function (t) {
     let node = null;
 
     for (const num of numbers) {
-      node = tree.insert(node, num, cmpIntegers);
-      t.ok(checkTreeInvariants(node, cmpIntegers), 'tree is valid and balanced');
+      node = tree.insert(node, num, compareIntegers);
+      t.ok(checkTreeInvariants(node, compareIntegers), 'tree is valid and balanced');
     }
 
     t.deepEqual(
@@ -67,14 +64,14 @@ test('all', function (t) {
     shuffle(numbers);
 
     for (const num of numbers) {
-      const next = tree.findNext(node, num, cmpIntegers);
+      const next = tree.findNext(node, num, compareIntegers);
       t.equal(
         next === null ? null : next.value,
         num < 31 ? (num + 1) : null,
         'next node is found',
       );
 
-      const prev = tree.findPrev(node, num, cmpIntegers);
+      const prev = tree.findPrev(node, num, compareIntegers);
       t.equal(
         prev === null ? null : prev.value,
         num > 1 ? (num - 1) : null,
@@ -83,19 +80,19 @@ test('all', function (t) {
     }
 
     for (const num of numbers) {
-      let foundNode = tree.find(node, num, cmpIntegers);
+      let foundNode = tree.find(node, num, compareIntegers);
       t.ok(foundNode !== null && foundNode.value === num, 'existing node is found');
 
-      node = tree.remove(node, num, cmpIntegers);
-      t.ok(checkTreeInvariants(node, cmpIntegers), 'tree is valid and balanced');
+      node = tree.remove(node, num, compareIntegers);
+      t.ok(checkTreeInvariants(node, compareIntegers), 'tree is valid and balanced');
 
-      foundNode = tree.find(node, num, cmpIntegers);
+      foundNode = tree.find(node, num, compareIntegers);
       t.ok(foundNode === null, 'removed node is not found');
     }
 
     t.ok(node === null, 'tree is empty');
 
-    node = tree.remove(node, 0, cmpIntegers);
+    node = tree.remove(node, 0, compareIntegers);
     t.ok(node === null, 'tree is still empty');
   }
 
@@ -130,42 +127,40 @@ test('find with different value type', function (t) {
 });
 
 test('findNext/findPrev with non-existent values', function (t) {
-  const cmp = (a, b) => a - b;
-
   let node = null;
-  node = tree.insert(node, 1, cmp);
-  node = tree.insert(node, 3, cmp);
-  node = tree.insert(node, 5, cmp);
-  node = tree.insert(node, 7, cmp);
-  node = tree.insert(node, 9, cmp);
+  node = tree.insert(node, 1, compareIntegers);
+  node = tree.insert(node, 3, compareIntegers);
+  node = tree.insert(node, 5, compareIntegers);
+  node = tree.insert(node, 7, compareIntegers);
+  node = tree.insert(node, 9, compareIntegers);
 
-  t.equal(tree.findNext(node, 0, cmp)?.value, 1);
-  t.equal(tree.findNext(node, 1, cmp)?.value, 3);
-  t.equal(tree.findNext(node, 2, cmp)?.value, 3);
-  t.equal(tree.findNext(node, 3, cmp)?.value, 5);
-  t.equal(tree.findNext(node, 4, cmp)?.value, 5);
-  t.equal(tree.findNext(node, 5, cmp)?.value, 7);
-  t.equal(tree.findNext(node, 6, cmp)?.value, 7);
-  t.equal(tree.findNext(node, 7, cmp)?.value, 9);
-  t.equal(tree.findNext(node, 8, cmp)?.value, 9);
-  t.equal(tree.findNext(node, 9, cmp), null);
+  t.equal(tree.findNext(node, 0, compareIntegers)?.value, 1);
+  t.equal(tree.findNext(node, 1, compareIntegers)?.value, 3);
+  t.equal(tree.findNext(node, 2, compareIntegers)?.value, 3);
+  t.equal(tree.findNext(node, 3, compareIntegers)?.value, 5);
+  t.equal(tree.findNext(node, 4, compareIntegers)?.value, 5);
+  t.equal(tree.findNext(node, 5, compareIntegers)?.value, 7);
+  t.equal(tree.findNext(node, 6, compareIntegers)?.value, 7);
+  t.equal(tree.findNext(node, 7, compareIntegers)?.value, 9);
+  t.equal(tree.findNext(node, 8, compareIntegers)?.value, 9);
+  t.equal(tree.findNext(node, 9, compareIntegers), null);
 
-  t.equal(tree.findPrev(node, 1, cmp), null);
-  t.equal(tree.findPrev(node, 2, cmp)?.value, 1);
-  t.equal(tree.findPrev(node, 3, cmp)?.value, 1);
-  t.equal(tree.findPrev(node, 4, cmp)?.value, 3);
-  t.equal(tree.findPrev(node, 5, cmp)?.value, 3);
-  t.equal(tree.findPrev(node, 6, cmp)?.value, 5);
-  t.equal(tree.findPrev(node, 7, cmp)?.value, 5);
-  t.equal(tree.findPrev(node, 8, cmp)?.value, 7);
-  t.equal(tree.findPrev(node, 9, cmp)?.value, 7);
-  t.equal(tree.findPrev(node, 10, cmp)?.value, 9);
+  t.equal(tree.findPrev(node, 1, compareIntegers), null);
+  t.equal(tree.findPrev(node, 2, compareIntegers)?.value, 1);
+  t.equal(tree.findPrev(node, 3, compareIntegers)?.value, 1);
+  t.equal(tree.findPrev(node, 4, compareIntegers)?.value, 3);
+  t.equal(tree.findPrev(node, 5, compareIntegers)?.value, 3);
+  t.equal(tree.findPrev(node, 6, compareIntegers)?.value, 5);
+  t.equal(tree.findPrev(node, 7, compareIntegers)?.value, 5);
+  t.equal(tree.findPrev(node, 8, compareIntegers)?.value, 7);
+  t.equal(tree.findPrev(node, 9, compareIntegers)?.value, 7);
+  t.equal(tree.findPrev(node, 10, compareIntegers)?.value, 9);
 
   t.end();
 });
 
 test('insertIfNotExists', function (t) {
-  const cmp = (a, b) => a.value - b.value;
+  const cmp = (a, b) => compareIntegers(a.value, b.value);
 
   let node = null;
   for (const num of oneToThirtyOne) {
@@ -190,7 +185,7 @@ test('insertIfNotExists', function (t) {
 });
 
 test('insertOrReplaceIfExists', function (t) {
-  const cmp = (a, b) => a.value - b.value;
+  const cmp = (a, b) => compareIntegers(a.value, b.value);
 
   let node = null;
   for (const num of oneToThirtyOne) {
@@ -212,7 +207,7 @@ test('insertOrReplaceIfExists', function (t) {
 });
 
 test('insertOrThrowIfExists', function (t) {
-  const cmp = (a, b) => a.value - b.value;
+  const cmp = (a, b) => compareIntegers(a.value, b.value);
 
   let node = null;
   for (const num of oneToThirtyOne) {
@@ -245,47 +240,43 @@ test('insertOrThrowIfExists', function (t) {
 });
 
 test('removeIfExists', function (t) {
-  const cmp = (a, b) => a - b;
-
   let node = tree.create(1);
-  node = tree.insert(node, 2, cmp);
+  node = tree.insert(node, 2, compareIntegers);
 
   const origNode = node;
-  node = tree.removeIfExists(node, 3, cmp);
+  node = tree.removeIfExists(node, 3, compareIntegers);
   t.equal(node, origNode);
-  node = tree.remove(node, 3, cmp);
+  node = tree.remove(node, 3, compareIntegers);
   t.equal(node, origNode);
-  const node2 = tree.removeIfExists(node, 2, cmp);
+  const node2 = tree.removeIfExists(node, 2, compareIntegers);
   t.equal(node2?.size, 1);
   t.equal(node2?.value, 1);
-  const node3 = tree.remove(node, 2, cmp);
+  const node3 = tree.remove(node, 2, compareIntegers);
   t.equal(node3?.size, 1);
   t.equal(node3?.value, 1);
-  const node4 = tree.removeIfExists(node2, 1, cmp);
+  const node4 = tree.removeIfExists(node2, 1, compareIntegers);
   t.equal(node4, null);
-  const node5 = tree.remove(node3, 1, cmp);
+  const node5 = tree.remove(node3, 1, compareIntegers);
   t.equal(node5, null);
-  const node6 = tree.removeIfExists(null, 1, cmp);
+  const node6 = tree.removeIfExists(null, 1, compareIntegers);
   t.equal(node6, null);
-  const node7 = tree.remove(null, 1, cmp);
+  const node7 = tree.remove(null, 1, compareIntegers);
   t.equal(node7, null);
 
   t.end();
 });
 
 test('removeOrThrowIfNotExists', function (t) {
-  const cmp = (a, b) => a - b;
-
   let node = tree.create(1);
   t.throws(
     function () {
-      node = tree.removeOrThrowIfNotExists(node, 2, cmp);
+      node = tree.removeOrThrowIfNotExists(node, 2, compareIntegers);
     },
     /^Error: The value given to remove does not exist in the tree\.$/,
     'exception is thrown with removeOrThrowIfNotExists',
   );
   t.equal(node?.size, 1);
-  node = tree.removeOrThrowIfNotExists(node, 1, cmp);
+  node = tree.removeOrThrowIfNotExists(node, 1, compareIntegers);
   t.equal(node, null);
 
   t.end();
@@ -294,12 +285,12 @@ test('removeOrThrowIfNotExists', function (t) {
 test('remove returns the same tree back if there is no value to remove', function (t) {
   let node = null;
   for (const num of oneToThirtyOne) {
-    node = tree.insert(node, num, cmpIntegers);
+    node = tree.insert(node, num, compareIntegers);
   }
 
   const origNode = node;
   for (const num of oneToThirtyOne) {
-    node = tree.remove(node, num + 31, cmpIntegers);
+    node = tree.remove(node, num + 31, compareIntegers);
     t.equal(node, origNode);
   }
 
@@ -320,8 +311,8 @@ test('create', function (t) {
 test('insert with onConflict', function (t) {
   /*:: type Item = {+key: number, +value: number}; */
 
-  const cmp = (a/*: Item */, b/*: Item */) => a.key - b.key;
-  const cmpKeyWithItem = (key/*: number */, item/*: Item */) => key - item.key;
+  const cmp = (a/*: Item */, b/*: Item */) => compareIntegers(a.key, b.key);
+  const cmpKeyWithItem = (key/*: number */, item/*: Item */) => compareIntegers(key, item.key);
 
   let v1 = {key: 1, value: 10};
   let node = tree.create(v1);
@@ -359,8 +350,8 @@ test('insert with onConflict', function (t) {
 test('insertByKey', function (t) {
   /*:: type Item = {+key: number, +value: number}; */
 
-  const cmp = (a/*: Item */, b/*: Item */) => a.key - b.key;
-  const cmpKeyWithItem = (key/*: number */, item/*: Item */) => key - item.key;
+  const cmp = (a/*: Item */, b/*: Item */) => compareIntegers(a.key, b.key);
+  const cmpKeyWithItem = (key/*: number */, item/*: Item */) => compareIntegers(key, item.key);
 
   const v1 = {key: 1, value: 10};
   const v2 = {key: 2, value: 20};
@@ -442,25 +433,23 @@ test('insertByKey', function (t) {
 });
 
 test('equals', function (t) {
-  const cmp = (a, b) => a - b;
-
   let tree1 = null;
   for (const num of oneToThirtyOne) {
-    tree1 = tree.insert(tree1, num, cmp);
+    tree1 = tree.insert(tree1, num, compareIntegers);
   }
 
   let tree2 = null;
   for (const num of oneToThirtyOne.slice(0).reverse()) {
-    tree2 = tree.insert(tree2, num, cmp);
+    tree2 = tree.insert(tree2, num, compareIntegers);
   }
 
-  t.ok(tree.equals(tree1, tree2, cmp));
+  t.ok(tree.equals(tree1, tree2, compareIntegers));
 
-  tree1 = tree.remove(tree1, 1, cmp);
-  t.ok(!tree.equals(tree1, tree2, cmp));
+  tree1 = tree.remove(tree1, 1, compareIntegers);
+  t.ok(!tree.equals(tree1, tree2, compareIntegers));
 
-  tree2 = tree.remove(tree2, 1, cmp);
-  t.ok(tree.equals(tree1, tree2, cmp));
+  tree2 = tree.remove(tree2, 1, compareIntegers);
+  t.ok(tree.equals(tree1, tree2, compareIntegers));
 
   t.ok(tree.equals(null, null, compareIntegers));
   t.ok(!tree.equals(tree1, null, compareIntegers));
@@ -489,7 +478,7 @@ test('equals', function (t) {
       size: 2,
       value: {num: 1},
     },
-    (a, b) => a.num - b.num,
+    (a, b) => compareIntegers(a.num, b.num),
   ));
 
   t.ok(!tree.equals(
@@ -532,9 +521,7 @@ test('equals', function (t) {
 });
 
 test('fromDistinctAscArray', function (t) {
-  const cmp = (a, b) => a - b;
-
   const node = tree.fromDistinctAscArray(oneToThirtyOne);
-  t.ok(checkTreeInvariants(node, cmp), 'tree is valid and balanced');
+  t.ok(checkTreeInvariants(node, compareIntegers), 'tree is valid and balanced');
   t.end();
 });
