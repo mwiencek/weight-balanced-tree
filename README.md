@@ -48,9 +48,9 @@ modified.
 Pass `null` for `tree` to create a new tree.  (This module has no such thing
 as a tree of size 0.)
 
-The `cmp` (comparator) function is used to order the values.  This should never
-change for a particular tree.  (It's recommended to create utility functions
-for each type of tree that always pass the same comparator.)
+The `cmp` (comparator) function is used to order the values.  It works the
+same as the comparator you'd pass to `Array.prototype.sort`, and should
+never change for a particular tree.
 
 `onConflict` is a function that determines what should happen when `value`
 already exists in the tree.  This is required.  It receives the existing tree
