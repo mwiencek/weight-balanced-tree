@@ -14,6 +14,3 @@ export interface MutableTree<T> {
 
 export type TreeAction<T> =
   (existingTreeValue: T, value: T) => T;
-
-export type SomeTreeAction =
-  <T>(existingTreeValue: T, value: T) => T;
