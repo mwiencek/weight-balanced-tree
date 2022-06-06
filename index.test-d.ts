@@ -3,7 +3,6 @@ import {
   expectType,
 } from 'tsd';
 
-import * as actions from './actions';
 import * as types from './types';
 import * as wbt from './index';
 import create from './create';
@@ -11,6 +10,9 @@ import find from './find';
 import findNext from './findNext';
 import findPrev from './findPrev';
 import insert, {
+  NOOP,
+  REPLACE,
+  THROW,
   insertIfNotExists,
   insertOrReplaceIfExists,
   insertOrThrowIfExists,
@@ -24,10 +26,6 @@ import remove, {
 } from './remove';
 import reverseIterate from './reverseIterate';
 
-expectType<types.SomeTreeAction>(actions.NOOP);
-expectType<types.SomeTreeAction>(actions.REPLACE);
-expectType<types.SomeTreeAction>(actions.THROW);
-
 declare const stringTree: types.ImmutableTree<string> | null;
 declare const nonNullStringTree: types.ImmutableTree<string>;
 
@@ -37,7 +35,7 @@ declare function cmpNumberAndString(a: number, b: string): number;
 
 // Basic usage
 expectType<types.ImmutableTree<string>>(create<string>(''));
-expectType<types.ImmutableTree<string>>(insert<string>(stringTree, '', cmpStrings, actions.NOOP));
+expectType<types.ImmutableTree<string>>(insert<string>(stringTree, '', cmpStrings, NOOP));
 expectType<types.ImmutableTree<string>>(insert<string>(stringTree, '', cmpStrings, (a: string, b: string) => a + b));
 expectType<types.ImmutableTree<string>>(insertIfNotExists<string>(stringTree, '', cmpStrings));
 expectType<types.ImmutableTree<string>>(insertOrReplaceIfExists<string>(stringTree, '', cmpStrings));
@@ -60,7 +58,7 @@ expectType<types.ImmutableTree<string> | null>(findPrev<string, number>(stringTr
 
 // Wrong tree type
 expectError<types.ImmutableTree<number>>(create<number>(''));
-expectError<types.ImmutableTree<number>>(insert<number>(stringTree, '', cmpNumbers, actions.NOOP));
+expectError<types.ImmutableTree<number>>(insert<number>(stringTree, '', cmpNumbers, NOOP));
 expectError<types.ImmutableTree<number>>(insertIfNotExists<number>(stringTree, '', cmpStrings));
 expectError<types.ImmutableTree<number>>(insertOrReplaceIfExists<number>(stringTree, '', cmpStrings));
 expectError<types.ImmutableTree<number>>(insertOrThrowIfExists<number>(stringTree, '', cmpStrings));
@@ -79,7 +77,7 @@ expectError<types.ImmutableTree<number> | null>(removeOrThrowIfNotExists<number>
 expectError<types.ImmutableTree<string> | null>(find<string>(stringTree, '', cmpNumbers));
 expectError<types.ImmutableTree<string> | null>(findNext<string>(stringTree, '', cmpNumbers));
 expectError<types.ImmutableTree<string> | null>(findPrev<string>(stringTree, '', cmpNumbers));
-expectError<types.ImmutableTree<string>>(insert<string>(stringTree, '', cmpNumbers, actions.NOOP));
+expectError<types.ImmutableTree<string>>(insert<string>(stringTree, '', cmpNumbers, NOOP));
 expectError<types.ImmutableTree<string> | null>(remove<string>(stringTree, '', cmpNumbers));
 expectError<types.ImmutableTree<string> | null>(removeIfExists<string>(stringTree, '', cmpNumbers));
 expectError<types.ImmutableTree<string> | null>(removeOrThrowIfNotExists<string>(stringTree, '', cmpNumbers));
@@ -89,6 +87,9 @@ expectError<types.ImmutableTree<string> | null>(find<string, number>(stringTree,
 expectError<types.ImmutableTree<string> | null>(findNext<string, number>(stringTree, 0, cmpStrings));
 expectError<types.ImmutableTree<string> | null>(findPrev<string, number>(stringTree, 0, cmpStrings));
 
+expectType<typeof NOOP>(wbt.NOOP);
+expectType<typeof REPLACE>(wbt.REPLACE);
+expectType<typeof THROW>(wbt.THROW);
 expectType<typeof create>(wbt.create);
 expectType<typeof find>(wbt.find);
 expectType<typeof findNext>(wbt.findNext);
@@ -104,7 +105,4 @@ expectType<typeof minValue>(wbt.minValue);
 expectType<typeof remove>(wbt.remove);
 expectType<typeof removeIfExists>(wbt.removeIfExists);
 expectType<typeof removeOrThrowIfNotExists>(wbt.removeOrThrowIfNotExists);
-expectType<types.SomeTreeAction>(wbt.NOOP);
-expectType<types.SomeTreeAction>(wbt.REPLACE);
-expectType<types.SomeTreeAction>(wbt.THROW);
 expectType<types.TreeAction<number>>((a: number, b: number) => a + b);

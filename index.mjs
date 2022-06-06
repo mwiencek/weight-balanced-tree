@@ -5,6 +5,9 @@ export {default as find} from './find.mjs';
 export {default as findNext} from './findNext.mjs';
 export {default as findPrev} from './findPrev.mjs';
 export {
+  NOOP,
+  REPLACE,
+  THROW,
   default as insert,
   insertIfNotExists,
   insertOrReplaceIfExists,
@@ -21,7 +24,6 @@ export {
   removeOrThrowIfNotExists,
 } from './remove.mjs';
 export {default as reverseIterate} from './reverseIterate.mjs';
-export * from './actions.mjs';
 /*::
 export * from './types.mjs';
 */

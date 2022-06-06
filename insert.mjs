@@ -1,10 +1,19 @@
 // @flow strict
 
-import {NOOP, REPLACE, THROW} from './actions.mjs';
 import {balanceLeft, balanceRight} from './balance.mjs';
 /*::
 import type {ImmutableTree, TreeAction} from './types.mjs';
 */
+
+export function THROW()/*: empty */ {
+  throw new Error('');
+}
+
+export const NOOP =
+  /*:: <T> */(treeValue/*: T */, givenValue/*: T */)/*: T */ => treeValue;
+
+export const REPLACE =
+  /*:: <T> */(treeValue/*: T */, givenValue/*: T */)/*: T */ => givenValue;
 
 export default function insert/*:: <T> */(
   tree/*: ImmutableTree<T> | null */,

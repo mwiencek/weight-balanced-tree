@@ -3,6 +3,9 @@ export {default as find} from './find';
 export {default as findNext} from './findNext';
 export {default as findPrev} from './findPrev';
 export {
+  NOOP,
+  REPLACE,
+  THROW,
   default as insert,
   insertIfNotExists,
   insertOrReplaceIfExists,
@@ -17,5 +20,4 @@ export {
   removeOrThrowIfNotExists,
 } from './remove';
 export {default as reverseIterate} from './reverseIterate';
-export * from './actions';
 export * from './types';

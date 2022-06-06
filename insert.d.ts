@@ -1,5 +1,13 @@
 import type {ImmutableTree, TreeAction} from './types';
 
+export function THROW(): never;
+
+export const NOOP:
+  <T>(treeValue: T, givenValue: T) => T;
+
+export const REPLACE:
+  <T>(treeValue: T, givenValue: T) => T;
+
 export default function insert<T>(
   tree: ImmutableTree<T> | null,
   value: T,
