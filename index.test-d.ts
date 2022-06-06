@@ -6,6 +6,7 @@ import {
 import * as types from './types';
 import * as wbt from './index';
 import create from './create';
+import equals from './equals';
 import find from './find';
 import findNext from './findNext';
 import findPrev from './findPrev';
@@ -56,6 +57,7 @@ expectType<types.ImmutableTree<string>>(insertOrReplaceIfExists<string>(stringTr
 expectType<types.ImmutableTree<string>>(insertOrThrowIfExists<string>(stringTree, '', cmpStrings));
 expectType<Generator<string, undefined, undefined>>(iterate<string>(stringTree));
 expectType<Generator<string, undefined, undefined>>(reverseIterate<string>(stringTree));
+expectType<boolean>(equals<string>(stringTree, stringTree, cmpStrings));
 expectType<types.ImmutableTree<string> | null>(find<string>(stringTree, '', cmpStrings));
 expectType<types.ImmutableTree<string> | null>(findNext<string>(stringTree, '', cmpStrings));
 expectType<types.ImmutableTree<string> | null>(findPrev<string>(stringTree, '', cmpStrings));
@@ -78,6 +80,7 @@ expectError<types.ImmutableTree<number>>(insertOrReplaceIfExists<number>(stringT
 expectError<types.ImmutableTree<number>>(insertOrThrowIfExists<number>(stringTree, '', cmpStrings));
 expectError<Generator<number, undefined, undefined>>(iterate<number>(stringTree));
 expectError<Generator<number, undefined, undefined>>(reverseIterate<number>(stringTree));
+expectError<boolean>(equals<number>(stringTree, stringTree, cmpStrings));
 expectError<types.ImmutableTree<number> | null>(find<number>(stringTree, 0, cmpNumbers));
 expectError<number>(maxValue<number>(nonNullStringTree));
 expectError<number>(minValue<number>(nonNullStringTree));
@@ -88,6 +91,7 @@ expectError<types.ImmutableTree<number> | null>(removeIfExists<number>(stringTre
 expectError<types.ImmutableTree<number> | null>(removeOrThrowIfNotExists<number>(stringTree, '', cmpNumbers));
 
 // Wrong comparator function type
+expectError<types.ImmutableTree<string> | null>(equals<string>(stringTree, stringTree, cmpNumbers));
 expectError<types.ImmutableTree<string> | null>(find<string>(stringTree, '', cmpNumbers));
 expectError<types.ImmutableTree<string> | null>(findNext<string>(stringTree, '', cmpNumbers));
 expectError<types.ImmutableTree<string> | null>(findPrev<string>(stringTree, '', cmpNumbers));
@@ -105,6 +109,7 @@ expectType<typeof NOOP>(wbt.NOOP);
 expectType<typeof REPLACE>(wbt.REPLACE);
 expectType<typeof THROW>(wbt.THROW);
 expectType<typeof create>(wbt.create);
+expectType<typeof equals>(wbt.equals);
 expectType<typeof find>(wbt.find);
 expectType<typeof findNext>(wbt.findNext);
 expectType<typeof findPrev>(wbt.findPrev);

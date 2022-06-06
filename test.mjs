@@ -509,3 +509,93 @@ test('insertByKey', function (t) {
   );
   t.end();
 });
+
+test('equals', function (t) {
+  const cmp = (a, b) => a - b;
+
+  let tree1 = null;
+  for (const num of oneToThirtyOne) {
+    tree1 = tree.insert(tree1, num, cmp);
+  }
+
+  let tree2 = null;
+  for (const num of oneToThirtyOne.slice(0).reverse()) {
+    tree2 = tree.insert(tree2, num, cmp);
+  }
+
+  t.ok(tree.equals(tree1, tree2, cmp));
+
+  tree1 = tree.remove(tree1, 1, cmp);
+  t.ok(!tree.equals(tree1, tree2, cmp));
+
+  tree2 = tree.remove(tree2, 1, cmp);
+  t.ok(tree.equals(tree1, tree2, cmp));
+
+  t.ok(tree.equals(null, null, compareIntegers));
+  t.ok(!tree.equals(tree1, null, compareIntegers));
+  t.ok(!tree.equals(null, tree1, compareIntegers));
+
+  t.ok(tree.equals(
+    {
+      left: {
+        left: null,
+        right: null,
+        size: 1,
+        value: {num: 1},
+      },
+      right: null,
+      size: 2,
+      value: {num: 2},
+    },
+    {
+      left: null,
+      right: {
+        left: null,
+        right: null,
+        size: 1,
+        value: {num: 2},
+      },
+      size: 2,
+      value: {num: 1},
+    },
+    (a, b) => a.num - b.num,
+  ));
+
+  t.ok(!tree.equals(
+    {
+      left: {
+        left: null,
+        right: null,
+        size: 1,
+        value: {num: 1},
+      },
+      right: {
+        left: null,
+        right: null,
+        size: 1,
+        value: {num: 3},
+      },
+      size: 2,
+      value: {num: 2},
+    },
+    {
+      left: {
+        left: null,
+        right: null,
+        size: 1,
+        value: {num: 0},
+      },
+      right: {
+        left: null,
+        right: null,
+        size: 1,
+        value: {num: 2},
+      },
+      size: 2,
+      value: {num: 1},
+    },
+    (a, b) => compareIntegers(a.num, b.num),
+  ));
+
+  t.end();
+});

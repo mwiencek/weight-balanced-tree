@@ -1,6 +1,7 @@
 // @flow strict
 
 export {default as create} from './create.mjs';
+export {default as equals} from './equals.mjs';
 export {default as find} from './find.mjs';
 export {default as findNext} from './findNext.mjs';
 export {default as findPrev} from './findPrev.mjs';

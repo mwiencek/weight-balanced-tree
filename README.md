@@ -187,6 +187,18 @@ Like `remove`, but throws an error if `value` does not exist in the tree.
 
 This simply checks if the tree returned from `remove` is the same reference.
 
+### equals
+
+```
+equals<T>(
+  a: ImmutableTree<T> | null,
+  b: ImmutableTree<T> | null,
+  cmp: (a: T, b: T) => number,
+): boolean;
+```
+
+Returns `true` if two trees contain the same values, or `false` otherwise.
+
 ### find
 
 ```
