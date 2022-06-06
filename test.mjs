@@ -256,6 +256,15 @@ test('removeIfExists', function (t) {
   const node7 = tree.remove(null, 1, compareIntegers);
   t.equal(node7, null);
 
+  node = tree.fromDistinctAscArray(oneToThirtyOne);
+
+  let size = 31;
+  for (const num of oneToThirtyOne) {
+    node = tree.removeIfExists(node, num, compareIntegers);
+    t.equal(tree.find(node, num, compareIntegers), null);
+    t.equal((node?.size ?? 0), --size);
+  }
+
   t.end();
 });
 
@@ -284,6 +293,10 @@ test('remove returns the same tree back if there is no value to remove', functio
   const origNode = node;
   for (const num of oneToThirtyOne) {
     node = tree.remove(node, num + 31, compareIntegers);
+    t.equal(node, origNode);
+  }
+  for (const num of oneToThirtyOne) {
+    node = tree.remove(node, num - 31, compareIntegers);
     t.equal(node, origNode);
   }
 
