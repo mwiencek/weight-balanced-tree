@@ -518,3 +518,26 @@ test('fromDistinctAscArray', function (t) {
   t.ok(checkTreeInvariants(node, compareIntegers), 'tree is valid and balanced');
   t.end();
 });
+
+test('GHC issue #4242', function (t) {
+  // https://gitlab.haskell.org/ghc/ghc/-/issues/4242
+
+  let node = null;
+  for (const num of [0, 2, 5, 1, 6, 4, 8, 9, 7, 11, 10, 3]) {
+    node = tree.insert(node, num, compareIntegers);
+  }
+
+  /*:: invariant(node !== null); */
+
+  node = tree.remove(node, tree.minValue(node), compareIntegers);
+
+  t.ok(checkTreeInvariants(node, compareIntegers));
+
+  /*:: invariant(node !== null); */
+
+  node = tree.remove(node, tree.minValue(node), compareIntegers);
+
+  t.ok(checkTreeInvariants(node, compareIntegers));
+
+  t.end();
+});
