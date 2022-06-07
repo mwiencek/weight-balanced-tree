@@ -1,23 +1,30 @@
 # weight-balanced-tree
 
-A persistent weight-balanced (bounded balance) tree.
+A [persistent](https://en.wikipedia.org/wiki/Persistent_data_structure)
+weight-balanced ([bounded balance](https://en.wikipedia.org/wiki/Weight-balanced_tree))
+tree for JavaScript.
 
-Both Flow and TypeScript definitions are included.
-
-References:
-
- 1. Adams, Stephen.
-    "Implementing Sets Efficiently in a Functional Language."
-    University of Southampton, n.d.
-    Accessed at http://groups.csail.mit.edu/mac/users/adams/BB/92-10.ps
-
- 2. [GHC's Data.Map.Internal](https://gitlab.haskell.org/ghc/packages/containers/-/blob/f00aa02/containers/src/Data/Map/Internal.hs).
+ * Zero dependencies
+ * Usable as a persistent map or set
+ * Works in Node.js and the browser
+ * Flow and TypeScript definitions included
 
 ## Installation
 
-`npm install weight-balanced-tree` or `yarn add weight-balanced-tree`.
+This software is released under the [MIT license](LICENSE).
+
+It's published on npm as [weight-balanced-tree](https://www.npmjs.com/package/weight-balanced-tree),
+so you can install it using `yarn` or `npm`.
 
 ## API
+
+To create a tree, see `create`, `insert`, or `fromDistinctAscArray` below.
+
+A tree consists of at least one value.  There's no tree of size 0; an empty
+tree is represented by `null`.
+
+Although there's only one datum stored per node, for maps you can store a
+`[key, value]` tuple, or store `key` directly on `value` if it's an object.
 
 ```
 type ImmutableTree<+T> = {
@@ -34,7 +41,11 @@ type InsertNotFoundHandler<T, K> =
   (key: T) => T;
 ```
 
-### insert
+### size
+
+How many values are contained in the tree.
+
+### insert()
 
 ```
 insert<T>(
@@ -45,8 +56,7 @@ insert<T>(
 ): ImmutableTree<T>;
 ```
 
-Returns a new version of `tree` with `value` inserted.  The old version is not
-modified.
+Returns a new version of `tree` with `value` inserted.
 
 Pass `null` for `tree` to create a new tree.  (This module has no such thing
 as a tree of size 0.)
@@ -86,7 +96,7 @@ these options for you:
 
 `insertOrThrowIfExists` is an alias of `insert`.
 
-### insertByKey
+### insertByKey()
 
 ```
 insertByKey<T, K>(
@@ -158,7 +168,7 @@ insertByKey<Item, number>(
 );
 ```
 
-### remove
+### remove()
 
 ```
 remove<T>(
@@ -168,14 +178,12 @@ remove<T>(
 ): ImmutableTree<T> | null;
 ```
 
-Returns a new version of `tree` with `value` removed.  The old version is not
-modified.
+Returns a new version of `tree` with `value` removed.
 
 If `value` is not found in the tree, the same tree reference is returned
 back.
 
-If this was the last value in `tree`, `null` is returned (indicating an empty
-tree).
+If this was the last value in `tree`, `null` is returned.
 
 The `cmp` (comparator) function is the same as used for `insert`.
 
@@ -187,7 +195,7 @@ Like `remove`, but throws an error if `value` does not exist in the tree.
 
 This simply checks if the tree returned from `remove` is the same reference.
 
-### equals
+### equals()
 
 ```
 equals<T>(
@@ -199,7 +207,7 @@ equals<T>(
 
 Returns `true` if two trees contain the same values, or `false` otherwise.
 
-### find
+### find()
 
 ```
 find<T>(
@@ -214,7 +222,7 @@ found.
 
 The `cmp` (comparator) function is the same as used for `insert`.
 
-### findNext
+### findNext()
 
 ```
 findNext<T, V = T>(
@@ -228,7 +236,7 @@ Finds the branch of `tree` that follows `value` and returns it, or `null` if
 there is no such node.  `value` does not have to exist in the tree: if a set
 has 1 & 3, the next value from 2 is 3.
 
-### findPrev
+### findPrev()
 
 ```
 findNext<T, V = T>(
@@ -242,7 +250,7 @@ Finds the branch of `tree` that precedes `value` and returns it, or `null` if
 there is no such node.  `value` does not have to exist in the tree: if a set
 has 1 & 3, the previous value from 2 is 1.
 
-### fromDistinctAscArray
+### fromDistinctAscArray()
 
 ```
 fromDistinctAscArray<T>(
@@ -257,7 +265,7 @@ building the tree value-by-value with `insert`.)
 If `array` is not sorted or contains duplicate values, then this returns an
 invalid tree.  (Do not do this.)
 
-### iterate
+### iterate()
 
 ```
 iterate<T>(tree: ImmutableTree<T> | null): Generator<T, void, void>;
@@ -265,7 +273,7 @@ iterate<T>(tree: ImmutableTree<T> | null): Generator<T, void, void>;
 
 Returns a JS iterator that traverses the values of the tree in order.
 
-### reverseIterate
+### reverseIterate()
 
 ```
 reverseIterate<T>(tree: ImmutableTree<T> | null): Generator<T, void, void>;
@@ -273,7 +281,7 @@ reverseIterate<T>(tree: ImmutableTree<T> | null): Generator<T, void, void>;
 
 Returns a JS iterator that traverses the values of the tree in reverse order.
 
-### minNode
+### minNode()
 
 ```
 minNode<T>(tree: ImmutableTree<T>): ImmutableTree<T>;
@@ -281,7 +289,7 @@ minNode<T>(tree: ImmutableTree<T>): ImmutableTree<T>;
 
 Returns the "smallest" (left-most) node in `tree`.
 
-### minValue
+### minValue()
 
 ```
 minValue<T>(tree: ImmutableTree<T>): T;
@@ -291,7 +299,7 @@ Returns the "smallest" (left-most) value in `tree`.
 
 This is equivalent to `minNode(tree).value`.
 
-### maxNode
+### maxNode()
 
 ```
 maxNode<T>(tree: ImmutableTree<T>): ImmutableTree<T>;
@@ -299,7 +307,7 @@ maxNode<T>(tree: ImmutableTree<T>): ImmutableTree<T>;
 
 Returns the "largest" (right-most) node in `tree`.
 
-### maxValue
+### maxValue()
 
 ```
 maxValue<T>(tree: ImmutableTree<T>): T;
@@ -308,34 +316,6 @@ maxValue<T>(tree: ImmutableTree<T>): T;
 Returns the "largest" (right-most) value in `tree`.
 
 This is equivalent to `maxNode(tree).value`.
-
-## Example
-
-A tree always consists of at least one node with a value; an "empty" tree is
-just `null`.
-
-These can be used as maps or simple ordered lists.  Although there's only one
-datum stored per node, for maps you can store a `[key, value]` tuple, or store
-`key` directly on `value` if it's an object.
-
-
-```JavaScript
-import * as wbt from 'weight-balanced-tree';
-
-const compareInt = (a, b) => (a - b);
-const insertInt = (list, int) => wbt.insert(list, int, compareInt);
-const removeInt = (list, int) => wbt.remove(list, int, compareInt);
-
-let list = null;
-list = insertInt(list, 2); // list.size === 1
-list = insertInt(list, 1); // list.size === 2
-
-Array.from(wbt.iterate(list)); // [1, 2]
-
-list = removeInt(list, 1); // list.size === 1
-list = removeInt(list, 2); // list === null
-
-```
 
 ## Performance
 
@@ -357,3 +337,12 @@ To test the .d.ts files, run `./node_modules/.bin/tsd`.
 ## Changelog
 
 See [CHANGELOG.md](CHANGELOG.md).
+
+## References
+
+ 1. Adams, Stephen.
+    "Implementing Sets Efficiently in a Functional Language."
+    University of Southampton, n.d.
+    Accessed at http://groups.csail.mit.edu/mac/users/adams/BB/92-10.ps
+
+ 2. [GHC's Data.Map.Internal](https://gitlab.haskell.org/ghc/packages/containers/-/blob/f00aa02/containers/src/Data/Map/Internal.hs).
