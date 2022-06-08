@@ -1,6 +1,6 @@
 # Changelog
 
-## v0.3.0 (unreleased)
+## v0.3.0 (2022-06-08)
 
  * Added `insertByKey`, which allows for insertions using a key of type `K`
    instead of a value of type `T`.  It accepts an `onNotFound` handler which
