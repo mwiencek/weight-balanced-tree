@@ -9,7 +9,7 @@ import type {ImmutableTree} from './types.mjs';
 export default function equals/*:: <T> */(
   a/*: ImmutableTree<T> | null */,
   b/*: ImmutableTree<T> | null */,
-  cmp/*: (T, T) => number */,
+  cmp/*: (a: T, b: T) => number */,
 )/*: boolean */ {
   if (a === null && b === null) {
     return true;

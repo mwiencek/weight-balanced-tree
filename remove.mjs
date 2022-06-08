@@ -9,7 +9,7 @@ import type {ImmutableTree, MutableTree} from './types.mjs';
 export default function remove/*:: <T> */(
   tree/*: ImmutableTree<T> | null */,
   value/*: T */,
-  cmp/*: (T, T) => number */,
+  cmp/*: (a: T, b: T) => number */,
 )/*: ImmutableTree<T> | null */ {
   if (tree === null) {
     return null;
@@ -77,13 +77,13 @@ export default function remove/*:: <T> */(
 export const removeIfExists/*: <T> (
   tree: ImmutableTree<T> | null,
   value: T,
-  cmp: (T, T) => number,
+  cmp: (a: T, b: T) => number,
 ) => ImmutableTree<T> | null */ = remove;
 
 export function removeOrThrowIfNotExists/*:: <T> */(
   tree/*: ImmutableTree<T> | null */,
   value/*: T */,
-  cmp/*: (T, T) => number */,
+  cmp/*: (a: T, b: T) => number */,
 )/*: ImmutableTree<T> | null */ {
   const newTree = remove(tree, value, cmp);
   if (newTree === tree) {

@@ -8,7 +8,7 @@ import type {ImmutableTree} from './types.mjs';
 export default function findPrev/*:: <T, V = T> */(
   tree/*: ImmutableTree<T> | null */,
   value/*: V */,
-  cmp/*: (V, T) => number */,
+  cmp/*: (a: V, b: T) => number */,
 )/*: ImmutableTree<T> | null */ {
   let cursor = tree;
   let smallerParent = null;

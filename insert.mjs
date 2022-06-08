@@ -44,7 +44,7 @@ export const REPLACE = onConflictUseGivenValue;
 export function insertByKey/*:: <T, K> */(
   tree/*: ImmutableTree<T> | null */,
   key/*: K */,
-  cmp/*: (K, T) => number */,
+  cmp/*: (key: K, treeValue: T) => number */,
   onConflict/*: InsertConflictHandler<T, K> */,
   onNotFound/*: InsertNotFoundHandler<T, K> */,
 )/*: ImmutableTree<T> */ {
@@ -113,7 +113,7 @@ export function insertByKey/*:: <T, K> */(
 export default function insert/*:: <T> */(
   tree/*: ImmutableTree<T> | null */,
   value/*: T */,
-  cmp/*: (T, T) => number */,
+  cmp/*: (a: T, b: T) => number */,
   onConflict/*:: ?: InsertConflictHandler<T, T> */ = onConflictThrowError,
 )/*: ImmutableTree<T> */ {
   return insertByKey/*:: <T, T> */(
@@ -128,7 +128,7 @@ export default function insert/*:: <T> */(
 export function insertIfNotExists/*:: <T> */(
   tree/*: ImmutableTree<T> | null */,
   value/*: T */,
-  cmp/*: (T, T) => number */,
+  cmp/*: (a: T, b: T) => number */,
 )/*: ImmutableTree<T> */ {
   return insertByKey/*:: <T, T> */(
     tree,
@@ -142,7 +142,7 @@ export function insertIfNotExists/*:: <T> */(
 export function insertOrReplaceIfExists/*:: <T> */(
   tree/*: ImmutableTree<T> | null */,
   value/*: T */,
-  cmp/*: (T, T) => number */,
+  cmp/*: (a: T, b: T) => number */,
 )/*: ImmutableTree<T> */ {
   return insertByKey/*:: <T, T> */(
     tree,
@@ -156,7 +156,7 @@ export function insertOrReplaceIfExists/*:: <T> */(
 export function insertOrThrowIfExists/*:: <T> */(
   tree/*: ImmutableTree<T> | null */,
   value/*: T */,
-  cmp/*: (T, T) => number */,
+  cmp/*: (a: T, b: T) => number */,
 )/*: ImmutableTree<T> */ {
   return insertByKey/*:: <T, T> */(
     tree,
