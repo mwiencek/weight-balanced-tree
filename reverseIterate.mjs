@@ -2,6 +2,7 @@
 
 /*::
 import type {ImmutableTree} from './types.mjs';
+import invariant from './invariant.mjs';
 */
 
 export default function* reverseIterate/*:: <T> */(

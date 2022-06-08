@@ -15,6 +15,9 @@ import {
   onConflictUseGivenValue,
 } from './insert.mjs';
 import shuffle from './shuffle.mjs';
+/*::
+import invariant from './invariant.mjs';
+*/
 
 const oneToThirtyOne = [];
 

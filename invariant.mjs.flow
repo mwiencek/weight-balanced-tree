@@ -1,0 +1,5 @@
+// @flow strict
+
+/*::
+declare export default function invariant(mixed): void;
+*/
