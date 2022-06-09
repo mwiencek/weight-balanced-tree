@@ -86,7 +86,16 @@ for (const pair of asciiTable) {
   prefilledTree = wbt.insert(prefilledTree, pair, compareKeys);
 }
 
+let prefilledTree2 = null;
+for (const pair of asciiTable) {
+  prefilledTree2 = wbt.insert(prefilledTree2, pair, compareKeys);
+}
+
 const prefilledImmutableList = Immutable.List(asciiTable);
+
+suite.add('equals (weight-balanced-tree)', function () {
+  wbt.equals(prefilledTree, prefilledTree2, compareKeys);
+});
 
 suite.add('insertion (weight-balanced-tree)', function () {
   const asciiTableCopy = copyAndShuffleAsciiTable();
