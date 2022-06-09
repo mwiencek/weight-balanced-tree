@@ -2,7 +2,7 @@
 
 ## v0.4.0 (unreleased)
 
-  * WIP
+  * Added `zip` to zip two trees together, returning an iterable of tuples.
 
 ## v0.3.0 (2022-06-08)
 

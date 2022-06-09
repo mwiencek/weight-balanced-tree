@@ -535,6 +535,27 @@ test('fromDistinctAscArray', function (t) {
   t.end();
 });
 
+test('zip', function (t) {
+  t.deepEqual(Array.from(tree.zip(null, null)), []);
+  t.deepEqual(Array.from(tree.zip(tree.create(1), null)), [[1, undefined]]);
+  t.deepEqual(Array.from(tree.zip(null, tree.create(1))), [[undefined, 1]]);
+  t.deepEqual(
+    Array.from(
+      tree.zip(
+        tree.fromDistinctAscArray(['a', 'b', 'c']),
+        tree.fromDistinctAscArray([1, 2, 3, undefined]),
+      )
+    ),
+    [
+      ['a', 1],
+      ['b', 2],
+      ['c', 3],
+      [undefined, undefined],
+    ],
+  );
+  t.end();
+});
+
 test('GHC issue #4242', function (t) {
   // https://gitlab.haskell.org/ghc/ghc/-/issues/4242
 

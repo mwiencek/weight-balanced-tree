@@ -35,9 +35,11 @@ import remove, {
   removeOrThrowIfNotExists,
 } from './remove';
 import reverseIterate from './reverseIterate';
+import zip from './zip';
 
 declare const stringTree: types.ImmutableTree<string> | null;
 declare const nonNullStringTree: types.ImmutableTree<string>;
+declare const numberTree: types.ImmutableTree<number> | null;
 
 declare function cmpStrings(a: string, b: string): number;
 declare function cmpNumbers(a: number, b: number): number;
@@ -68,6 +70,7 @@ expectType<string>(minValue<string>(nonNullStringTree));
 expectType<types.ImmutableTree<string> | null>(remove<string>(stringTree, '', cmpStrings));
 expectType<types.ImmutableTree<string> | null>(removeIfExists<string>(stringTree, '', cmpStrings));
 expectType<types.ImmutableTree<string> | null>(removeOrThrowIfNotExists<string>(stringTree, '', cmpStrings));
+expectType<Generator<[string | undefined, number | undefined], undefined, undefined>>(zip(stringTree, numberTree));
 
 // Value type override
 expectType<types.ImmutableTree<string> | null>(find<string, number>(stringTree, 0, cmpNumberAndString));
@@ -92,6 +95,7 @@ expectError<string>(minValue<string>(stringTree));
 expectError<types.ImmutableTree<number> | null>(remove<number>(stringTree, '', cmpNumbers));
 expectError<types.ImmutableTree<number> | null>(removeIfExists<number>(stringTree, '', cmpNumbers));
 expectError<types.ImmutableTree<number> | null>(removeOrThrowIfNotExists<number>(stringTree, '', cmpNumbers));
+expectError<Generator<[string | undefined, number | undefined], undefined, undefined>>(zip(numberTree, stringTree));
 
 // Wrong comparator function type
 expectError<types.ImmutableTree<string> | null>(equals<string>(stringTree, stringTree, cmpNumbers));
@@ -129,5 +133,6 @@ expectType<typeof minValue>(wbt.minValue);
 expectType<typeof remove>(wbt.remove);
 expectType<typeof removeIfExists>(wbt.removeIfExists);
 expectType<typeof removeOrThrowIfNotExists>(wbt.removeOrThrowIfNotExists);
+expectType<typeof zip>(wbt.zip);
 expectType<InsertConflictHandler<string, number>>((a: string, b: number) => a + String(b));
 expectType<InsertNotFoundHandler<string, number>>((a: number) => String(a));

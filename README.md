@@ -317,6 +317,20 @@ Returns the "largest" (right-most) value in `tree`.
 
 This is equivalent to `maxNode(tree).value`.
 
+### zip()
+
+```
+zip<T, U>(
+  t1: ImmutableTree<T> | null,
+  t2: ImmutableTree<U> | null,
+): Generator<[T | void, U | void], void, void>;
+```
+
+Zips two trees together, returning an iterable of tuples: the first tuple
+contains the first values of both trees, the second tuple contains the second
+values of both trees, and so on.  If the trees are of different sizes,
+`undefined` is used within a tuple where a corresponding value is missing.
+
 ## Performance
 
 Performance will largely depend on the size of your data and the cost of your
