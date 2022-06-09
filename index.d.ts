@@ -23,5 +23,6 @@ export {
   removeOrThrowIfNotExists,
 } from './remove';
 export {default as reverseIterate} from './reverseIterate';
+export {default as toArray} from './toArray';
 export {default as zip} from './zip';
 export * from './types';

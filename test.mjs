@@ -535,6 +535,14 @@ test('fromDistinctAscArray', function (t) {
   t.end();
 });
 
+test('toArray', function (t) {
+  t.deepEqual(tree.toArray(null), []);
+  t.deepEqual(tree.toArray(tree.create(1)), [1]);
+  t.deepEqual(tree.toArray(tree.fromDistinctAscArray([1, 2, 3])), [1, 2, 3]);
+  t.deepEqual(tree.toArray(tree.fromDistinctAscArray([3, 2, 1])), [3, 2, 1]);
+  t.end();
+});
+
 test('zip', function (t) {
   t.deepEqual(Array.from(tree.zip(null, null)), []);
   t.deepEqual(Array.from(tree.zip(tree.create(1), null)), [[1, undefined]]);

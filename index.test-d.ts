@@ -35,6 +35,7 @@ import remove, {
   removeOrThrowIfNotExists,
 } from './remove';
 import reverseIterate from './reverseIterate';
+import toArray from './toArray';
 import zip from './zip';
 
 declare const stringTree: types.ImmutableTree<string> | null;
@@ -70,6 +71,7 @@ expectType<string>(minValue<string>(nonNullStringTree));
 expectType<types.ImmutableTree<string> | null>(remove<string>(stringTree, '', cmpStrings));
 expectType<types.ImmutableTree<string> | null>(removeIfExists<string>(stringTree, '', cmpStrings));
 expectType<types.ImmutableTree<string> | null>(removeOrThrowIfNotExists<string>(stringTree, '', cmpStrings));
+expectType<ReadonlyArray<string>>(toArray(stringTree));
 expectType<Generator<[string | undefined, number | undefined], undefined, undefined>>(zip(stringTree, numberTree));
 
 // Value type override
@@ -95,6 +97,7 @@ expectError<string>(minValue<string>(stringTree));
 expectError<types.ImmutableTree<number> | null>(remove<number>(stringTree, '', cmpNumbers));
 expectError<types.ImmutableTree<number> | null>(removeIfExists<number>(stringTree, '', cmpNumbers));
 expectError<types.ImmutableTree<number> | null>(removeOrThrowIfNotExists<number>(stringTree, '', cmpNumbers));
+expectError<ReadonlyArray<string>>(toArray<string>(numberTree));
 expectError<Generator<[string | undefined, number | undefined], undefined, undefined>>(zip(numberTree, stringTree));
 
 // Wrong comparator function type
@@ -133,6 +136,7 @@ expectType<typeof minValue>(wbt.minValue);
 expectType<typeof remove>(wbt.remove);
 expectType<typeof removeIfExists>(wbt.removeIfExists);
 expectType<typeof removeOrThrowIfNotExists>(wbt.removeOrThrowIfNotExists);
+expectType<typeof toArray>(wbt.toArray);
 expectType<typeof zip>(wbt.zip);
 expectType<InsertConflictHandler<string, number>>((a: string, b: number) => a + String(b));
 expectType<InsertNotFoundHandler<string, number>>((a: number) => String(a));

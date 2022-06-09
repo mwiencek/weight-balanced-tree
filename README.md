@@ -317,6 +317,16 @@ Returns the "largest" (right-most) value in `tree`.
 
 This is equivalent to `maxNode(tree).value`.
 
+### toArray()
+
+```
+toArray<T>(
+  tree: ImmutableTree<T> | null,
+): $ReadOnlyArray<T>;
+```
+
+Flattens `tree` into an array of values.
+
 ### zip()
 
 ```
