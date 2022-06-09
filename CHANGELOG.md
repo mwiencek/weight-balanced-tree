@@ -1,5 +1,9 @@
 # Changelog
 
+## v0.4.0 (unreleased)
+
+  * WIP
+
 ## v0.3.0 (2022-06-08)
 
  * Added `insertByKey`, which allows for insertions using a key of type `K`
