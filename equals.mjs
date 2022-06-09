@@ -1,8 +1,9 @@
 // @flow strict
 
-import find from './find.mjs';
 import iterate from './iterate.mjs';
+import zip from './zip.mjs';
 /*::
+import invariant from './invariant.mjs';
 import type {ImmutableTree} from './types.mjs';
 */
 
@@ -20,8 +21,13 @@ export default function equals/*:: <T> */(
   if (a.size !== b.size) {
     return false;
   }
-  for (const aValue of iterate(a)) {
-    if (find(b, aValue, cmp) === null) {
+  for (const [aValue, bValue] of zip(a, b)) {
+    /*::
+    // These may actually be void if T includes void, but it's to convince
+    // Flow that they're not void from zip.
+    invariant(aValue !== undefined && bValue !== undefined);
+    */
+    if (cmp(aValue, bValue) !== 0) {
       return false;
     }
   }

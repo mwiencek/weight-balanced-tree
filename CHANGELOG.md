@@ -3,6 +3,7 @@
 ## v0.4.0 (unreleased)
 
   * Added `zip` to zip two trees together, returning an iterable of tuples.
+  * Improved the performance of `equals`.
 
 ## v0.3.0 (2022-06-08)
 
