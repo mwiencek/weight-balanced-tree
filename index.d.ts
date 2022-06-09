@@ -24,5 +24,6 @@ export {
 } from './remove';
 export {default as reverseIterate} from './reverseIterate';
 export {default as toArray} from './toArray';
+export {default as union} from './union';
 export {default as zip} from './zip';
 export * from './types';

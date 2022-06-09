@@ -28,6 +28,7 @@ export {
 } from './remove.mjs';
 export {default as reverseIterate} from './reverseIterate.mjs';
 export {default as toArray} from './toArray.mjs';
+export {default as union} from './union.mjs';
 export {default as zip} from './zip.mjs';
 /*::
 export * from './types.mjs';

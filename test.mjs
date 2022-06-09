@@ -543,6 +543,136 @@ test('toArray', function (t) {
   t.end();
 });
 
+test('union', function (t) {
+  const compareValues = (a, b) => compareIntegers(a.v, b.v);
+
+  t.equals(tree.union(null, null, compareIntegers), null);
+  t.deepEqual(
+    tree.union(tree.create(1), null, compareIntegers),
+    tree.create(1),
+  );
+  t.deepEqual(
+    tree.union(null, tree.create(1), compareIntegers),
+    tree.create(1),
+  );
+  t.ok(
+    tree.equals(
+      tree.union(
+        tree.fromDistinctAscArray([1, 2, 3]),
+        tree.fromDistinctAscArray([4, 5, 6]),
+        compareIntegers,
+      ),
+      tree.fromDistinctAscArray([1, 2, 3, 4, 5, 6]),
+      compareIntegers,
+    ),
+  );
+  t.ok(
+    tree.equals(
+      tree.union(
+        tree.fromDistinctAscArray([4, 5, 6]),
+        tree.fromDistinctAscArray([1, 2, 3]),
+        compareIntegers,
+      ),
+      tree.fromDistinctAscArray([1, 2, 3, 4, 5, 6]),
+      compareIntegers,
+    ),
+  );
+  t.ok(
+    tree.equals(
+      tree.union(
+        tree.fromDistinctAscArray([2, 3]),
+        tree.fromDistinctAscArray([1, 4]),
+        compareIntegers,
+      ),
+      tree.fromDistinctAscArray([1, 2, 3, 4]),
+      compareIntegers,
+    ),
+  );
+  t.ok(
+    tree.equals(
+      tree.union(
+        tree.fromDistinctAscArray([1, 4]),
+        tree.fromDistinctAscArray([1, 2, 3]),
+        compareIntegers,
+      ),
+      tree.fromDistinctAscArray([1, 2, 3, 4]),
+      compareIntegers,
+    ),
+  );
+  t.ok(
+    tree.equals(
+      tree.union(
+        tree.fromDistinctAscArray([1, 2, 3]),
+        tree.fromDistinctAscArray([1, 4]),
+        compareIntegers,
+      ),
+      tree.fromDistinctAscArray([1, 2, 3, 4]),
+      compareIntegers,
+    ),
+  );
+  t.ok(
+    tree.equals(
+      tree.union(
+        tree.fromDistinctAscArray(oneToThirtyOne),
+        tree.fromDistinctAscArray(oneToThirtyOne),
+        compareIntegers,
+      ),
+      tree.fromDistinctAscArray(oneToThirtyOne),
+      compareIntegers,
+    ),
+  );
+
+  const v3a = {v: 3};
+  const v3b = {v: 3};
+
+  const unionWithDefaultConflictHandler = tree.union(
+    tree.fromDistinctAscArray([{v: 1}, {v: 2}, v3a]),
+    tree.fromDistinctAscArray([v3b, {v: 4}, {v: 5}]),
+    compareValues,
+  );
+  t.deepEqual(
+    tree.toArray(
+      unionWithDefaultConflictHandler,
+    ),
+    [{v: 1}, {v: 2}, {v: 3}, {v: 4}, {v: 5}],
+  );
+  t.equals(
+    tree.find(unionWithDefaultConflictHandler, {v: 3}, compareValues)?.value,
+    v3b,
+  );
+
+  const unionWithCustomConflictHandler = tree.union(
+    tree.fromDistinctAscArray([{v: 1}, {v: 2}, v3a]),
+    tree.fromDistinctAscArray([v3b, {v: 4}, {v: 5}]),
+    compareValues,
+    (v1, v2) => v1,
+  );
+  t.deepEqual(
+    tree.toArray(
+      unionWithCustomConflictHandler,
+    ),
+    [{v: 1}, {v: 2}, {v: 3}, {v: 4}, {v: 5}],
+  );
+  t.equals(
+    tree.find(unionWithCustomConflictHandler, {v: 3}, compareValues)?.value,
+    v3a,
+  );
+
+  t.throws(
+    function () {
+      tree.union(
+        tree.fromDistinctAscArray([1]),
+        tree.fromDistinctAscArray([1]),
+        compareIntegers,
+        (v1, v2) => 2,
+      );
+    },
+    /^Error: The relative ordering of the union value has changed\.$/,
+  );
+
+  t.end();
+});
+
 test('zip', function (t) {
   t.deepEqual(Array.from(tree.zip(null, null)), []);
   t.deepEqual(Array.from(tree.zip(tree.create(1), null)), [[1, undefined]]);

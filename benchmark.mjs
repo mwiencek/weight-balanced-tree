@@ -2,6 +2,7 @@ import Benchmark from 'benchmark';
 import * as Immutable from 'immutable';
 
 import * as wbt from './index.mjs';
+import compareIntegers from './compareIntegers.mjs';
 import shuffle from './shuffle.mjs';
 
 const suite = new Benchmark.Suite();
@@ -162,6 +163,13 @@ suite.add('removal (array)', function () {
       array.splice(index, 1);
     }
   }
+});
+
+const union1 = wbt.fromDistinctAscArray([1, 2, 3, 7, 8, 9]);
+const union2 = wbt.fromDistinctAscArray([3, 4, 5, 6, 7]);
+
+suite.add('union (weight-balanced-tree)', function () {
+  wbt.union(union1, union2, compareIntegers);
 });
 
 suite.add('create from sorted array (weight-balanced-tree)', function () {

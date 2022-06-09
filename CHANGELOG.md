@@ -3,6 +3,7 @@
 ## v0.4.0 (unreleased)
 
   * Added `zip` to zip two trees together, returning an iterable of tuples.
+  * Added `union` to merge two trees together.
   * Added `toArray` to flatten a tree into an array of values.
   * Improved the performance of `equals`.
 
