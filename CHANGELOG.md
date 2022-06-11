@@ -6,6 +6,8 @@
   * Added `union` to merge two trees together.
   * Added `toArray` to flatten a tree into an array of values.
   * Improved the performance of `equals`.
+  * Fixed a bug causing `insert` to return nodes with incorrect sizes when
+    replacing a value.
 
 ## v0.3.0 (2022-06-08)
 

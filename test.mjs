@@ -186,14 +186,21 @@ test('insertOrReplaceIfExists', function (t) {
   let node = null;
   for (const num of oneToThirtyOne) {
     node = tree.insert(node, {value: num}, cmp, onConflictUseGivenValue);
+    checkTreeInvariants(node, cmp);
+  }
 
+  for (const num of oneToThirtyOne) {
     const newValue1 = {value: num};
     const newNode1 = tree.insert(node, newValue1, cmp, onConflictUseGivenValue);
+    checkTreeInvariants(newNode1, cmp);
     t.notEqual(node, newNode1);
     t.equal(tree.find(newNode1, {value: num}, cmp)?.value, newValue1);
+  }
 
+  for (const num of oneToThirtyOne) {
     const newValue2 = {value: num};
     const newNode2 = tree.insertOrReplaceIfExists(node, newValue2, cmp);
+    checkTreeInvariants(newNode2, cmp);
     t.notEqual(node, newNode2);
     t.equal(tree.find(newNode2, {value: num}, cmp)?.value, newValue2);
   }
@@ -235,6 +242,28 @@ test('insertOrThrowIfExists', function (t) {
   t.end();
 });
 
+test('replacing a node preserves the existing node size', function (t) {
+  t.equal(
+    tree.insertOrReplaceIfExists(
+      {
+        left: null,
+        right: {
+          left: null,
+          right: null,
+          size: 1,
+          value: {value: 2},
+        },
+        size: 2,
+        value: {value: 1},
+      },
+      {value: 1},
+      (a, b) => compareIntegers(a.value, b.value),
+    ).size,
+    2,
+  );
+  t.end();
+});
+
 test('removeIfExists', function (t) {
   let node = tree.create(1);
   node = tree.insert(node, 2, compareIntegers);
@@ -264,6 +293,7 @@ test('removeIfExists', function (t) {
   let size = 31;
   for (const num of oneToThirtyOne) {
     node = tree.removeIfExists(node, num, compareIntegers);
+    checkTreeInvariants(node, compareIntegers);
     t.equal(tree.find(node, num, compareIntegers), null);
     t.equal((node?.size ?? 0), --size);
   }
@@ -296,10 +326,12 @@ test('remove returns the same tree back if there is no value to remove', functio
   const origNode = node;
   for (const num of oneToThirtyOne) {
     node = tree.remove(node, num + 31, compareIntegers);
+    checkTreeInvariants(node, compareIntegers);
     t.equal(node, origNode);
   }
   for (const num of oneToThirtyOne) {
     node = tree.remove(node, num - 31, compareIntegers);
+    checkTreeInvariants(node, compareIntegers);
     t.equal(node, origNode);
   }
 

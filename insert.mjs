@@ -73,7 +73,7 @@ export function insertByKey/*:: <T, K> */(
     return {
       left: tree.left,
       right: tree.right,
-      size: 1,
+      size: tree.size,
       value: valueToInsert,
     };
   }
