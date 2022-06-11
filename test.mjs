@@ -4,6 +4,11 @@ import test from 'tape';
 
 import checkTreeInvariants from './checkTreeInvariants.mjs';
 import compareIntegers from './compareIntegers.mjs';
+import {
+  ValueExistsError,
+  ValueNotFoundError,
+  ValueOrderError,
+} from './errors.mjs';
 import * as tree from './index.mjs';
 import {
   NOOP,
@@ -219,21 +224,21 @@ test('insertOrThrowIfExists', function (t) {
       function () {
         node = tree.insertOrThrowIfExists(node, {value: num}, cmp);
       },
-      /^Error: The value given to insert already exists in the tree\.$/,
+      ValueExistsError,
       'exception is thrown with insertOrThrowIfExists',
     );
     t.throws(
       function () {
         node = tree.insert(node, {value: num}, cmp, onConflictThrowError);
       },
-      /^Error: The value given to insert already exists in the tree\.$/,
+      ValueExistsError,
       'exception is thrown with insert plus onConflictThrowError',
     );
     t.throws(
       function () {
         node = tree.insert(node, {value: num}, cmp);
       },
-      /^Error: The value given to insert already exists in the tree\.$/,
+      ValueExistsError,
       'exception is thrown with insert by default',
     );
   }
@@ -307,7 +312,7 @@ test('removeOrThrowIfNotExists', function (t) {
     function () {
       node = tree.removeOrThrowIfNotExists(node, 2, compareIntegers);
     },
-    /^Error: The value given to remove does not exist in the tree\.$/,
+    ValueNotFoundError,
     'exception is thrown with removeOrThrowIfNotExists',
   );
   t.equal(node?.size, 1);
@@ -383,7 +388,7 @@ test('insert with onConflict', function (t) {
         },
       );
     },
-    /^Error: The relative ordering of the value to insert has changed\.$/,
+    ValueOrderError,
   );
   t.end();
 });
@@ -468,7 +473,7 @@ test('insertByKey', function (t) {
         },
       );
     },
-    /^Error: The relative ordering of the value to insert has changed\.$/,
+    ValueOrderError,
   );
   t.end();
 });
@@ -699,7 +704,7 @@ test('union', function (t) {
         (v1, v2) => 2,
       );
     },
-    /^Error: The relative ordering of the union value has changed\.$/,
+    ValueOrderError,
   );
 
   t.end();

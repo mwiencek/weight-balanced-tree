@@ -1,4 +1,5 @@
 import {
+  expectAssignable,
   expectError,
   expectType,
 } from 'tsd';
@@ -6,6 +7,11 @@ import {
 import * as types from './types';
 import * as wbt from './index';
 import create from './create';
+import {
+  ValueExistsError,
+  ValueNotFoundError,
+  ValueOrderError,
+} from './errors';
 import equals from './equals';
 import find from './find';
 import findNext from './findNext';
@@ -121,6 +127,11 @@ expectError<types.ImmutableTree<string> | null>(union<string>(stringTree, string
 expectError<types.ImmutableTree<string> | null>(find<string, number>(stringTree, 0, cmpStrings));
 expectError<types.ImmutableTree<string> | null>(findNext<string, number>(stringTree, 0, cmpStrings));
 expectError<types.ImmutableTree<string> | null>(findPrev<string, number>(stringTree, 0, cmpStrings));
+
+// Error classes
+expectAssignable<Error>(new ValueExistsError('a'));
+expectAssignable<Error>(new ValueNotFoundError('a'));
+expectAssignable<Error>(new ValueOrderError('a', 'b'));
 
 expectType<typeof NOOP>(wbt.NOOP);
 expectType<typeof REPLACE>(wbt.REPLACE);

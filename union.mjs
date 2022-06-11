@@ -1,5 +1,6 @@
 // @flow strict
 
+import checkOrder from './checkOrder.mjs';
 import fromDistinctAscArray from './fromDistinctAscArray.mjs';
 import iterate from './iterate.mjs';
 /*::
@@ -54,11 +55,12 @@ export default function union/*:: <T> */(
         const unionValue = onConflict(r1.value, r2.value);
         if (
           !Object.is(unionValue, r1.value) &&
-          !Object.is(unionValue, r2.value) &&
-          cmp(r1.value, unionValue) !== 0
+          !Object.is(unionValue, r2.value)
         ) {
-          throw new Error(
-            'The relative ordering of the union value has changed.',
+          checkOrder(
+            /* expected = */ r1.value,
+            /* got = */ unionValue,
+            cmp,
           );
         }
         arrayUnion.push(unionValue);

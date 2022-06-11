@@ -74,8 +74,8 @@ declare interface tape$Context {
   notLooseEqual(actual: mixed, expected: mixed, msg?: string): void,
   notLooseEquals(actual: mixed, expected: mixed, msg?: string): void,
 
-  throws(fn: () => mixed, expected?: RegExp | (() => mixed), msg?: string): void,
-  doesNotThrow(fn: () => mixed, expected?: RegExp | (() => mixed), msg?: string): void,
+  throws(fn: () => mixed, expected?: RegExp | Class<Error>, msg?: string): void,
+  doesNotThrow(fn: () => mixed, expected?: RegExp | Class<Error>, msg?: string): void,
 
   timeoutAfter(ms: number): void,
 

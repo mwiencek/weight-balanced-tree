@@ -1,6 +1,7 @@
 // @flow strict
 
 import {balanceLeft, balanceRight} from './balance.mjs';
+import {ValueNotFoundError} from './errors.mjs';
 import minValue from './minValue.mjs';
 /*::
 import type {ImmutableTree, MutableTree} from './types.mjs';
@@ -87,7 +88,7 @@ export function removeOrThrowIfNotExists/*:: <T> */(
 )/*: ImmutableTree<T> | null */ {
   const newTree = remove(tree, value, cmp);
   if (newTree === tree) {
-    throw new Error('The value given to remove does not exist in the tree.');
+    throw new ValueNotFoundError(value);
   }
   return newTree;
 }

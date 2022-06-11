@@ -8,6 +8,10 @@
   * Improved the performance of `equals`.
   * Fixed a bug causing `insert` to return nodes with incorrect sizes when
     replacing a value.
+  * Created error classes for each kind of error thrown by the module.
+    Currently these are `ValueExistsError`, `ValueNotFoundError`, and
+    `ValueOrderError`, and they're exported from errors.mjs.  The messages
+    attached to the error instances have changed.
 
 ## v0.3.0 (2022-06-08)
 

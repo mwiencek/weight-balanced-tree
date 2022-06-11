@@ -1,6 +1,8 @@
 // @flow strict
 
 import {balanceLeft, balanceRight} from './balance.mjs';
+import checkOrder from './checkOrder.mjs';
+import {ValueExistsError} from './errors.mjs';
 /*::
 import type {ImmutableTree} from './types.mjs';
 
@@ -11,17 +13,9 @@ export type InsertNotFoundHandler<T, K> =
   (key: K) => T;
 */
 
-function checkOrder(order/*: number */)/*: void */ {
-  if (order !== 0) {
-    throw new Error(
-      'The relative ordering of the value to insert has changed.',
-    );
-  }
-}
-
 export function onConflictThrowError()/*: empty */ {
   // If this is expected, provide your own `onConflict` handler.
-  throw new Error('The value given to insert already exists in the tree.');
+  throw new ValueExistsError();
 }
 
 export const onConflictKeepTreeValue =
@@ -51,7 +45,11 @@ export function insertByKey/*:: <T, K> */(
   if (tree === null) {
     const valueToInsert = onNotFound(key);
     if (!Object.is(valueToInsert, key)) {
-      checkOrder(cmp(key, valueToInsert));
+      checkOrder(
+        /* expected = */ key,
+        /* got = */ valueToInsert,
+        cmp,
+      );
     }
     return {
       left: null,
@@ -68,7 +66,11 @@ export function insertByKey/*:: <T, K> */(
     if (Object.is(valueToInsert, tree.value)) {
       return tree;
     } else {
-      checkOrder(cmp(key, valueToInsert));
+      checkOrder(
+        /* expected = */ key,
+        /* got = */ valueToInsert,
+        cmp,
+      );
     }
     return {
       left: tree.left,
