@@ -25,6 +25,7 @@
     `ValueOrderError`, and they're exported from errors.mjs.  The messages
     attached to the error instances have changed.
   * Removed the `onConflict` helper aliases `NOOP`, `REPLACE`, and `THROW`.
+  * Defined the "exports" field in package.json.
 
 ## v0.3.0 (2022-06-08)
 
