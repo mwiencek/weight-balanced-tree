@@ -127,6 +127,13 @@ return a final value of type `T` to be inserted.
   * You want to throw an error if the value doesn't exist (because you expect
     to replace it).
 
+The following exports in [insert.mjs](insert.mjs) can be used for
+`onNotFound` instead of defining your own:
+
+ * `onNotFoundUseGivenValue`, which is what `insert` and all associated
+   helpers default to.  Note that the given value in this case is the `key`,
+   so this only works in cases where `K` is a subtype of `T`.
+
 Here's an example of sorting/mapping objects by a simple key property and
 lazily creating them:
 

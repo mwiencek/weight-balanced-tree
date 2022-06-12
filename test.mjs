@@ -18,6 +18,7 @@ import {
   onConflictKeepTreeValue,
   onConflictThrowError,
   onConflictUseGivenValue,
+  onNotFoundUseGivenValue,
 } from './insert.mjs';
 import shuffle from './shuffle.mjs';
 /*::
@@ -475,6 +476,18 @@ test('insertByKey', function (t) {
     },
     ValueOrderError,
   );
+  t.end();
+});
+
+test('onNotFoundUseGivenValue', function (t) {
+  const node = insertByKey/*:: <number, number> */(
+    null,
+    1,
+    compareIntegers,
+    onConflictKeepTreeValue,
+    onNotFoundUseGivenValue,
+  );
+  t.equals(node.value, 1);
   t.end();
 });
 

@@ -14,7 +14,9 @@ export const onConflictKeepTreeValue:
 export const onConflictUseGivenValue:
   <T>(treeValue: T, givenValue: T) => T;
 
-  // Aliases for backwards compatibility.
+export function onNotFoundUseGivenValue<T>(givenValue: T): T;
+
+// Aliases for backwards compatibility.
 export const NOOP: typeof onConflictKeepTreeValue;
 export const REPLACE: typeof onConflictUseGivenValue;
 export const THROW: typeof onConflictThrowError;

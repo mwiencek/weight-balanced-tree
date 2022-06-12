@@ -12,6 +12,7 @@
     Currently these are `ValueExistsError`, `ValueNotFoundError`, and
     `ValueOrderError`, and they're exported from errors.mjs.  The messages
     attached to the error instances have changed.
+  * Documented `onNotFoundUseGivenValue` and exposed it for TypeScript.
 
 ## v0.3.0 (2022-06-08)
 

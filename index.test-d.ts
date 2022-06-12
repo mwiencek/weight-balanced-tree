@@ -28,6 +28,7 @@ import insert, {
   onConflictKeepTreeValue,
   onConflictThrowError,
   onConflictUseGivenValue,
+  onNotFoundUseGivenValue,
 } from './insert';
 import type {
   InsertConflictHandler,
@@ -53,10 +54,12 @@ declare const numberTree: types.ImmutableTree<number> | null;
 
 declare function cmpStrings(a: string, b: string): number;
 declare function cmpNumbers(a: number, b: number): number;
+declare function cmpNullableNumbers(a: number | null, b: number | null): number;
 declare function cmpNumberAndString(a: number, b: string): number;
 
 // Basic usage
 expectType<types.ImmutableTree<string>>(create<string>(''));
+expectType<types.ImmutableTree<number | null>>(insertByKey<number | null, number>(numberTree, 0, cmpNullableNumbers, onConflictKeepTreeValue, onNotFoundUseGivenValue));
 expectType<types.ImmutableTree<string>>(insert<string>(stringTree, '', cmpStrings));
 expectType<types.ImmutableTree<string>>(insert<string>(stringTree, '', cmpStrings, NOOP));
 expectType<types.ImmutableTree<string>>(insert<string>(stringTree, '', cmpStrings, REPLACE));
@@ -128,6 +131,19 @@ expectError<types.ImmutableTree<string> | null>(find<string, number>(stringTree,
 expectError<types.ImmutableTree<string> | null>(findNext<string, number>(stringTree, 0, cmpStrings));
 expectError<types.ImmutableTree<string> | null>(findPrev<string, number>(stringTree, 0, cmpStrings));
 
+// InsertConflictHandler
+expectType<InsertConflictHandler<string, number>>((a: string, b: number) => a + String(b));
+expectAssignable<InsertConflictHandler<unknown, unknown>>(onConflictKeepTreeValue);
+expectAssignable<InsertConflictHandler<unknown, unknown>>(onConflictThrowError);
+expectAssignable<InsertConflictHandler<unknown, unknown>>(onConflictUseGivenValue);
+
+// InsertNotFoundHandler
+expectType<InsertNotFoundHandler<string, number>>((a: number) => String(a));
+expectAssignable<InsertNotFoundHandler<unknown, unknown>>(onNotFoundUseGivenValue);
+
+// Wrong 'onNotFound' function type.
+expectError<types.ImmutableTree<string>>(insertByKey<string, number>(stringTree, 0, cmpNumberAndString, onConflictKeepTreeValue, onNotFoundUseGivenValue));
+
 // Error classes
 expectAssignable<Error>(new ValueExistsError('a'));
 expectAssignable<Error>(new ValueNotFoundError('a'));
@@ -157,5 +173,3 @@ expectType<typeof removeOrThrowIfNotExists>(wbt.removeOrThrowIfNotExists);
 expectType<typeof toArray>(wbt.toArray);
 expectType<typeof union>(wbt.union);
 expectType<typeof zip>(wbt.zip);
-expectType<InsertConflictHandler<string, number>>((a: string, b: number) => a + String(b));
-expectType<InsertNotFoundHandler<string, number>>((a: number) => String(a));
