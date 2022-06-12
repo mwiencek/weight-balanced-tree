@@ -21,11 +21,6 @@ export function onNotFoundThrowError(): never;
 
 export function onNotFoundUseGivenValue<T>(givenValue: T): T;
 
-// Aliases for backwards compatibility.
-export const NOOP: typeof onConflictKeepTreeValue;
-export const REPLACE: typeof onConflictUseGivenValue;
-export const THROW: typeof onConflictThrowError;
-
 export function insertByKey<T, K>(
   tree: ImmutableTree<T> | null,
   key: K,

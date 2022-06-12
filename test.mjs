@@ -11,9 +11,6 @@ import {
 } from './errors.mjs';
 import * as tree from './index.mjs';
 import {
-  NOOP,
-  REPLACE,
-  THROW,
   insertByKey,
   onConflictKeepTreeValue,
   onConflictThrowError,
@@ -100,16 +97,6 @@ test('all', function (t) {
     t.ok(node === null, 'tree is still empty');
   }
 
-  t.end();
-});
-
-test('onConflict export aliases', function (t) {
-  t.equal(NOOP, onConflictKeepTreeValue);
-  t.equal(REPLACE, onConflictUseGivenValue);
-  t.equal(THROW, onConflictThrowError);
-  t.equal(tree.NOOP, NOOP);
-  t.equal(tree.REPLACE, REPLACE);
-  t.equal(tree.THROW, THROW);
   t.end();
 });
 

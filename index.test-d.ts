@@ -18,9 +18,6 @@ import findNext from './findNext';
 import findPrev from './findPrev';
 import fromDistinctAscArray from './fromDistinctAscArray';
 import insert, {
-  NOOP,
-  REPLACE,
-  THROW,
   insertByKey,
   insertIfNotExists,
   insertOrReplaceIfExists,
@@ -65,9 +62,6 @@ expectType<types.ImmutableTree<number | null> | null>(insertByKey<number | null,
 expectType<types.ImmutableTree<string> | null>(insertByKey<string, number>(stringTree, 0, cmpNumberAndString, onConflictKeepTreeValue, onNotFoundDoNothing));
 expectType<types.ImmutableTree<string> | null>(insertByKey<string, number>(stringTree, 0, cmpNumberAndString, onConflictKeepTreeValue, onNotFoundThrowError));
 expectType<types.ImmutableTree<string>>(insert<string>(stringTree, '', cmpStrings));
-expectType<types.ImmutableTree<string>>(insert<string>(stringTree, '', cmpStrings, NOOP));
-expectType<types.ImmutableTree<string>>(insert<string>(stringTree, '', cmpStrings, REPLACE));
-expectType<types.ImmutableTree<string>>(insert<string>(stringTree, '', cmpStrings, THROW));
 expectType<types.ImmutableTree<string>>(insert<string>(stringTree, '', cmpStrings, onConflictKeepTreeValue));
 expectType<types.ImmutableTree<string>>(insert<string>(stringTree, '', cmpStrings, onConflictThrowError));
 expectType<types.ImmutableTree<string>>(insert<string>(stringTree, '', cmpStrings, onConflictUseGivenValue));
@@ -155,9 +149,6 @@ expectAssignable<Error>(new ValueExistsError('a'));
 expectAssignable<Error>(new ValueNotFoundError('a'));
 expectAssignable<Error>(new ValueOrderError('a', 'b'));
 
-expectType<typeof NOOP>(wbt.NOOP);
-expectType<typeof REPLACE>(wbt.REPLACE);
-expectType<typeof THROW>(wbt.THROW);
 expectType<typeof create>(wbt.create);
 expectType<typeof equals>(wbt.equals);
 expectType<typeof find>(wbt.find);

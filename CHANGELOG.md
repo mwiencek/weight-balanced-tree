@@ -21,6 +21,7 @@
     used.
   * Added `onNotFoundThrowError`, which throws a `ValueNotFoundError` if the
     key doesn't exist.
+  * Removed the `onConflict` helper aliases `NOOP`, `REPLACE`, and `THROW`.
 
 ## v0.3.0 (2022-06-08)
 

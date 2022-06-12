@@ -7,9 +7,6 @@ export {default as findNext} from './findNext.mjs';
 export {default as findPrev} from './findPrev.mjs';
 export {default as fromDistinctAscArray} from './fromDistinctAscArray.mjs';
 export {
-  NOOP,
-  REPLACE,
-  THROW,
   default as insert,
   insertByKey,
   insertIfNotExists,

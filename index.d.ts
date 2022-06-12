@@ -5,9 +5,6 @@ export {default as findNext} from './findNext';
 export {default as findPrev} from './findPrev';
 export {default as fromDistinctAscArray} from './fromDistinctAscArray';
 export {
-  NOOP,
-  REPLACE,
-  THROW,
   default as insert,
   insertByKey,
   insertIfNotExists,
