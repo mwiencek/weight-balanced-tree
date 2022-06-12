@@ -19,6 +19,7 @@ import {
   onConflictThrowError,
   onConflictUseGivenValue,
   onNotFoundDoNothing,
+  onNotFoundThrowError,
   onNotFoundUseGivenValue,
 } from './insert.mjs';
 import shuffle from './shuffle.mjs';
@@ -508,6 +509,22 @@ test('onNotFoundDoNothing', function (t) {
     onNotFoundDoNothing,
   );
   t.equals(newNode, node, 'tree was not updated with onNotFoundDoNothing');
+  t.end();
+});
+
+test('onNotFoundThrowError', function (t) {
+  t.throws(
+    () => {
+      const node = insertByKey/*:: <number, number> */(
+        null,
+        1,
+        compareIntegers,
+        onConflictKeepTreeValue,
+        onNotFoundThrowError,
+      );
+    },
+    ValueNotFoundError,
+  );
   t.end();
 });
 

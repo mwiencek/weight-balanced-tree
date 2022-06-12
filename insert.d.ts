@@ -17,6 +17,8 @@ export const onConflictUseGivenValue:
 export const onNotFoundDoNothing:
   (givenValue: unknown) => never;
 
+export function onNotFoundThrowError(): never;
+
 export function onNotFoundUseGivenValue<T>(givenValue: T): T;
 
 // Aliases for backwards compatibility.

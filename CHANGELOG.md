@@ -19,6 +19,8 @@
   * Changed the return type of `insertByKey` to include `null`, as it can now
     return `null` where the input tree is `null` and `onNotFoundDoNothing` is
     used.
+  * Added `onNotFoundThrowError`, which throws a `ValueNotFoundError` if the
+    key doesn't exist.
 
 ## v0.3.0 (2022-06-08)
 

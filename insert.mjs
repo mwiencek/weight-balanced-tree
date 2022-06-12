@@ -2,7 +2,10 @@
 
 import {balanceLeft, balanceRight} from './balance.mjs';
 import checkOrder from './checkOrder.mjs';
-import {ValueExistsError} from './errors.mjs';
+import {
+  ValueExistsError,
+  ValueNotFoundError,
+} from './errors.mjs';
 /*::
 import invariant from './invariant.mjs';
 import type {ImmutableTree} from './types.mjs';
@@ -31,6 +34,10 @@ export function onNotFoundDoNothing(
   givenValue/*: mixed */,
 )/*: empty */ {
   throw DO_NOTHING_SYMBOL;
+}
+
+export function onNotFoundThrowError()/*: empty */ {
+  throw new ValueNotFoundError();
 }
 
 export function onNotFoundUseGivenValue/*:: <T> */(
