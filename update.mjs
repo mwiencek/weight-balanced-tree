@@ -114,7 +114,9 @@ export default function update/*:: <T, K> */(
       size: newLeftBranch.size + (right === null ? 0 : right.size) + 1,
       value: tree.value,
     };
-    balanceLeft(newTree);
+    if (newTree.size !== tree.size) {
+      balanceLeft(newTree);
+    }
     return newTree;
   } else {
     const newRightBranch = update(right, key, cmp, onConflict, onNotFound);
@@ -127,7 +129,9 @@ export default function update/*:: <T, K> */(
       size: (left === null ? 0 : left.size) + newRightBranch.size + 1,
       value: tree.value,
     };
-    balanceRight(newTree);
+    if (newTree.size !== tree.size) {
+      balanceRight(newTree);
+    }
     return newTree;
   }
 }
