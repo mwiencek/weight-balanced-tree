@@ -18,20 +18,9 @@ import findNext from './findNext';
 import findPrev from './findPrev';
 import fromDistinctAscArray from './fromDistinctAscArray';
 import insert, {
-  insertByKey,
   insertIfNotExists,
   insertOrReplaceIfExists,
   insertOrThrowIfExists,
-  onConflictKeepTreeValue,
-  onConflictThrowError,
-  onConflictUseGivenValue,
-  onNotFoundDoNothing,
-  onNotFoundThrowError,
-  onNotFoundUseGivenValue,
-} from './insert';
-import type {
-  InsertConflictHandler,
-  InsertNotFoundHandler,
 } from './insert';
 import iterate from './iterate';
 import maxValue from './maxValue';
@@ -45,6 +34,18 @@ import toArray from './toArray';
 import union, {
   onConflictUseSecondValue,
 } from './union';
+import update, {
+  onConflictKeepTreeValue,
+  onConflictThrowError,
+  onConflictUseGivenValue,
+  onNotFoundDoNothing,
+  onNotFoundThrowError,
+  onNotFoundUseGivenValue,
+} from './update';
+import type {
+  InsertConflictHandler,
+  InsertNotFoundHandler,
+} from './update';
 import zip from './zip';
 
 declare const stringTree: types.ImmutableTree<string> | null;
@@ -58,9 +59,9 @@ declare function cmpNumberAndString(a: number, b: string): number;
 
 // Basic usage
 expectType<types.ImmutableTree<string>>(create<string>(''));
-expectType<types.ImmutableTree<number | null> | null>(insertByKey<number | null, number>(numberTree, 0, cmpNullableNumbers, onConflictKeepTreeValue, onNotFoundUseGivenValue));
-expectType<types.ImmutableTree<string> | null>(insertByKey<string, number>(stringTree, 0, cmpNumberAndString, onConflictKeepTreeValue, onNotFoundDoNothing));
-expectType<types.ImmutableTree<string> | null>(insertByKey<string, number>(stringTree, 0, cmpNumberAndString, onConflictKeepTreeValue, onNotFoundThrowError));
+expectType<types.ImmutableTree<number | null> | null>(update<number | null, number>(numberTree, 0, cmpNullableNumbers, onConflictKeepTreeValue, onNotFoundUseGivenValue));
+expectType<types.ImmutableTree<string> | null>(update<string, number>(stringTree, 0, cmpNumberAndString, onConflictKeepTreeValue, onNotFoundDoNothing));
+expectType<types.ImmutableTree<string> | null>(update<string, number>(stringTree, 0, cmpNumberAndString, onConflictKeepTreeValue, onNotFoundThrowError));
 expectType<types.ImmutableTree<string>>(insert<string>(stringTree, '', cmpStrings));
 expectType<types.ImmutableTree<string>>(insert<string>(stringTree, '', cmpStrings, onConflictKeepTreeValue));
 expectType<types.ImmutableTree<string>>(insert<string>(stringTree, '', cmpStrings, onConflictThrowError));
@@ -142,7 +143,7 @@ expectAssignable<InsertNotFoundHandler<unknown, unknown>>(onNotFoundThrowError);
 expectAssignable<InsertNotFoundHandler<unknown, unknown>>(onNotFoundUseGivenValue);
 
 // Wrong 'onNotFound' function type.
-expectError<types.ImmutableTree<string>>(insertByKey<string, number>(stringTree, 0, cmpNumberAndString, onConflictKeepTreeValue, onNotFoundUseGivenValue));
+expectError<types.ImmutableTree<string>>(update<string, number>(stringTree, 0, cmpNumberAndString, onConflictKeepTreeValue, onNotFoundUseGivenValue));
 
 // Error classes
 expectAssignable<Error>(new ValueExistsError('a'));
@@ -156,7 +157,6 @@ expectType<typeof findNext>(wbt.findNext);
 expectType<typeof findPrev>(wbt.findPrev);
 expectType<typeof fromDistinctAscArray>(wbt.fromDistinctAscArray);
 expectType<typeof insert>(wbt.insert);
-expectType<typeof insertByKey>(wbt.insertByKey);
 expectType<typeof insertIfNotExists>(wbt.insertIfNotExists);
 expectType<typeof insertOrReplaceIfExists>(wbt.insertOrReplaceIfExists);
 expectType<typeof insertOrThrowIfExists>(wbt.insertOrThrowIfExists);
@@ -169,4 +169,5 @@ expectType<typeof removeIfExists>(wbt.removeIfExists);
 expectType<typeof removeOrThrowIfNotExists>(wbt.removeOrThrowIfNotExists);
 expectType<typeof toArray>(wbt.toArray);
 expectType<typeof union>(wbt.union);
+expectType<typeof update>(wbt.update);
 expectType<typeof zip>(wbt.zip);

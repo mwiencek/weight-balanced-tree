@@ -6,7 +6,6 @@ export {default as findPrev} from './findPrev';
 export {default as fromDistinctAscArray} from './fromDistinctAscArray';
 export {
   default as insert,
-  insertByKey,
   insertIfNotExists,
   insertOrReplaceIfExists,
   insertOrThrowIfExists,
@@ -22,5 +21,6 @@ export {
 export {default as reverseIterate} from './reverseIterate';
 export {default as toArray} from './toArray';
 export {default as union} from './union';
+export {default as update} from './update';
 export {default as zip} from './zip';
 export * from './types';

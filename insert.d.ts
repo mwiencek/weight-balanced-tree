@@ -1,33 +1,5 @@
 import type {ImmutableTree} from './types';
-
-export type InsertConflictHandler<T, K> =
-  (existingTreeValue: T, key: K) => T;
-
-export type InsertNotFoundHandler<T, K> =
-  (key: K) => T;
-
-export function onConflictThrowError(): never;
-
-export const onConflictKeepTreeValue:
-  <T, K>(treeValue: T, givenValue: K) => T;
-
-export const onConflictUseGivenValue:
-  <T>(treeValue: T, givenValue: T) => T;
-
-export const onNotFoundDoNothing:
-  (givenValue: unknown) => never;
-
-export function onNotFoundThrowError(): never;
-
-export function onNotFoundUseGivenValue<T>(givenValue: T): T;
-
-export function insertByKey<T, K>(
-  tree: ImmutableTree<T> | null,
-  key: K,
-  cmp: (key: K, treeValue: T) => number,
-  onConflict: InsertConflictHandler<T, K>,
-  onNotFound: InsertNotFoundHandler<T, K>,
-): ImmutableTree<T> | null;
+import type {InsertConflictHandler} from './update';
 
 export default function insert<T>(
   tree: ImmutableTree<T> | null,

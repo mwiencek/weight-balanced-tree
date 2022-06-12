@@ -45,96 +45,76 @@ type InsertNotFoundHandler<T, K> =
 
 How many values are contained in the tree.
 
-### insert()
+### update()
 
 ```
-insert<T>(
-    tree: ImmutableTree<T> | null,
-    value: T,
-    cmp: (T, T) => number,
-    onConflict?: InsertConflictHandler<T, T>,
-): ImmutableTree<T>;
-```
-
-Returns a new version of `tree` with `value` inserted.
-
-Pass `null` for `tree` to create a new tree.  (This module has no such thing
-as a tree of size 0.)
-
-The `cmp` (comparator) function is used to order the values.  It works the
-same as the comparator you'd pass to `Array.prototype.sort`, and should
-never change for a particular tree.
-
-`onConflict` allows you to configure what happens when `value` already exists
-in the tree according to `cmp`.  It receives the existing tree value as its
-first argument, and the value you passed to `insert` as its second argument.
-
-`onConflict` is expected to return a final value to be inserted, or throw an
-error if the value shouldn't exist.  This allows you to merge both values in
-some way if needed.  However, the returned value must have the same sort
-order as before.
-
-If you return `existingTreeValue` from `onConflict`, `insert` will return the
-same `tree` reference back.  `Object.is` is used to determine if the value
-you return is the same as `existingTreeValue`.
-
-If `onConflict` is not specified, the default action is to throw an error.
-There are several exports in [insert.mjs](insert.mjs) that can be used here:
-
- * `onConflictThrowError` (the default), which throws an exception.
- * `onConflictKeepTreeValue`, which just returns the existing tree value back
-   unmodified.  In this case, `insert` will also return the same tree
-   reference back.
- * `onConflictUseGivenValue`, which replaces the existing tree value with the
-   value given to `insert`.
-
-There are also some convenience functions available that call `insert` with
-these options for you:
-
- * `insertIfNotExists` (passes `onConflictKeepTreeValue` for you)
- * `insertOrReplaceIfExists` (passes `onConflictUseGivenValue` for you)
-
-`insertOrThrowIfExists` is an alias of `insert`.
-
-### insertByKey()
-
-```
-insertByKey<T, K>(
+update<T, K>(
     tree: ImmutableTree<T> | null,
     key: K,
     cmp: (key: K, treeValue: T) => number,
     onConflict: InsertConflictHandler<T, K>,
     onNotFound: InsertNotFoundHandler<T, K>,
-): ImmutableTree<T>;
+): ImmutableTree<T> | null;
 ```
 
-This is a generalized version of `insert` (which calls `insertByKey` under
-the hood).  The main difference is that it takes a `key` of type `K` instead
-of a `value` of type `T`, and allows you to construct a value when `key` is
-not found.
+Updates the value in `tree` found with `key`.  This is a generalized way of
+updating the tree; for a simpler method of inserting values, see `insert`
+(which calls `update` under the hood).
 
-This is particularly convenient where you're using the tree as a map. and the
-keys are properties of the items being mapped.
+`update` is particularly convenient where you're using the tree as a map and
+the keys are properties of the items being mapped.
 
-`onNotFound` handles the key-not-found case.  It only receives one argument,
-the `key` you passed to `insertByKey`.  Like `onConflict`, you are expected to
-return a final value of type `T` to be inserted.
+The `cmp` (comparator) function is used to order the values.  It receives
+`key` as its first argument, and a value of type `T` from `tree` as its
+second argument.  The behavior should match that of `Array.prototype.sort`'s
+`compareFunction`; the only difference is that `K` and `T` can be different
+types.
+
+Many other functions of this library require `cmp` in order to navigate the
+tree; obviously, `cmp` should be idempotent and behave consistently for a
+particular tree, otherwise the tree can become invalid.
+
+`onConflict` allows you to configure what happens when `key` already exists in
+the tree.  It receives the existing tree value as its first argument, and the
+`key` passed to `update` as its second argument.
+
+`onConflict` is expected to return a final value to be inserted, or throw an
+error if the value shouldn't exist.  This allows you to merge both values in
+some way if needed.  However, the returned value must have the same order or
+position in the tree as before (otherwise a `ValueOrderError` is thrown).
+
+If you return `existingTreeValue` from `onConflict`, `update` will return the
+same `tree` reference back.  `Object.is` is used to determine if the value
+you return is the same as `existingTreeValue`.
+
+There are several exports in [update.mjs](update.mjs) that can be used for
+`onConflict`:
+
+ * `onConflictThrowError`, which throws `ValueExistsError`.
+ * `onConflictKeepTreeValue`, which just returns the existing tree value back
+   unmodified.  In this case, `insert` will also return the same tree
+   reference back.
+ * `onConflictUseGivenValue`, which replaces the existing tree value with the
+   value given to `update`.
+
+`onNotFound` executes when `key` is not found in the tree.  It only receives
+one argument, the `key` you passed to `update`.  Like `onConflict`, you are
+expected to return a final value of type `T` to be inserted.
 
 `onNotFound` is useful in at least a couple scenarios:
 
   * You want to create the value to insert lazily, only if it doesn't exist.
-
   * You want to throw an error if the value doesn't exist (because you expect
     to replace it).
 
-The following exports in [insert.mjs](insert.mjs) can be used for
-`onNotFound` instead of defining your own:
+The following exports in [update.mjs](update.mjs) can be used for `onNotFound`
+instead of defining your own:
 
  * `onNotFoundUseGivenValue`, which is what `insert` and all associated
    helpers default to.  Note that the given value in this case is the `key`,
    so this only works in cases where `K` is a subtype of `T`.
- * `onNotFoundDoNothing`, which causes `insertByKey` to do nothing and return
-   the same `tree` reference back if the key doesn't exist.
+ * `onNotFoundDoNothing`, which causes `update` to do nothing and return the
+   same `tree` reference back if the key doesn't exist.
  * `onNotFoundThrowError`, which throws a `ValueNotFoundError` if the key
    doesn't exist.
 
@@ -154,7 +134,7 @@ function onNotFoundCreateItemFromKey(key: number): Item {
   return {key};
 }
 
-insertByKey<Item, number>(
+update<Item, number>(
   tree,
   /* key = */ 1,
   compareKeyWithItemKey,
@@ -165,7 +145,7 @@ insertByKey<Item, number>(
 // a "find or insert" implementation:
 
 let item2;
-insertByKey<Item, number>(
+update<Item, number>(
   tree,
   /* key = */ 1,
   compareKeyWithItemKey,
@@ -178,6 +158,34 @@ insertByKey<Item, number>(
   },
 );
 ```
+
+### insert()
+
+```
+insert<T>(
+    tree: ImmutableTree<T> | null,
+    value: T,
+    cmp: (T, T) => number,
+    onConflict?: InsertConflictHandler<T, T>,
+): ImmutableTree<T>;
+```
+
+Returns a new version of `tree` with `value` inserted.  This is a more
+specific version of `update` that only operates on the value type `T`.
+
+`cmp` is the same as with `update`, except the first argument received is the
+`value` you passed, and both arguments are of type `T`.
+
+`onConflict` is also the same as with `update`, but here it defaults to
+`onConflictThrowError` if not specified.
+
+There are some helper functions available that call `insert` with different
+values of `onConflict` for you:
+
+ * `insertIfNotExists` (passes `onConflictKeepTreeValue`)
+ * `insertOrReplaceIfExists` (passes `onConflictUseGivenValue`)
+
+`insertOrThrowIfExists` is an alias of `insert`.
 
 ### remove()
 

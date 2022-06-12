@@ -2,6 +2,18 @@
 
 ## v0.4.0 (unreleased)
 
+  * Renamed `insertByKey` to `update` and moved it to update.mjs.
+  * Moved all `onConflict*` helpers, and the types `InsertConflictHandler`
+    and `InsertNotFoundHandler` to update.mjs.
+  * Added `onNotFoundDoNothing`, which can be passed to `update` for the
+    `onNotFound` argument where you only want to perform an update if the key
+    already exists.
+  * Changed the return type of `update` to include `null`, as it can now
+    return `null` where the input tree is `null` and `onNotFoundDoNothing` is
+    used.
+  * Added `onNotFoundThrowError`, which throws a `ValueNotFoundError` if the
+    key doesn't exist.
+  * Documented `onNotFoundUseGivenValue` and exposed it for TypeScript.
   * Added `zip` to zip two trees together, returning an iterable of tuples.
   * Added `union` to merge two trees together.
   * Added `toArray` to flatten a tree into an array of values.
@@ -12,15 +24,6 @@
     Currently these are `ValueExistsError`, `ValueNotFoundError`, and
     `ValueOrderError`, and they're exported from errors.mjs.  The messages
     attached to the error instances have changed.
-  * Documented `onNotFoundUseGivenValue` and exposed it for TypeScript.
-  * Added `onNotFoundDoNothing`, which can be passed to `insertByKey` for the
-    `onNotFound` argument where you only want to perform an update if the key
-    already exists.
-  * Changed the return type of `insertByKey` to include `null`, as it can now
-    return `null` where the input tree is `null` and `onNotFoundDoNothing` is
-    used.
-  * Added `onNotFoundThrowError`, which throws a `ValueNotFoundError` if the
-    key doesn't exist.
   * Removed the `onConflict` helper aliases `NOOP`, `REPLACE`, and `THROW`.
 
 ## v0.3.0 (2022-06-08)

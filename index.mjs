@@ -8,7 +8,6 @@ export {default as findPrev} from './findPrev.mjs';
 export {default as fromDistinctAscArray} from './fromDistinctAscArray.mjs';
 export {
   default as insert,
-  insertByKey,
   insertIfNotExists,
   insertOrReplaceIfExists,
   insertOrThrowIfExists,
@@ -26,6 +25,7 @@ export {
 export {default as reverseIterate} from './reverseIterate.mjs';
 export {default as toArray} from './toArray.mjs';
 export {default as union} from './union.mjs';
+export {default as update} from './update.mjs';
 export {default as zip} from './zip.mjs';
 /*::
 export * from './types.mjs';

@@ -10,16 +10,15 @@ import {
   ValueOrderError,
 } from './errors.mjs';
 import * as tree from './index.mjs';
+import shuffle from './shuffle.mjs';
 import {
-  insertByKey,
   onConflictKeepTreeValue,
   onConflictThrowError,
   onConflictUseGivenValue,
   onNotFoundDoNothing,
   onNotFoundThrowError,
   onNotFoundUseGivenValue,
-} from './insert.mjs';
-import shuffle from './shuffle.mjs';
+} from './update.mjs';
 /*::
 import invariant from './invariant.mjs';
 */
@@ -383,7 +382,7 @@ test('insert with onConflict', function (t) {
   t.end();
 });
 
-test('insertByKey', function (t) {
+test('update', function (t) {
   /*:: type Item = {+key: number, +value: number}; */
 
   const cmp = (a/*: Item */, b/*: Item */) => compareIntegers(a.key, b.key);
@@ -394,7 +393,7 @@ test('insertByKey', function (t) {
 
   let node = tree.create(v1);
 
-  node = insertByKey(
+  node = tree.update(
     node,
     v2,
     cmp,
@@ -406,7 +405,7 @@ test('insertByKey', function (t) {
   );
   t.equal(tree.find(node, v2, cmp)?.value, v2);
 
-  node = insertByKey(
+  node = tree.update(
     node,
     3,
     cmpKeyWithItem,
@@ -418,7 +417,7 @@ test('insertByKey', function (t) {
   let v3 = tree.find(node, 3, cmpKeyWithItem)?.value;
   t.deepEqual(v3, {key: 3, value: 30});
 
-  node = insertByKey(
+  node = tree.update(
     node,
     3,
     cmpKeyWithItem,
@@ -433,7 +432,7 @@ test('insertByKey', function (t) {
     'existing tree value it kept',
   );
 
-  node = insertByKey(
+  node = tree.update(
     node,
     3,
     cmpKeyWithItem,
@@ -453,7 +452,7 @@ test('insertByKey', function (t) {
 
   t.throws(
     function () {
-      node = insertByKey(
+      node = tree.update(
         node,
         {key: 4, value: 40},
         cmp,
@@ -470,7 +469,7 @@ test('insertByKey', function (t) {
 
   t.throws(
     function () {
-      node = insertByKey(
+      node = tree.update(
         node,
         5,
         cmpKeyWithItem,
@@ -488,7 +487,7 @@ test('insertByKey', function (t) {
 test('onNotFoundDoNothing', function (t) {
   let node = tree.create(1);
 
-  const newNode = tree.insertByKey(
+  const newNode = tree.update(
     node,
     2,
     compareIntegers,
@@ -502,7 +501,7 @@ test('onNotFoundDoNothing', function (t) {
 test('onNotFoundThrowError', function (t) {
   t.throws(
     () => {
-      const node = insertByKey/*:: <number, number> */(
+      const node = tree.update/*:: <number, number> */(
         null,
         1,
         compareIntegers,
@@ -516,7 +515,7 @@ test('onNotFoundThrowError', function (t) {
 });
 
 test('onNotFoundUseGivenValue', function (t) {
-  const node = insertByKey/*:: <number, number> */(
+  const node = tree.update/*:: <number, number> */(
     null,
     1,
     compareIntegers,
