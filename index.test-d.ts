@@ -28,6 +28,7 @@ import insert, {
   onConflictKeepTreeValue,
   onConflictThrowError,
   onConflictUseGivenValue,
+  onNotFoundDoNothing,
   onNotFoundUseGivenValue,
 } from './insert';
 import type {
@@ -59,7 +60,8 @@ declare function cmpNumberAndString(a: number, b: string): number;
 
 // Basic usage
 expectType<types.ImmutableTree<string>>(create<string>(''));
-expectType<types.ImmutableTree<number | null>>(insertByKey<number | null, number>(numberTree, 0, cmpNullableNumbers, onConflictKeepTreeValue, onNotFoundUseGivenValue));
+expectType<types.ImmutableTree<number | null> | null>(insertByKey<number | null, number>(numberTree, 0, cmpNullableNumbers, onConflictKeepTreeValue, onNotFoundUseGivenValue));
+expectType<types.ImmutableTree<string> | null>(insertByKey<string, number>(stringTree, 0, cmpNumberAndString, onConflictKeepTreeValue, onNotFoundDoNothing));
 expectType<types.ImmutableTree<string>>(insert<string>(stringTree, '', cmpStrings));
 expectType<types.ImmutableTree<string>>(insert<string>(stringTree, '', cmpStrings, NOOP));
 expectType<types.ImmutableTree<string>>(insert<string>(stringTree, '', cmpStrings, REPLACE));
@@ -139,6 +141,7 @@ expectAssignable<InsertConflictHandler<unknown, unknown>>(onConflictUseGivenValu
 
 // InsertNotFoundHandler
 expectType<InsertNotFoundHandler<string, number>>((a: number) => String(a));
+expectAssignable<InsertNotFoundHandler<unknown, unknown>>(onNotFoundDoNothing);
 expectAssignable<InsertNotFoundHandler<unknown, unknown>>(onNotFoundUseGivenValue);
 
 // Wrong 'onNotFound' function type.

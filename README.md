@@ -133,6 +133,8 @@ The following exports in [insert.mjs](insert.mjs) can be used for
  * `onNotFoundUseGivenValue`, which is what `insert` and all associated
    helpers default to.  Note that the given value in this case is the `key`,
    so this only works in cases where `K` is a subtype of `T`.
+ * `onNotFoundDoNothing`, which causes `insertByKey` to do nothing and return
+   the same `tree` reference back if the key doesn't exist.
 
 Here's an example of sorting/mapping objects by a simple key property and
 lazily creating them:

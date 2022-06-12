@@ -14,6 +14,9 @@ export const onConflictKeepTreeValue:
 export const onConflictUseGivenValue:
   <T>(treeValue: T, givenValue: T) => T;
 
+export const onNotFoundDoNothing:
+  (givenValue: unknown) => never;
+
 export function onNotFoundUseGivenValue<T>(givenValue: T): T;
 
 // Aliases for backwards compatibility.
@@ -27,7 +30,7 @@ export function insertByKey<T, K>(
   cmp: (key: K, treeValue: T) => number,
   onConflict: InsertConflictHandler<T, K>,
   onNotFound: InsertNotFoundHandler<T, K>,
-): ImmutableTree<T>;
+): ImmutableTree<T> | null;
 
 export default function insert<T>(
   tree: ImmutableTree<T> | null,

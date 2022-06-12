@@ -18,6 +18,7 @@ import {
   onConflictKeepTreeValue,
   onConflictThrowError,
   onConflictUseGivenValue,
+  onNotFoundDoNothing,
   onNotFoundUseGivenValue,
 } from './insert.mjs';
 import shuffle from './shuffle.mjs';
@@ -476,6 +477,37 @@ test('insertByKey', function (t) {
     },
     ValueOrderError,
   );
+
+  class CustomNotFoundError extends Error {}
+
+  t.throws(
+    function () {
+      node = insertByKey(
+        node,
+        5,
+        cmpKeyWithItem,
+        (treeValue, key) => treeValue,
+        () => {
+          throw new CustomNotFoundError();
+        },
+      );
+    },
+    CustomNotFoundError,
+  );
+  t.end();
+});
+
+test('onNotFoundDoNothing', function (t) {
+  let node = tree.create(1);
+
+  const newNode = tree.insertByKey(
+    node,
+    2,
+    compareIntegers,
+    onConflictThrowError,
+    onNotFoundDoNothing,
+  );
+  t.equals(newNode, node, 'tree was not updated with onNotFoundDoNothing');
   t.end();
 });
 
@@ -487,7 +519,7 @@ test('onNotFoundUseGivenValue', function (t) {
     onConflictKeepTreeValue,
     onNotFoundUseGivenValue,
   );
-  t.equals(node.value, 1);
+  t.equals(node?.value, 1);
   t.end();
 });
 

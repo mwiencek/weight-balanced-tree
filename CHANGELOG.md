@@ -13,6 +13,12 @@
     `ValueOrderError`, and they're exported from errors.mjs.  The messages
     attached to the error instances have changed.
   * Documented `onNotFoundUseGivenValue` and exposed it for TypeScript.
+  * Added `onNotFoundDoNothing`, which can be passed to `insertByKey` for the
+    `onNotFound` argument where you only want to perform an update if the key
+    already exists.
+  * Changed the return type of `insertByKey` to include `null`, as it can now
+    return `null` where the input tree is `null` and `onNotFoundDoNothing` is
+    used.
 
 ## v0.3.0 (2022-06-08)
 

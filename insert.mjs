@@ -4,6 +4,7 @@ import {balanceLeft, balanceRight} from './balance.mjs';
 import checkOrder from './checkOrder.mjs';
 import {ValueExistsError} from './errors.mjs';
 /*::
+import invariant from './invariant.mjs';
 import type {ImmutableTree} from './types.mjs';
 
 export type InsertConflictHandler<T, K> =
@@ -24,6 +25,14 @@ export const onConflictKeepTreeValue =
 export const onConflictUseGivenValue =
   /*:: <T> */(treeValue/*: T */, givenValue/*: T */)/*: T */ => givenValue;
 
+const DO_NOTHING_SYMBOL = Symbol('DO_NOTHING');
+
+export function onNotFoundDoNothing(
+  givenValue/*: mixed */,
+)/*: empty */ {
+  throw DO_NOTHING_SYMBOL;
+}
+
 export function onNotFoundUseGivenValue/*:: <T> */(
   givenValue/*: T */,
 )/*: T */ {
@@ -41,9 +50,18 @@ export function insertByKey/*:: <T, K> */(
   cmp/*: (key: K, treeValue: T) => number */,
   onConflict/*: InsertConflictHandler<T, K> */,
   onNotFound/*: InsertNotFoundHandler<T, K> */,
-)/*: ImmutableTree<T> */ {
+)/*: ImmutableTree<T> | null */ {
   if (tree === null) {
-    const valueToInsert = onNotFound(key);
+    let valueToInsert;
+    try {
+      valueToInsert = onNotFound(key);
+    } catch (error) {
+      if (error === DO_NOTHING_SYMBOL) {
+        // This is the only case where `insertByKey` can return null.
+        return null;
+      }
+      throw error;
+    }
     if (!Object.is(valueToInsert, key)) {
       checkOrder(
         /* expected = */ key,
@@ -85,7 +103,7 @@ export function insertByKey/*:: <T, K> */(
 
   if (order < 0) {
     const newLeftBranch = insertByKey(left, key, cmp, onConflict, onNotFound);
-    if (newLeftBranch === left) {
+    if (newLeftBranch === null || newLeftBranch === left) {
       return tree;
     }
     const newTree = {
@@ -98,7 +116,7 @@ export function insertByKey/*:: <T, K> */(
     return newTree;
   } else {
     const newRightBranch = insertByKey(right, key, cmp, onConflict, onNotFound);
-    if (newRightBranch === right) {
+    if (newRightBranch === null || newRightBranch === right) {
       return tree;
     }
     const newTree = {
@@ -118,13 +136,15 @@ export default function insert/*:: <T> */(
   cmp/*: (a: T, b: T) => number */,
   onConflict/*:: ?: InsertConflictHandler<T, T> */ = onConflictThrowError,
 )/*: ImmutableTree<T> */ {
-  return insertByKey/*:: <T, T> */(
+  const result = insertByKey/*:: <T, T> */(
     tree,
     value,
     cmp,
     onConflict,
     onNotFoundUseGivenValue,
   );
+  /*:: invariant(result); */
+  return result;
 }
 
 export function insertIfNotExists/*:: <T> */(
@@ -132,13 +152,15 @@ export function insertIfNotExists/*:: <T> */(
   value/*: T */,
   cmp/*: (a: T, b: T) => number */,
 )/*: ImmutableTree<T> */ {
-  return insertByKey/*:: <T, T> */(
+  const result = insertByKey/*:: <T, T> */(
     tree,
     value,
     cmp,
     onConflictKeepTreeValue,
     onNotFoundUseGivenValue,
   );
+  /*:: invariant(result); */
+  return result;
 }
 
 export function insertOrReplaceIfExists/*:: <T> */(
@@ -146,13 +168,15 @@ export function insertOrReplaceIfExists/*:: <T> */(
   value/*: T */,
   cmp/*: (a: T, b: T) => number */,
 )/*: ImmutableTree<T> */ {
-  return insertByKey/*:: <T, T> */(
+  const result = insertByKey/*:: <T, T> */(
     tree,
     value,
     cmp,
     onConflictUseGivenValue,
     onNotFoundUseGivenValue,
   );
+  /*:: invariant(result); */
+  return result;
 }
 
 export function insertOrThrowIfExists/*:: <T> */(
@@ -160,11 +184,13 @@ export function insertOrThrowIfExists/*:: <T> */(
   value/*: T */,
   cmp/*: (a: T, b: T) => number */,
 )/*: ImmutableTree<T> */ {
-  return insertByKey/*:: <T, T> */(
+  const result = insertByKey/*:: <T, T> */(
     tree,
     value,
     cmp,
     onConflictThrowError,
     onNotFoundUseGivenValue,
   );
+  /*:: invariant(result); */
+  return result;
 }
