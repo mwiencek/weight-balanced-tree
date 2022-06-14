@@ -1,6 +1,6 @@
 # Changelog
 
-## v0.4.0 (unreleased)
+## v0.4.0 (2022-06-14)
 
   * Renamed `insertByKey` to `update` and moved it to update.mjs.
   * Moved all `onConflict*` helpers, and the types `InsertConflictHandler`
