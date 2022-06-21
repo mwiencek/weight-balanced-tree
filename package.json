@@ -1,6 +1,6 @@
 {
   "name": "weight-balanced-tree",
-  "version": "0.4.0",
+  "version": "0.5.0-dev",
   "description": "A persistent weight-balanced (bounded balance) tree.",
   "keywords": [
     "weight balanced tree",
