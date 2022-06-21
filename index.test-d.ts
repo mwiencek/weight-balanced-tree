@@ -23,6 +23,7 @@ import insert, {
   insertOrThrowIfExists,
 } from './insert';
 import iterate from './iterate';
+import map from './map';
 import maxValue from './maxValue';
 import minValue from './minValue';
 import remove, {
@@ -56,6 +57,7 @@ declare function cmpStrings(a: string, b: string): number;
 declare function cmpNumbers(a: number, b: number): number;
 declare function cmpNullableNumbers(a: number | null, b: number | null): number;
 declare function cmpNumberAndString(a: number, b: string): number;
+declare function toString(num: number): string;
 
 // Basic usage
 expectType<types.ImmutableTree<string>>(create<string>(''));
@@ -77,6 +79,7 @@ expectType<types.ImmutableTree<string> | null>(find<string>(stringTree, '', cmpS
 expectType<types.ImmutableTree<string> | null>(findNext<string>(stringTree, '', cmpStrings));
 expectType<types.ImmutableTree<string> | null>(findPrev<string>(stringTree, '', cmpStrings));
 expectType<types.ImmutableTree<string> | null>(fromDistinctAscArray<string>(['']));
+expectType<types.ImmutableTree<string> | null>(map<number, string>(numberTree, toString));
 expectType<string>(maxValue<string>(nonNullStringTree));
 expectType<string>(minValue<string>(nonNullStringTree));
 expectType<types.ImmutableTree<string> | null>(remove<string>(stringTree, '', cmpStrings));
@@ -103,6 +106,7 @@ expectError<Generator<number, undefined, undefined>>(reverseIterate<number>(stri
 expectError<boolean>(equals<number>(stringTree, stringTree, cmpStrings));
 expectError<types.ImmutableTree<number> | null>(find<number>(stringTree, 0, cmpNumbers));
 expectError<types.ImmutableTree<number>>(fromDistinctAscArray<number>(['']));
+expectError<types.ImmutableTree<string> | null>(map<number, string>(stringTree, toString));
 expectError<number>(maxValue<number>(nonNullStringTree));
 expectError<number>(minValue<number>(nonNullStringTree));
 expectError<string>(maxValue<string>(stringTree));
@@ -124,6 +128,9 @@ expectError<types.ImmutableTree<string> | null>(remove<string>(stringTree, '', c
 expectError<types.ImmutableTree<string> | null>(removeIfExists<string>(stringTree, '', cmpNumbers));
 expectError<types.ImmutableTree<string> | null>(removeOrThrowIfNotExists<string>(stringTree, '', cmpNumbers));
 expectError<types.ImmutableTree<string> | null>(union<string>(stringTree, stringTree, cmpNumbers));
+
+// Wrong 'mapper' function type.
+expectError<types.ImmutableTree<string> | null>(map<number, string>(numberTree, (x: string) => parseInt(x, 10)));
 
 // Value type override + wrong comparator function type
 expectError<types.ImmutableTree<string> | null>(find<string, number>(stringTree, 0, cmpStrings));
@@ -162,6 +169,7 @@ expectType<typeof insertOrReplaceIfExists>(wbt.insertOrReplaceIfExists);
 expectType<typeof insertOrThrowIfExists>(wbt.insertOrThrowIfExists);
 expectType<typeof iterate>(wbt.iterate);
 expectType<typeof reverseIterate>(wbt.reverseIterate);
+expectType<typeof map>(wbt.map);
 expectType<typeof maxValue>(wbt.maxValue);
 expectType<typeof minValue>(wbt.minValue);
 expectType<typeof remove>(wbt.remove);

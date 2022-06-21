@@ -300,6 +300,24 @@ reverseIterate<T>(tree: ImmutableTree<T> | null): Generator<T, void, void>;
 
 Returns a JS iterator that traverses the values of the tree in reverse order.
 
+### map()
+
+```
+map<T, U>(tree: ImmutableTree<T> | null, mapper: (T) => U): ImmutableTree<U> | null;
+```
+
+Returns a new tree with every value passed through `mapper`.
+The mapped values are assumed to have the same relative order as before.
+
+```TypeScript
+const numberTree = fromDistinctAscArray([1, 2, 3]);
+
+const stringTree = map<number, string>(
+  numberTree,
+  (num: number) => String(num),
+);
+```
+
 ### minNode()
 
 ```

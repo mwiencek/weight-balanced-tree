@@ -1,5 +1,9 @@
 # Changelog
 
+## v0.5.0 (unreleased)
+
+  * Added `map` to replace all values in a tree using a `mapper` function.
+
 ## v0.4.0 (2022-06-14)
 
   * Renamed `insertByKey` to `update` and moved it to update.mjs.

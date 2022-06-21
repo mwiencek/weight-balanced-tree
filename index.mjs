@@ -13,6 +13,7 @@ export {
   insertOrThrowIfExists,
 } from './insert.mjs';
 export {default as iterate} from './iterate.mjs';
+export {default as map} from './map.mjs';
 export {default as maxNode} from './maxNode.mjs';
 export {default as maxValue} from './maxValue.mjs';
 export {default as minNode} from './minNode.mjs';

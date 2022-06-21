@@ -11,6 +11,7 @@ export {
   insertOrThrowIfExists,
 } from './insert';
 export {default as iterate} from './iterate';
+export {default as map} from './map';
 export {default as maxValue} from './maxValue';
 export {default as minValue} from './minValue';
 export {

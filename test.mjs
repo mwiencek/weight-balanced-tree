@@ -620,6 +620,20 @@ test('fromDistinctAscArray', function (t) {
   t.end();
 });
 
+test('map', function (t) {
+  const toString = (x) => String(x);
+
+  t.equals(tree.map(null, toString), null);
+  t.deepEqual(
+    tree.map(
+      tree.fromDistinctAscArray(oneToThirtyOne),
+      toString,
+    ),
+    tree.fromDistinctAscArray(oneToThirtyOne.map(toString)),
+  );
+  t.end();
+});
+
 test('toArray', function (t) {
   t.deepEqual(tree.toArray(null), []);
   t.deepEqual(tree.toArray(tree.create(1)), [1]);
