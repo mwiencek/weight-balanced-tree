@@ -10,6 +10,7 @@
   "exports": {
     ".": "./index.mjs",
     "./create": "./create.mjs",
+    "./difference": "./difference.mjs",
     "./equals": "./equals.mjs",
     "./errors": "./errors.mjs",
     "./find": "./find.mjs",

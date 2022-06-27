@@ -526,6 +526,102 @@ test('onNotFoundUseGivenValue', function (t) {
   t.end();
 });
 
+test('difference', function (t) {
+  t.equals(tree.difference(null, null, compareIntegers), null);
+  t.deepEqual(
+    tree.difference(tree.create(1), null, compareIntegers),
+    tree.create(1),
+  );
+  t.deepEqual(
+    tree.difference(null, tree.create(1), compareIntegers),
+    null,
+  );
+  t.ok(
+    tree.equals(
+      tree.difference(
+        tree.fromDistinctAscArray([1, 2, 3]),
+        tree.fromDistinctAscArray([1, 2, 3]),
+        compareIntegers,
+      ),
+      null,
+      compareIntegers,
+    ),
+  );
+  t.ok(
+    tree.equals(
+      tree.difference(
+        tree.fromDistinctAscArray([1, 2, 3, 4]),
+        tree.fromDistinctAscArray([2, 3, 4, 5]),
+        compareIntegers,
+      ),
+      tree.create(1),
+      compareIntegers,
+    ),
+  );
+  t.ok(
+    tree.equals(
+      tree.difference(
+        tree.fromDistinctAscArray([2, 3, 4, 5]),
+        tree.fromDistinctAscArray([1, 2, 3, 4]),
+        compareIntegers,
+      ),
+      tree.create(5),
+      compareIntegers,
+    ),
+  );
+  t.ok(
+    tree.equals(
+      tree.difference(
+        tree.fromDistinctAscArray([1, 4]),
+        tree.fromDistinctAscArray([1, 2, 3]),
+        compareIntegers,
+      ),
+      tree.create(4),
+      compareIntegers,
+    ),
+  );
+  t.ok(
+    tree.equals(
+      tree.difference(
+        tree.fromDistinctAscArray([1, 2, 3]),
+        tree.fromDistinctAscArray([1, 4]),
+        compareIntegers,
+      ),
+      tree.fromDistinctAscArray([2, 3]),
+      compareIntegers,
+    ),
+  );
+  const oneToThirtyOneOdds =
+    tree.fromDistinctAscArray(oneToThirtyOne.filter(x => x % 2));
+  const oneToThirtyOneEvens =
+    tree.fromDistinctAscArray(oneToThirtyOne.filter(x => !(x % 2)));
+  t.ok(
+    tree.equals(
+      tree.difference(
+        tree.fromDistinctAscArray(oneToThirtyOne),
+        oneToThirtyOneOdds,
+        compareIntegers,
+      ),
+      oneToThirtyOneEvens,
+      compareIntegers,
+    ),
+  );
+  t.ok(
+    tree.equals(
+      tree.difference(
+        tree.fromDistinctAscArray(oneToThirtyOne),
+        oneToThirtyOneEvens,
+        compareIntegers,
+      ),
+      oneToThirtyOneOdds,
+      compareIntegers,
+    ),
+  );
+
+  t.end();
+});
+
+
 test('equals', function (t) {
   let tree1 = null;
   for (const num of oneToThirtyOne) {

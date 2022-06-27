@@ -3,6 +3,7 @@
 ## v0.5.0 (unreleased)
 
   * Added `map` to replace all values in a tree using a `mapper` function.
+  * Added `difference` to calculate the difference of two trees.
 
 ## v0.4.0 (2022-06-14)
 

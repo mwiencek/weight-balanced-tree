@@ -7,6 +7,7 @@ import {
 import * as types from './types';
 import * as wbt from './index';
 import create from './create';
+import difference from './difference';
 import {
   ValueExistsError,
   ValueNotFoundError,
@@ -88,6 +89,7 @@ expectType<types.ImmutableTree<string> | null>(removeOrThrowIfNotExists<string>(
 expectType<ReadonlyArray<string>>(toArray(stringTree));
 expectType<types.ImmutableTree<string> | null>(union(stringTree, stringTree, cmpStrings));
 expectType<types.ImmutableTree<string> | null>(union(stringTree, stringTree, cmpStrings, onConflictUseSecondValue));
+expectType<types.ImmutableTree<string> | null>(difference(stringTree, stringTree, cmpStrings));
 expectType<Generator<[string | undefined, number | undefined], undefined, undefined>>(zip(stringTree, numberTree));
 
 // Value type override
@@ -116,6 +118,7 @@ expectError<types.ImmutableTree<number> | null>(removeIfExists<number>(stringTre
 expectError<types.ImmutableTree<number> | null>(removeOrThrowIfNotExists<number>(stringTree, '', cmpNumbers));
 expectError<ReadonlyArray<string>>(toArray<string>(numberTree));
 expectError<types.ImmutableTree<number> | null>(union<number>(stringTree, stringTree, cmpNumbers));
+expectError<types.ImmutableTree<number> | null>(difference<number>(stringTree, stringTree, cmpNumbers));
 expectError<Generator<[string | undefined, number | undefined], undefined, undefined>>(zip(numberTree, stringTree));
 
 // Wrong comparator function type
@@ -128,6 +131,7 @@ expectError<types.ImmutableTree<string> | null>(remove<string>(stringTree, '', c
 expectError<types.ImmutableTree<string> | null>(removeIfExists<string>(stringTree, '', cmpNumbers));
 expectError<types.ImmutableTree<string> | null>(removeOrThrowIfNotExists<string>(stringTree, '', cmpNumbers));
 expectError<types.ImmutableTree<string> | null>(union<string>(stringTree, stringTree, cmpNumbers));
+expectError<types.ImmutableTree<string> | null>(difference<string>(stringTree, stringTree, cmpNumbers));
 
 // Wrong 'mapper' function type.
 expectError<types.ImmutableTree<string> | null>(map<number, string>(numberTree, (x: string) => parseInt(x, 10)));
@@ -158,6 +162,7 @@ expectAssignable<Error>(new ValueNotFoundError('a'));
 expectAssignable<Error>(new ValueOrderError('a', 'b'));
 
 expectType<typeof create>(wbt.create);
+expectType<typeof difference>(wbt.difference);
 expectType<typeof equals>(wbt.equals);
 expectType<typeof find>(wbt.find);
 expectType<typeof findNext>(wbt.findNext);

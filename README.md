@@ -381,6 +381,19 @@ return the final value to use in the union (though it must have the same
 relative sort order as `v1` and `v2`).  If not specified, by default `union`
 will prefer values in `t2` when resolving conflicts.
 
+### difference()
+
+```
+difference<T>(
+  t1: ImmutableTree<T> | null,
+  t2: ImmutableTree<T> | null,
+  cmp: (a: T, b: T) => number,
+): ImmutableTree<T> | null;
+```
+
+Returns a new tree with values in `t1` that aren't in `t2`, using the
+comparator `cmp`.
+
 ### zip()
 
 ```
