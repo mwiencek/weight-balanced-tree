@@ -220,11 +220,17 @@ This simply checks if the tree returned from `remove` is the same reference.
 equals<T>(
   a: ImmutableTree<T> | null,
   b: ImmutableTree<T> | null,
-  cmp: (a: T, b: T) => number,
+  isEqual?: (a: T, b: T) => boolean,
 ): boolean;
 ```
 
-Returns `true` if two trees contain the same values, or `false` otherwise.
+Returns `true` if two trees contain the same values in the same order, or
+`false` otherwise.
+
+This works by zipping the trees' values together, and passing each pair of
+values to `isEqual`.
+
+`isEqual` is optional.  If not provided, it defaults to `Object.is`.
 
 ### find()
 

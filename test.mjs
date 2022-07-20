@@ -23,6 +23,9 @@ import {
 import invariant from './invariant.mjs';
 */
 
+// $FlowIssue[method-unbinding]
+const objectIs/*: <T>(a: T, b: T) => boolean */ = Object.is;
+
 const oneToThirtyOne = [];
 
 for (let i = 1; i <= 31; i++) {
@@ -544,7 +547,6 @@ test('difference', function (t) {
         compareIntegers,
       ),
       null,
-      compareIntegers,
     ),
   );
   t.ok(
@@ -555,7 +557,6 @@ test('difference', function (t) {
         compareIntegers,
       ),
       tree.create(1),
-      compareIntegers,
     ),
   );
   t.ok(
@@ -566,7 +567,6 @@ test('difference', function (t) {
         compareIntegers,
       ),
       tree.create(5),
-      compareIntegers,
     ),
   );
   t.ok(
@@ -577,7 +577,6 @@ test('difference', function (t) {
         compareIntegers,
       ),
       tree.create(4),
-      compareIntegers,
     ),
   );
   t.ok(
@@ -588,7 +587,6 @@ test('difference', function (t) {
         compareIntegers,
       ),
       tree.fromDistinctAscArray([2, 3]),
-      compareIntegers,
     ),
   );
   const oneToThirtyOneOdds =
@@ -603,7 +601,6 @@ test('difference', function (t) {
         compareIntegers,
       ),
       oneToThirtyOneEvens,
-      compareIntegers,
     ),
   );
   t.ok(
@@ -614,7 +611,6 @@ test('difference', function (t) {
         compareIntegers,
       ),
       oneToThirtyOneOdds,
-      compareIntegers,
     ),
   );
 
@@ -633,17 +629,17 @@ test('equals', function (t) {
     tree2 = tree.insert(tree2, num, compareIntegers);
   }
 
-  t.ok(tree.equals(tree1, tree2, compareIntegers));
+  t.ok(tree.equals(tree1, tree2));
 
   tree1 = tree.remove(tree1, 1, compareIntegers);
-  t.ok(!tree.equals(tree1, tree2, compareIntegers));
+  t.ok(!tree.equals(tree1, tree2));
 
   tree2 = tree.remove(tree2, 1, compareIntegers);
-  t.ok(tree.equals(tree1, tree2, compareIntegers));
+  t.ok(tree.equals(tree1, tree2));
 
-  t.ok(tree.equals(null, null, compareIntegers));
-  t.ok(!tree.equals(tree1, null, compareIntegers));
-  t.ok(!tree.equals(null, tree1, compareIntegers));
+  t.ok(tree.equals(null, null));
+  t.ok(!tree.equals(tree1, null));
+  t.ok(!tree.equals(null, tree1));
 
   t.ok(tree.equals(
     {
@@ -668,7 +664,7 @@ test('equals', function (t) {
       size: 2,
       value: {num: 1},
     },
-    (a, b) => compareIntegers(a.num, b.num),
+    (a, b) => objectIs(a.num, b.num),
   ));
 
   t.ok(!tree.equals(
@@ -704,7 +700,7 @@ test('equals', function (t) {
       size: 2,
       value: {num: 1},
     },
-    (a, b) => compareIntegers(a.num, b.num),
+    (a, b) => objectIs(a.num, b.num),
   ));
 
   t.end();
@@ -758,7 +754,6 @@ test('union', function (t) {
         compareIntegers,
       ),
       tree.fromDistinctAscArray([1, 2, 3, 4, 5, 6]),
-      compareIntegers,
     ),
   );
   t.ok(
@@ -769,7 +764,6 @@ test('union', function (t) {
         compareIntegers,
       ),
       tree.fromDistinctAscArray([1, 2, 3, 4, 5, 6]),
-      compareIntegers,
     ),
   );
   t.ok(
@@ -780,7 +774,6 @@ test('union', function (t) {
         compareIntegers,
       ),
       tree.fromDistinctAscArray([1, 2, 3, 4]),
-      compareIntegers,
     ),
   );
   t.ok(
@@ -791,7 +784,6 @@ test('union', function (t) {
         compareIntegers,
       ),
       tree.fromDistinctAscArray([1, 2, 3, 4]),
-      compareIntegers,
     ),
   );
   t.ok(
@@ -802,7 +794,6 @@ test('union', function (t) {
         compareIntegers,
       ),
       tree.fromDistinctAscArray([1, 2, 3, 4]),
-      compareIntegers,
     ),
   );
   t.ok(
@@ -813,7 +804,6 @@ test('union', function (t) {
         compareIntegers,
       ),
       tree.fromDistinctAscArray(oneToThirtyOne),
-      compareIntegers,
     ),
   );
 

@@ -24,6 +24,10 @@ const compareKeys = (a, b) => {
   return ai < bi ? -1 : (ai > bi ? 1 : 0);
 };
 
+const isTableEntryEqual = (a, b) => (
+  a[0] === b[0] && a[1] === b[1]
+);
+
 function getSortedIndex(array, size, value, get, cmp) {
   let low = 0;
   let high = size;
@@ -95,7 +99,7 @@ for (const pair of asciiTable) {
 const prefilledImmutableList = Immutable.List(asciiTable);
 
 suite.add('equals (weight-balanced-tree)', function () {
-  wbt.equals(prefilledTree, prefilledTree2, compareKeys);
+  wbt.equals(prefilledTree, prefilledTree2, isTableEntryEqual);
 });
 
 suite.add('insertion (weight-balanced-tree)', function () {

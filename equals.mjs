@@ -10,7 +10,9 @@ import type {ImmutableTree} from './types.mjs';
 export default function equals/*:: <T> */(
   a/*: ImmutableTree<T> | null */,
   b/*: ImmutableTree<T> | null */,
-  cmp/*: (a: T, b: T) => number */,
+  // `Object.is` is a static method, so Flow shouldn't care about unbinding.
+  // $FlowIssue[method-unbinding]
+  isEqual/*:: ?: (a: T, b: T) => boolean */ = Object.is,
 )/*: boolean */ {
   if (a === null && b === null) {
     return true;
@@ -27,7 +29,7 @@ export default function equals/*:: <T> */(
     // Flow that they're not void from zip.
     invariant(aValue !== undefined && bValue !== undefined);
     */
-    if (cmp(aValue, bValue) !== 0) {
+    if (!isEqual(aValue, bValue)) {
       return false;
     }
   }

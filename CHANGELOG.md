@@ -1,5 +1,12 @@
 # Changelog
 
+## v0.6.0 (unreleased)
+
+  * Changed the signature of `equals`.  It now accepts an `isEqual` function
+    of type `<T>(T, T) => boolean` as the third argument instead of a
+    comparator.  `isEqual` is optional: if not provided, it defaults to
+    `Object.is`.
+
 ## v0.5.0 (2022-07-03)
 
   * Added `map` to replace all values in a tree using a `mapper` function.

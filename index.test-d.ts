@@ -54,6 +54,8 @@ declare const stringTree: types.ImmutableTree<string> | null;
 declare const nonNullStringTree: types.ImmutableTree<string>;
 declare const numberTree: types.ImmutableTree<number> | null;
 
+declare function areStringsEqual(a: string, b: string): boolean;
+declare function areNumbersEqual(a: number, b: number): boolean;
 declare function cmpStrings(a: string, b: string): number;
 declare function cmpNumbers(a: number, b: number): number;
 declare function cmpNullableNumbers(a: number | null, b: number | null): number;
@@ -75,7 +77,8 @@ expectType<types.ImmutableTree<string>>(insertOrReplaceIfExists<string>(stringTr
 expectType<types.ImmutableTree<string>>(insertOrThrowIfExists<string>(stringTree, '', cmpStrings));
 expectType<Generator<string, undefined, undefined>>(iterate<string>(stringTree));
 expectType<Generator<string, undefined, undefined>>(reverseIterate<string>(stringTree));
-expectType<boolean>(equals<string>(stringTree, stringTree, cmpStrings));
+expectType<boolean>(equals<string>(stringTree, stringTree));
+expectType<boolean>(equals<string>(stringTree, stringTree, areStringsEqual));
 expectType<types.ImmutableTree<string> | null>(find<string>(stringTree, '', cmpStrings));
 expectType<types.ImmutableTree<string> | null>(findNext<string>(stringTree, '', cmpStrings));
 expectType<types.ImmutableTree<string> | null>(findPrev<string>(stringTree, '', cmpStrings));
@@ -105,7 +108,7 @@ expectError<types.ImmutableTree<number>>(insertOrReplaceIfExists<number>(stringT
 expectError<types.ImmutableTree<number>>(insertOrThrowIfExists<number>(stringTree, '', cmpStrings));
 expectError<Generator<number, undefined, undefined>>(iterate<number>(stringTree));
 expectError<Generator<number, undefined, undefined>>(reverseIterate<number>(stringTree));
-expectError<boolean>(equals<number>(stringTree, stringTree, cmpStrings));
+expectError<boolean>(equals<number>(stringTree, stringTree, areStringsEqual));
 expectError<types.ImmutableTree<number> | null>(find<number>(stringTree, 0, cmpNumbers));
 expectError<types.ImmutableTree<number>>(fromDistinctAscArray<number>(['']));
 expectError<types.ImmutableTree<string> | null>(map<number, string>(stringTree, toString));
@@ -122,7 +125,7 @@ expectError<types.ImmutableTree<number> | null>(difference<number>(stringTree, s
 expectError<Generator<[string | undefined, number | undefined], undefined, undefined>>(zip(numberTree, stringTree));
 
 // Wrong comparator function type
-expectError<types.ImmutableTree<string> | null>(equals<string>(stringTree, stringTree, cmpNumbers));
+expectError<types.ImmutableTree<string> | null>(equals<string>(stringTree, stringTree, areNumbersEqual));
 expectError<types.ImmutableTree<string> | null>(find<string>(stringTree, '', cmpNumbers));
 expectError<types.ImmutableTree<string> | null>(findNext<string>(stringTree, '', cmpNumbers));
 expectError<types.ImmutableTree<string> | null>(findPrev<string>(stringTree, '', cmpNumbers));
