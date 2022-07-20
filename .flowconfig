@@ -1,6 +1,7 @@
 [ignore]
 *.d.ts
 <PROJECT_ROOT>/node_modules/read-pkg/.*
+<PROJECT_ROOT>/node_modules/resolve/.*
 
 [include]
 

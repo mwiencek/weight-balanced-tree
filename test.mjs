@@ -21,6 +21,7 @@ import {
 } from './update.mjs';
 /*::
 import invariant from './invariant.mjs';
+import type {ImmutableTree} from './types.mjs';
 */
 
 // $FlowIssue[method-unbinding]
@@ -262,7 +263,7 @@ test('replacing a node preserves the existing node size', function (t) {
 });
 
 test('removeIfExists', function (t) {
-  let node = tree.create(1);
+  let node/*: ImmutableTree<number> | null */ = tree.create(1);
   node = tree.insert(node, 2, compareIntegers);
 
   const origNode = node;
@@ -299,7 +300,7 @@ test('removeIfExists', function (t) {
 });
 
 test('removeOrThrowIfNotExists', function (t) {
-  let node = tree.create(1);
+  let node/*: ImmutableTree<number> | null */ = tree.create(1);
   t.throws(
     function () {
       node = tree.removeOrThrowIfNotExists(node, 2, compareIntegers);
@@ -394,7 +395,7 @@ test('update', function (t) {
   const v1 = {key: 1, value: 10};
   const v2 = {key: 2, value: 20};
 
-  let node = tree.create(v1);
+  let node/*: ImmutableTree<Item> | null */ = tree.create(v1);
 
   node = tree.update(
     node,
