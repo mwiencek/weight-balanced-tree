@@ -6,6 +6,9 @@
     of type `<T>(T, T) => boolean` as the third argument instead of a
     comparator.  `isEqual` is optional: if not provided, it defaults to
     `Object.is`.
+  * Changed `find`, `findNext`, and `findPrev` to return the found tree value
+    directly instead of the tree branch containing the value.  These also now
+    accept a default value to return if no tree value is found.
 
 ## v0.5.0 (2022-07-03)
 

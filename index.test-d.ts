@@ -79,9 +79,9 @@ expectType<Generator<string, undefined, undefined>>(iterate<string>(stringTree))
 expectType<Generator<string, undefined, undefined>>(reverseIterate<string>(stringTree));
 expectType<boolean>(equals<string>(stringTree, stringTree));
 expectType<boolean>(equals<string>(stringTree, stringTree, areStringsEqual));
-expectType<types.ImmutableTree<string> | null>(find<string>(stringTree, '', cmpStrings));
-expectType<types.ImmutableTree<string> | null>(findNext<string>(stringTree, '', cmpStrings));
-expectType<types.ImmutableTree<string> | null>(findPrev<string>(stringTree, '', cmpStrings));
+expectType<string>(find<string>(stringTree, '', cmpStrings, ''));
+expectType<string>(findNext<string>(stringTree, '', cmpStrings, ''));
+expectType<string>(findPrev<string>(stringTree, '', cmpStrings, ''));
 expectType<types.ImmutableTree<string> | null>(fromDistinctAscArray<string>(['']));
 expectType<types.ImmutableTree<string> | null>(map<number, string>(numberTree, toString));
 expectType<string>(maxValue<string>(nonNullStringTree));
@@ -96,9 +96,9 @@ expectType<types.ImmutableTree<string> | null>(difference(stringTree, stringTree
 expectType<Generator<[string | undefined, number | undefined], undefined, undefined>>(zip(stringTree, numberTree));
 
 // Value type override
-expectType<types.ImmutableTree<string> | null>(find<string, number>(stringTree, 0, cmpNumberAndString));
-expectType<types.ImmutableTree<string> | null>(findNext<string, number>(stringTree, 0, cmpNumberAndString));
-expectType<types.ImmutableTree<string> | null>(findPrev<string, number>(stringTree, 0, cmpNumberAndString));
+expectType<string | null>(find<string, number, null>(stringTree, 0, cmpNumberAndString, null));
+expectType<string | null>(findNext<string, number, null>(stringTree, 0, cmpNumberAndString, null));
+expectType<string | null>(findPrev<string, number, null>(stringTree, 0, cmpNumberAndString, null));
 
 // Wrong tree type
 expectError<types.ImmutableTree<number>>(create<number>(''));
@@ -109,7 +109,7 @@ expectError<types.ImmutableTree<number>>(insertOrThrowIfExists<number>(stringTre
 expectError<Generator<number, undefined, undefined>>(iterate<number>(stringTree));
 expectError<Generator<number, undefined, undefined>>(reverseIterate<number>(stringTree));
 expectError<boolean>(equals<number>(stringTree, stringTree, areStringsEqual));
-expectError<types.ImmutableTree<number> | null>(find<number>(stringTree, 0, cmpNumbers));
+expectError<number>(find<number>(stringTree, 0, cmpNumbers, 0));
 expectError<types.ImmutableTree<number>>(fromDistinctAscArray<number>(['']));
 expectError<types.ImmutableTree<string> | null>(map<number, string>(stringTree, toString));
 expectError<number>(maxValue<number>(nonNullStringTree));
@@ -126,9 +126,9 @@ expectError<Generator<[string | undefined, number | undefined], undefined, undef
 
 // Wrong comparator function type
 expectError<types.ImmutableTree<string> | null>(equals<string>(stringTree, stringTree, areNumbersEqual));
-expectError<types.ImmutableTree<string> | null>(find<string>(stringTree, '', cmpNumbers));
-expectError<types.ImmutableTree<string> | null>(findNext<string>(stringTree, '', cmpNumbers));
-expectError<types.ImmutableTree<string> | null>(findPrev<string>(stringTree, '', cmpNumbers));
+expectError<string>(find<string>(stringTree, '', cmpNumbers, ''));
+expectError<string>(findNext<string>(stringTree, '', cmpNumbers, ''));
+expectError<string>(findPrev<string>(stringTree, '', cmpNumbers, ''));
 expectError<types.ImmutableTree<string>>(insert<string>(stringTree, '', cmpNumbers));
 expectError<types.ImmutableTree<string> | null>(remove<string>(stringTree, '', cmpNumbers));
 expectError<types.ImmutableTree<string> | null>(removeIfExists<string>(stringTree, '', cmpNumbers));
@@ -140,9 +140,9 @@ expectError<types.ImmutableTree<string> | null>(difference<string>(stringTree, s
 expectError<types.ImmutableTree<string> | null>(map<number, string>(numberTree, (x: string) => parseInt(x, 10)));
 
 // Value type override + wrong comparator function type
-expectError<types.ImmutableTree<string> | null>(find<string, number>(stringTree, 0, cmpStrings));
-expectError<types.ImmutableTree<string> | null>(findNext<string, number>(stringTree, 0, cmpStrings));
-expectError<types.ImmutableTree<string> | null>(findPrev<string, number>(stringTree, 0, cmpStrings));
+expectError<string>(find<string, number>(stringTree, 0, cmpStrings, ''));
+expectError<string>(findNext<string, number>(stringTree, 0, cmpStrings, ''));
+expectError<string>(findPrev<string, number>(stringTree, 0, cmpStrings, ''));
 
 // InsertConflictHandler
 expectType<InsertConflictHandler<string, number>>((a: string, b: number) => a + String(b));

@@ -24,6 +24,8 @@ import invariant from './invariant.mjs';
 import type {ImmutableTree} from './types.mjs';
 */
 
+const compareStringX = (a, b) => a.x.localeCompare(b.x);
+
 // $FlowIssue[method-unbinding]
 const objectIs/*: <T>(a: T, b: T) => boolean */ = Object.is;
 
@@ -68,30 +70,30 @@ test('all', function (t) {
     shuffle(numbers);
 
     for (const num of numbers) {
-      const next = tree.findNext(node, num, compareIntegers);
+      const next = tree.findNext(node, num, compareIntegers, -1);
       t.equal(
-        next === null ? null : next.value,
-        num < 31 ? (num + 1) : null,
+        next,
+        num < 31 ? (num + 1) : -1,
         'next node is found',
       );
 
-      const prev = tree.findPrev(node, num, compareIntegers);
+      const prev = tree.findPrev(node, num, compareIntegers, -1);
       t.equal(
-        prev === null ? null : prev.value,
-        num > 1 ? (num - 1) : null,
+        prev,
+        num > 1 ? (num - 1) : -1,
         'prev node is found',
       );
     }
 
     for (const num of numbers) {
-      let foundNode = tree.find(node, num, compareIntegers);
-      t.ok(foundNode !== null && foundNode.value === num, 'existing node is found');
+      let foundValue = tree.find(node, num, compareIntegers, null);
+      t.ok(foundValue === num, 'existing node is found');
 
       node = tree.remove(node, num, compareIntegers);
       t.ok(checkTreeInvariants(node, compareIntegers), 'tree is valid and balanced');
 
-      foundNode = tree.find(node, num, compareIntegers);
-      t.ok(foundNode === null, 'removed node is not found');
+      foundValue = tree.find(node, num, compareIntegers, -1);
+      t.ok(foundValue === -1, 'removed node is not found');
     }
 
     t.ok(node === null, 'tree is empty');
@@ -104,18 +106,19 @@ test('all', function (t) {
 });
 
 test('find with different value type', function (t) {
-  const compareX = (a, b) => a.x.localeCompare(b.x);
+  const compareX2 = (x, value) => x.localeCompare(value.x);
 
   const xa = {x: 'a'};
   const xb = {x: 'b'};
 
   let node = null;
-  node = tree.insert(node, xa, compareX);
-  node = tree.insert(node, xb, compareX);
+  node = tree.insert(node, xa, compareStringX);
+  node = tree.insert(node, xb, compareStringX);
 
-  const foundNode =
-    tree.find(node, 'b', (x, value) => x.localeCompare(value.x));
-  t.ok(foundNode !== null && foundNode.value.x === 'b')
+  let foundValue = tree.find(node, 'b', compareX2, null);
+  t.ok(foundValue?.x === 'b')
+  foundValue = tree.find(node, 'c', compareX2, {x: 'c'});
+  t.ok(foundValue.x === 'c');
 
   t.end();
 });
@@ -128,27 +131,27 @@ test('findNext/findPrev with non-existent values', function (t) {
   node = tree.insert(node, 7, compareIntegers);
   node = tree.insert(node, 9, compareIntegers);
 
-  t.equal(tree.findNext(node, 0, compareIntegers)?.value, 1);
-  t.equal(tree.findNext(node, 1, compareIntegers)?.value, 3);
-  t.equal(tree.findNext(node, 2, compareIntegers)?.value, 3);
-  t.equal(tree.findNext(node, 3, compareIntegers)?.value, 5);
-  t.equal(tree.findNext(node, 4, compareIntegers)?.value, 5);
-  t.equal(tree.findNext(node, 5, compareIntegers)?.value, 7);
-  t.equal(tree.findNext(node, 6, compareIntegers)?.value, 7);
-  t.equal(tree.findNext(node, 7, compareIntegers)?.value, 9);
-  t.equal(tree.findNext(node, 8, compareIntegers)?.value, 9);
-  t.equal(tree.findNext(node, 9, compareIntegers), null);
+  t.equal(tree.findNext(node, 0, compareIntegers, null), 1);
+  t.equal(tree.findNext(node, 1, compareIntegers, null), 3);
+  t.equal(tree.findNext(node, 2, compareIntegers, null), 3);
+  t.equal(tree.findNext(node, 3, compareIntegers, null), 5);
+  t.equal(tree.findNext(node, 4, compareIntegers, null), 5);
+  t.equal(tree.findNext(node, 5, compareIntegers, null), 7);
+  t.equal(tree.findNext(node, 6, compareIntegers, null), 7);
+  t.equal(tree.findNext(node, 7, compareIntegers, null), 9);
+  t.equal(tree.findNext(node, 8, compareIntegers, null), 9);
+  t.equal(tree.findNext(node, 9, compareIntegers, null), null);
 
-  t.equal(tree.findPrev(node, 1, compareIntegers), null);
-  t.equal(tree.findPrev(node, 2, compareIntegers)?.value, 1);
-  t.equal(tree.findPrev(node, 3, compareIntegers)?.value, 1);
-  t.equal(tree.findPrev(node, 4, compareIntegers)?.value, 3);
-  t.equal(tree.findPrev(node, 5, compareIntegers)?.value, 3);
-  t.equal(tree.findPrev(node, 6, compareIntegers)?.value, 5);
-  t.equal(tree.findPrev(node, 7, compareIntegers)?.value, 5);
-  t.equal(tree.findPrev(node, 8, compareIntegers)?.value, 7);
-  t.equal(tree.findPrev(node, 9, compareIntegers)?.value, 7);
-  t.equal(tree.findPrev(node, 10, compareIntegers)?.value, 9);
+  t.equal(tree.findPrev(node, 1, compareIntegers, null), null);
+  t.equal(tree.findPrev(node, 2, compareIntegers, null), 1);
+  t.equal(tree.findPrev(node, 3, compareIntegers, null), 1);
+  t.equal(tree.findPrev(node, 4, compareIntegers, null), 3);
+  t.equal(tree.findPrev(node, 5, compareIntegers, null), 3);
+  t.equal(tree.findPrev(node, 6, compareIntegers, null), 5);
+  t.equal(tree.findPrev(node, 7, compareIntegers, null), 5);
+  t.equal(tree.findPrev(node, 8, compareIntegers, null), 7);
+  t.equal(tree.findPrev(node, 9, compareIntegers, null), 7);
+  t.equal(tree.findPrev(node, 10, compareIntegers, null), 9);
 
   t.end();
 });
@@ -192,7 +195,7 @@ test('insertOrReplaceIfExists', function (t) {
     const newNode1 = tree.insert(node, newValue1, cmp, onConflictUseGivenValue);
     checkTreeInvariants(newNode1, cmp);
     t.notEqual(node, newNode1);
-    t.equal(tree.find(newNode1, {value: num}, cmp)?.value, newValue1);
+    t.equal(tree.find(newNode1, {value: num}, cmp, null), newValue1);
   }
 
   for (const num of oneToThirtyOne) {
@@ -200,7 +203,7 @@ test('insertOrReplaceIfExists', function (t) {
     const newNode2 = tree.insertOrReplaceIfExists(node, newValue2, cmp);
     checkTreeInvariants(newNode2, cmp);
     t.notEqual(node, newNode2);
-    t.equal(tree.find(newNode2, {value: num}, cmp)?.value, newValue2);
+    t.equal(tree.find(newNode2, {value: num}, cmp, null), newValue2);
   }
 
   t.equal(node?.size, 31);
@@ -292,7 +295,7 @@ test('removeIfExists', function (t) {
   for (const num of oneToThirtyOne) {
     node = tree.removeIfExists(node, num, compareIntegers);
     checkTreeInvariants(node, compareIntegers);
-    t.equal(tree.find(node, num, compareIntegers), null);
+    t.equal(tree.find(node, num, compareIntegers, null), null);
     t.equal((node?.size ?? 0), --size);
   }
 
@@ -367,7 +370,7 @@ test('insert with onConflict', function (t) {
       return v1;
     },
   );
-  t.equal(tree.find(node, 1, cmpKeyWithItem)?.value, v1);
+  t.equal(tree.find(node, 1, cmpKeyWithItem, null), v1);
   t.deepEqual(v1, {key: 1, value: 1000});
 
   t.throws(
@@ -407,7 +410,7 @@ test('update', function (t) {
       return v2;
     },
   );
-  t.equal(tree.find(node, v2, cmp)?.value, v2);
+  t.equal(tree.find(node, v2, cmp, null), v2);
 
   node = tree.update(
     node,
@@ -418,7 +421,7 @@ test('update', function (t) {
       return {key: newKey, value: newKey * 10};
     },
   );
-  let v3 = tree.find(node, 3, cmpKeyWithItem)?.value;
+  let v3 = tree.find(node, 3, cmpKeyWithItem, null);
   t.deepEqual(v3, {key: 3, value: 30});
 
   node = tree.update(
@@ -431,7 +434,7 @@ test('update', function (t) {
     },
   );
   t.deepEqual(
-    tree.find(node, 3, cmpKeyWithItem)?.value,
+    tree.find(node, 3, cmpKeyWithItem, null),
     v3,
     'existing tree value it kept',
   );
@@ -449,7 +452,7 @@ test('update', function (t) {
     },
   );
   t.deepEqual(
-    tree.find(node, 3, cmpKeyWithItem)?.value,
+    tree.find(node, 3, cmpKeyWithItem, null),
     v3,
     'new tree value is used',
   );
@@ -823,7 +826,7 @@ test('union', function (t) {
     [{v: 1}, {v: 2}, {v: 3}, {v: 4}, {v: 5}],
   );
   t.equals(
-    tree.find(unionWithDefaultConflictHandler, {v: 3}, compareValues)?.value,
+    tree.find(unionWithDefaultConflictHandler, {v: 3}, compareValues, null),
     v3b,
   );
 
@@ -840,7 +843,7 @@ test('union', function (t) {
     [{v: 1}, {v: 2}, {v: 3}, {v: 4}, {v: 5}],
   );
   t.equals(
-    tree.find(unionWithCustomConflictHandler, {v: 3}, compareValues)?.value,
+    tree.find(unionWithCustomConflictHandler, {v: 3}, compareValues, null),
     v3a,
   );
 

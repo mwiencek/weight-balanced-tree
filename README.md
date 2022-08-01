@@ -235,45 +235,53 @@ values to `isEqual`.
 ### find()
 
 ```
-find<T>(
-    tree: ImmutableTree<T> | null,
-    value: T,
-    cmp: (T, T) => number,
-): ImmutableTree<T> | null;
+find<T, K = T, D = T>(
+  tree: ImmutableTree<T> | null,
+  key: K,
+  cmp: (a: K, b: T) => number,
+  defaultValue: D,
+): T | D;
 ```
 
-Finds the branch of `tree` containing `value` and returns it, or `null` if not
-found.
+Finds a value in `tree` using the given `key` and returns it, or
+`defaultValue` if not found.
 
-The `cmp` (comparator) function is the same as used for `insert`.
+`cmp` receives `key` as its first argument, and a value of type `T` from
+`tree` as its second argument.
 
 ### findNext()
 
 ```
-findNext<T, V = T>(
+findNext<T, K = T, D = T>(
   tree: ImmutableTree<T> | null,
-  value: V,
-  cmp: (V, T) => number,
-): ImmutableTree<T> | null;
+  key: K,
+  cmp: (a: K, b: T) => number,
+  defaultValue: D,
+): T | D;
 ```
 
-Finds the branch of `tree` that follows `value` and returns it, or `null` if
-there is no such node.  `value` does not have to exist in the tree: if a set
-has 1 & 3, the next value from 2 is 3.
+Finds a value in `tree` using the given `key` and returns the value
+immediately after it, or `defaultValue` if there is no such value.
+
+`key` does not have to be found in the tree: if a set has 1 & 3, the next
+value from 2 is 3.
 
 ### findPrev()
 
 ```
-findNext<T, V = T>(
+findPrev<T, K = T, D = T>(
   tree: ImmutableTree<T> | null,
-  value: V,
-  cmp: (V, T) => number,
-): ImmutableTree<T> | null;
+  key: K,
+  cmp: (a: K, b: T) => number,
+  defaultValue: D,
+): T | D;
 ```
 
-Finds the branch of `tree` that precedes `value` and returns it, or `null` if
-there is no such node.  `value` does not have to exist in the tree: if a set
-has 1 & 3, the previous value from 2 is 1.
+Finds a value in `tree` using the given `key` and returns the value
+immediately before it, or `defaultValue` if there is no such value.
+
+`key` does not have to be found in the tree: if a set has 1 & 3, the previous
+value from 2 is 1.
 
 ### fromDistinctAscArray()
 
