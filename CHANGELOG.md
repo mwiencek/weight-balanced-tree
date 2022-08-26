@@ -1,6 +1,6 @@
 # Changelog
 
-## v0.6.0 (unreleased)
+## v0.6.0 (2022-08-25)
 
   * Changed the signature of `equals`.  It now accepts an `isEqual` function
     of type `<T>(T, T) => boolean` as the third argument instead of a
