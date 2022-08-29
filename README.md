@@ -373,7 +373,7 @@ This is equivalent to `maxNode(tree).value`.
 ```
 toArray<T>(
   tree: ImmutableTree<T> | null,
-): $ReadOnlyArray<T>;
+): Array<T>;
 ```
 
 Flattens `tree` into an array of values.

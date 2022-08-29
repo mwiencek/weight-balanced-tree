@@ -1,5 +1,9 @@
 # Changelog
 
+## v0.6.1 (unreleased)
+
+  * The return type of `toArray` is no longer read-only.
+
 ## v0.6.0 (2022-08-25)
 
   * Changed the signature of `equals`.  It now accepts an `isEqual` function

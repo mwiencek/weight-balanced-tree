@@ -731,7 +731,7 @@ test('map', function (t) {
 });
 
 test('toArray', function (t) {
-  t.deepEqual(tree.toArray(null), []);
+  t.deepEqual(tree.toArray(null).sort(), []);
   t.deepEqual(tree.toArray(tree.create(1)), [1]);
   t.deepEqual(tree.toArray(tree.fromDistinctAscArray([1, 2, 3])), [1, 2, 3]);
   t.deepEqual(tree.toArray(tree.fromDistinctAscArray([3, 2, 1])), [3, 2, 1]);

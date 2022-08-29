@@ -89,7 +89,7 @@ expectType<string>(minValue<string>(nonNullStringTree));
 expectType<types.ImmutableTree<string> | null>(remove<string>(stringTree, '', cmpStrings));
 expectType<types.ImmutableTree<string> | null>(removeIfExists<string>(stringTree, '', cmpStrings));
 expectType<types.ImmutableTree<string> | null>(removeOrThrowIfNotExists<string>(stringTree, '', cmpStrings));
-expectType<ReadonlyArray<string>>(toArray(stringTree));
+expectType<Array<string>>(toArray(stringTree));
 expectType<types.ImmutableTree<string> | null>(union(stringTree, stringTree, cmpStrings));
 expectType<types.ImmutableTree<string> | null>(union(stringTree, stringTree, cmpStrings, onConflictUseSecondValue));
 expectType<types.ImmutableTree<string> | null>(difference(stringTree, stringTree, cmpStrings));

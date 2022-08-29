@@ -7,6 +7,6 @@ import type {ImmutableTree} from './types.mjs';
 
 export default function toArray/*:: <T> */(
   tree/*: ImmutableTree<T> | null */,
-)/*: $ReadOnlyArray<T> */ {
+)/*: Array<T> */ {
   return Array.from(iterate(tree));
 }
