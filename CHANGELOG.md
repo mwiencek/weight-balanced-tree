@@ -1,6 +1,6 @@
 # Changelog
 
-## v0.6.1 (unreleased)
+## v0.6.1 (2022-09-13)
 
   * The return type of `toArray` is no longer read-only.
 
