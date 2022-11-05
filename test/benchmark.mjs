@@ -1,7 +1,8 @@
 import Benchmark from 'benchmark';
 import * as Immutable from 'immutable';
 
-import * as wbt from './index.mjs';
+import * as wbt from '../src/index.mjs';
+
 import compareIntegers from './compareIntegers.mjs';
 import shuffle from './shuffle.mjs';
 

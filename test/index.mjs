@@ -8,9 +8,8 @@ import {
   ValueExistsError,
   ValueNotFoundError,
   ValueOrderError,
-} from './errors.mjs';
-import * as tree from './index.mjs';
-import shuffle from './shuffle.mjs';
+} from '../src/errors.mjs';
+import * as tree from '../src/index.mjs';
 import {
   onConflictKeepTreeValue,
   onConflictThrowError,
@@ -18,11 +17,13 @@ import {
   onNotFoundDoNothing,
   onNotFoundThrowError,
   onNotFoundUseGivenValue,
-} from './update.mjs';
+} from '../src/update.mjs';
 /*::
-import invariant from './invariant.mjs';
-import type {ImmutableTree} from './types.mjs';
+import invariant from '../src/invariant.mjs';
+import type {ImmutableTree} from '../src/types.mjs';
 */
+
+import shuffle from './shuffle.mjs';
 
 const compareStringX = (
   a/*: {+x: string} */,

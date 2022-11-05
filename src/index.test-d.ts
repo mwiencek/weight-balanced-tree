@@ -4,38 +4,38 @@ import {
   expectType,
 } from 'tsd';
 
-import * as types from './types';
-import * as wbt from './index';
-import create from './create';
-import difference from './difference';
+import * as types from '../src/types';
+import * as wbt from '../src/index';
+import create from '../src/create';
+import difference from '../src/difference';
 import {
   ValueExistsError,
   ValueNotFoundError,
   ValueOrderError,
-} from './errors';
-import equals from './equals';
-import find from './find';
-import findNext from './findNext';
-import findPrev from './findPrev';
-import fromDistinctAscArray from './fromDistinctAscArray';
+} from '../src/errors';
+import equals from '../src/equals';
+import find from '../src/find';
+import findNext from '../src/findNext';
+import findPrev from '../src/findPrev';
+import fromDistinctAscArray from '../src/fromDistinctAscArray';
 import insert, {
   insertIfNotExists,
   insertOrReplaceIfExists,
   insertOrThrowIfExists,
-} from './insert';
-import iterate from './iterate';
-import map from './map';
-import maxValue from './maxValue';
-import minValue from './minValue';
+} from '../src/insert';
+import iterate from '../src/iterate';
+import map from '../src/map';
+import maxValue from '../src/maxValue';
+import minValue from '../src/minValue';
 import remove, {
   removeIfExists,
   removeOrThrowIfNotExists,
-} from './remove';
-import reverseIterate from './reverseIterate';
-import toArray from './toArray';
+} from '../src/remove';
+import reverseIterate from '../src/reverseIterate';
+import toArray from '../src/toArray';
 import union, {
   onConflictUseSecondValue,
-} from './union';
+} from '../src/union';
 import update, {
   onConflictKeepTreeValue,
   onConflictThrowError,
@@ -43,12 +43,12 @@ import update, {
   onNotFoundDoNothing,
   onNotFoundThrowError,
   onNotFoundUseGivenValue,
-} from './update';
+} from '../src/update';
 import type {
   InsertConflictHandler,
   InsertNotFoundHandler,
-} from './update';
-import zip from './zip';
+} from '../src/update';
+import zip from '../src/zip';
 
 declare const stringTree: types.ImmutableTree<string> | null;
 declare const nonNullStringTree: types.ImmutableTree<string>;

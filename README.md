@@ -431,13 +431,13 @@ uniform-length string keys and a simple string comparator function.
 Comparisons against [Immutable.List](https://immutable-js.com/) and plain
 arrays are included for insertions and removals.
 
-You can run `node benchmark.mjs` yourself.
+You can run `node test/benchmark.mjs` yourself.
 
 ## Tests
 
-Run `./node_modules/.bin/c8 node test.mjs`.
+Run `./node_modules/.bin/c8 node test/index.mjs`.
 
-To test the .d.ts files, run `./node_modules/.bin/tsd`.
+To test the .d.ts files, run `./node_modules/.bin/tsd src`.
 
 ## Changelog
 

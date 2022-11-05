@@ -5,6 +5,7 @@
   * Migrated the project to Yarn v4.
   * Upgraded Flow to 0.272.2.
   * Upgraded various other `devDependencies`.
+  * Reorganized the source files to live under `src/`.
 
 ## v0.6.1 (2022-09-13)
 
