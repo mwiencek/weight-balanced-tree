@@ -5,6 +5,7 @@
   * Added `findBy`, which is like `find`, but omits the key parameter and
     passes a single tree value to `cmp`.  `cmp` can be a closure that
     compares against a key in its scope instead.
+  * Added `indexOf` to find the position of a value in a tree.
   * Migrated the project to Yarn v4.
   * Upgraded Flow to 0.272.2.
   * Upgraded various other `devDependencies`.

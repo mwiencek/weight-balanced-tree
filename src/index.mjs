@@ -8,6 +8,7 @@ export {default as findBy} from './findBy.mjs';
 export {default as findNext} from './findNext.mjs';
 export {default as findPrev} from './findPrev.mjs';
 export {default as fromDistinctAscArray} from './fromDistinctAscArray.mjs';
+export {default as indexOf} from './indexOf.mjs';
 export {
   default as insert,
   insertIfNotExists,

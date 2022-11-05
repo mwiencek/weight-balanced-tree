@@ -19,6 +19,7 @@ import findBy from '../src/findBy';
 import findNext from '../src/findNext';
 import findPrev from '../src/findPrev';
 import fromDistinctAscArray from '../src/fromDistinctAscArray';
+import indexOf from '../src/indexOf';
 import insert, {
   insertIfNotExists,
   insertOrReplaceIfExists,
@@ -85,6 +86,7 @@ expectType<string>(findBy<string>(stringTree, (treeValue: string) => cmpStrings(
 expectType<string>(findNext<string>(stringTree, '', cmpStrings, ''));
 expectType<string>(findPrev<string>(stringTree, '', cmpStrings, ''));
 expectType<types.ImmutableTree<string> | null>(fromDistinctAscArray<string>(['']));
+expectType<number>(indexOf<number>(numberTree, 1, cmpNumbers));
 expectType<types.ImmutableTree<string> | null>(map<number, string>(numberTree, toString));
 expectType<string>(maxValue<string>(nonNullStringTree));
 expectType<string>(minValue<string>(nonNullStringTree));
@@ -102,6 +104,7 @@ expectType<string | null>(find<string, number, null>(stringTree, 0, cmpNumberAnd
 expectType<string | null>(findBy<string, null>(stringTree, (treeValue: string) => cmpStrings(treeValue, ''), null));
 expectType<string | null>(findNext<string, number, null>(stringTree, 0, cmpNumberAndString, null));
 expectType<string | null>(findPrev<string, number, null>(stringTree, 0, cmpNumberAndString, null));
+expectType<number>(indexOf<string, number>(stringTree, 1, cmpNumberAndString));
 
 // Wrong tree type
 expectError<types.ImmutableTree<number>>(create<number>(''));
@@ -176,6 +179,7 @@ expectType<typeof findBy>(wbt.findBy);
 expectType<typeof findNext>(wbt.findNext);
 expectType<typeof findPrev>(wbt.findPrev);
 expectType<typeof fromDistinctAscArray>(wbt.fromDistinctAscArray);
+expectType<typeof indexOf>(wbt.indexOf);
 expectType<typeof insert>(wbt.insert);
 expectType<typeof insertIfNotExists>(wbt.insertIfNotExists);
 expectType<typeof insertOrReplaceIfExists>(wbt.insertOrReplaceIfExists);

@@ -314,6 +314,18 @@ building the tree value-by-value with `insert`.)
 If `array` is not sorted or contains duplicate values, then this returns an
 invalid tree.  (Do not do this.)
 
+### indexOf()
+
+```
+indexOf<T, K = T>(
+  tree: ImmutableTree<T> | null,
+  key: K,
+  cmp: (a: K, b: T) => number,
+): number;
+```
+
+Returns the position of `key` in `tree`, or `-1` if not found.
+
 ### iterate()
 
 ```

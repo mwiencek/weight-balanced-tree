@@ -30,6 +30,11 @@ const compareStringX = (
   b/*: {+x: string} */,
 )/*: number */ => a.x.localeCompare(b.x);
 
+const compareIntegersReverse = (
+  a/*: number */,
+  b/*: number */,
+)/*: number */ => compareIntegers(b, a);
+
 // $FlowIssue[method-unbinding]
 const objectIs/*: <T>(a: T, b: T) => boolean */ = Object.is;
 
@@ -927,5 +932,38 @@ test('GHC issue #4242', function (t) {
 
   t.ok(checkTreeInvariants(node, compareIntegers));
 
+  t.end();
+});
+
+test('indexOf', function (t) {
+  let node = tree.fromDistinctAscArray(oneToThirtyOne);
+  t.equals(tree.indexOf(null, 1, compareIntegers), -1);
+  t.equals(tree.indexOf(node, 0, compareIntegers), -1);
+  t.equals(tree.indexOf(node, 32, compareIntegers), -1);
+  t.equals(
+    tree.indexOf(
+      {
+        left: null,
+        right: {
+          left: null,
+          right: null,
+          value: 2,
+          size: 1,
+        },
+        value: 1,
+        size: 2,
+      },
+      2,
+      compareIntegers,
+    ),
+    1,
+  );
+  for (const num of oneToThirtyOne) {
+    t.equals(tree.indexOf(node, num, compareIntegers), num - 1);
+  }
+  node = tree.fromDistinctAscArray(oneToThirtyOne.slice(0).reverse());
+  for (const num of oneToThirtyOne) {
+    t.equals(tree.indexOf(node, num, compareIntegersReverse), 31 - num);
+  }
   t.end();
 });
