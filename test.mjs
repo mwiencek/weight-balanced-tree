@@ -24,7 +24,10 @@ import invariant from './invariant.mjs';
 import type {ImmutableTree} from './types.mjs';
 */
 
-const compareStringX = (a, b) => a.x.localeCompare(b.x);
+const compareStringX = (
+  a/*: {+x: string} */,
+  b/*: {+x: string} */,
+)/*: number */ => a.x.localeCompare(b.x);
 
 // $FlowIssue[method-unbinding]
 const objectIs/*: <T>(a: T, b: T) => boolean */ = Object.is;
@@ -41,7 +44,7 @@ test('all', function (t) {
   const numbers = oneToThirtyOne.slice(0);
 
   for (let i = 0; i < 5; i++) {
-    let node = null;
+    let node/*: ImmutableTree<number> | null */ = null;
 
     for (const num of numbers) {
       node = tree.insert(node, num, compareIntegers);
@@ -106,7 +109,10 @@ test('all', function (t) {
 });
 
 test('find with different value type', function (t) {
-  const compareX2 = (x, value) => x.localeCompare(value.x);
+  const compareX2 = (
+    x/*: string */,
+    value/*: {+x: string} */,
+  )/*: number */ => x.localeCompare(value.x);
 
   const xa = {x: 'a'};
   const xb = {x: 'b'};
@@ -157,9 +163,12 @@ test('findNext/findPrev with non-existent values', function (t) {
 });
 
 test('insertIfNotExists', function (t) {
-  const cmp = (a, b) => compareIntegers(a.value, b.value);
+  const cmp = (
+    a/*: {+value: number} */,
+    b/*: {+value: number} */,
+  )/*: number */ => compareIntegers(a.value, b.value);
 
-  let node = null;
+  let node/*: ImmutableTree<{+value: number}> | null */ = null;
   for (const num of oneToThirtyOne) {
     node = tree.insert(node, {value: num}, cmp, onConflictKeepTreeValue);
 
@@ -182,9 +191,12 @@ test('insertIfNotExists', function (t) {
 });
 
 test('insertOrReplaceIfExists', function (t) {
-  const cmp = (a, b) => compareIntegers(a.value, b.value);
+  const cmp = (
+    a/*: {+value: number} */,
+    b/*: {+value: number} */,
+  )/*: number */ => compareIntegers(a.value, b.value);
 
-  let node = null;
+  let node/*: ImmutableTree<{+value: number}> | null */ = null;
   for (const num of oneToThirtyOne) {
     node = tree.insert(node, {value: num}, cmp, onConflictUseGivenValue);
     checkTreeInvariants(node, cmp);
@@ -211,9 +223,12 @@ test('insertOrReplaceIfExists', function (t) {
 });
 
 test('insertOrThrowIfExists', function (t) {
-  const cmp = (a, b) => compareIntegers(a.value, b.value);
+  const cmp = (
+    a/*: {+value: number} */,
+    b/*: {+value: number} */,
+  )/*: number */ => compareIntegers(a.value, b.value);
 
-  let node = null;
+  let node/*: ImmutableTree<{+value: number}> | null */ = null;
   for (const num of oneToThirtyOne) {
     node = tree.insert(node, {value: num}, cmp);
     t.throws(
@@ -319,7 +334,7 @@ test('removeOrThrowIfNotExists', function (t) {
 });
 
 test('remove returns the same tree back if there is no value to remove', function (t) {
-  let node = null;
+  let node/*: ImmutableTree<number> | null */ = null;
   for (const num of oneToThirtyOne) {
     node = tree.insert(node, num, compareIntegers);
   }
@@ -623,12 +638,12 @@ test('difference', function (t) {
 
 
 test('equals', function (t) {
-  let tree1 = null;
+  let tree1/*: ImmutableTree<number> | null */ = null;
   for (const num of oneToThirtyOne) {
     tree1 = tree.insert(tree1, num, compareIntegers);
   }
 
-  let tree2 = null;
+  let tree2/*: ImmutableTree<number> | null */ = null;
   for (const num of oneToThirtyOne.slice(0).reverse()) {
     tree2 = tree.insert(tree2, num, compareIntegers);
   }
@@ -717,7 +732,7 @@ test('fromDistinctAscArray', function (t) {
 });
 
 test('map', function (t) {
-  const toString = (x) => String(x);
+  const toString = (x/*: mixed */)/*: string */ => String(x);
 
   t.equals(tree.map(null, toString), null);
   t.deepEqual(
@@ -731,7 +746,7 @@ test('map', function (t) {
 });
 
 test('toArray', function (t) {
-  t.deepEqual(tree.toArray(null).sort(), []);
+  t.deepEqual(tree.toArray/*:: <mixed> */(null).sort(), []);
   t.deepEqual(tree.toArray(tree.create(1)), [1]);
   t.deepEqual(tree.toArray(tree.fromDistinctAscArray([1, 2, 3])), [1, 2, 3]);
   t.deepEqual(tree.toArray(tree.fromDistinctAscArray([3, 2, 1])), [3, 2, 1]);
@@ -739,7 +754,10 @@ test('toArray', function (t) {
 });
 
 test('union', function (t) {
-  const compareValues = (a, b) => compareIntegers(a.v, b.v);
+  const compareValues = (
+    a/*: {+v: number} */,
+    b/*: {+v: number} */,
+  )/*: number */ => compareIntegers(a.v, b.v);
 
   t.equals(tree.union(null, null, compareIntegers), null);
   t.deepEqual(
@@ -863,9 +881,9 @@ test('union', function (t) {
 });
 
 test('zip', function (t) {
-  t.deepEqual(Array.from(tree.zip(null, null)), []);
-  t.deepEqual(Array.from(tree.zip(tree.create(1), null)), [[1, undefined]]);
-  t.deepEqual(Array.from(tree.zip(null, tree.create(1))), [[undefined, 1]]);
+  t.deepEqual(Array.from(tree.zip/*:: <mixed, mixed> */(null, null)), []);
+  t.deepEqual(Array.from(tree.zip/*:: <number, number> */(tree.create(1), null)), [[1, undefined]]);
+  t.deepEqual(Array.from(tree.zip/*:: <number, number> */(null, tree.create(1))), [[undefined, 1]]);
   t.deepEqual(
     Array.from(
       tree.zip(
@@ -886,7 +904,7 @@ test('zip', function (t) {
 test('GHC issue #4242', function (t) {
   // https://gitlab.haskell.org/ghc/ghc/-/issues/4242
 
-  let node = null;
+  let node/*: ImmutableTree<number> | null */ = null;
   for (const num of [0, 2, 5, 1, 6, 4, 8, 9, 7, 11, 10, 3]) {
     node = tree.insert(node, num, compareIntegers);
   }

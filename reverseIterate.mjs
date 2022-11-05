@@ -9,17 +9,17 @@ export default function* reverseIterate/*:: <T> */(
   tree/*: ImmutableTree<T> | null */,
 )/*: Generator<T, void, void> */ {
   const stack = [];
-  let cursor = tree;
+  let cursor/*: ?ImmutableTree<T> */ = tree;
   do {
-    while (cursor !== null) {
+    while (cursor != null) {
       stack.push(cursor);
       cursor = cursor.right;
     }
-    if (stack.length) {
-      cursor = stack.pop();
+    cursor = stack.pop();
+    if (cursor) {
       yield cursor.value;
-      /*:: invariant(cursor); */
+      /*:: invariant(cursor != null); */
       cursor = cursor.left;
     }
-  } while (stack.length || cursor !== null);
+  } while (stack.length || cursor != null);
 }

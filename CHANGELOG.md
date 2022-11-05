@@ -3,6 +3,7 @@
 ## v0.7.0 (unreleased)
 
   * Migrated the project to Yarn v4.
+  * Upgraded Flow to 0.272.2.
 
 ## v0.6.1 (2022-09-13)
 
