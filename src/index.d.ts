@@ -2,6 +2,7 @@ export {default as create} from './create';
 export {default as difference} from './difference';
 export {default as equals} from './equals';
 export {default as find} from './find';
+export {default as findBy} from './findBy';
 export {default as findNext} from './findNext';
 export {default as findPrev} from './findPrev';
 export {default as fromDistinctAscArray} from './fromDistinctAscArray';

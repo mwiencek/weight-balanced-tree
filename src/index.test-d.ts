@@ -15,6 +15,7 @@ import {
 } from '../src/errors';
 import equals from '../src/equals';
 import find from '../src/find';
+import findBy from '../src/findBy';
 import findNext from '../src/findNext';
 import findPrev from '../src/findPrev';
 import fromDistinctAscArray from '../src/fromDistinctAscArray';
@@ -80,6 +81,7 @@ expectType<Generator<string, undefined, undefined>>(reverseIterate<string>(strin
 expectType<boolean>(equals<string>(stringTree, stringTree));
 expectType<boolean>(equals<string>(stringTree, stringTree, areStringsEqual));
 expectType<string>(find<string>(stringTree, '', cmpStrings, ''));
+expectType<string>(findBy<string>(stringTree, (treeValue: string) => cmpStrings(treeValue, ''), ''));
 expectType<string>(findNext<string>(stringTree, '', cmpStrings, ''));
 expectType<string>(findPrev<string>(stringTree, '', cmpStrings, ''));
 expectType<types.ImmutableTree<string> | null>(fromDistinctAscArray<string>(['']));
@@ -97,6 +99,7 @@ expectType<Generator<[string | undefined, number | undefined], undefined, undefi
 
 // Value type override
 expectType<string | null>(find<string, number, null>(stringTree, 0, cmpNumberAndString, null));
+expectType<string | null>(findBy<string, null>(stringTree, (treeValue: string) => cmpStrings(treeValue, ''), null));
 expectType<string | null>(findNext<string, number, null>(stringTree, 0, cmpNumberAndString, null));
 expectType<string | null>(findPrev<string, number, null>(stringTree, 0, cmpNumberAndString, null));
 
@@ -110,6 +113,7 @@ expectError<Generator<number, undefined, undefined>>(iterate<number>(stringTree)
 expectError<Generator<number, undefined, undefined>>(reverseIterate<number>(stringTree));
 expectError<boolean>(equals<number>(stringTree, stringTree, areStringsEqual));
 expectError<number>(find<number>(stringTree, 0, cmpNumbers, 0));
+expectError<number>(findBy<number>(stringTree, (treeValue: number) => cmpStrings(treeValue, 0), 0));
 expectError<types.ImmutableTree<number>>(fromDistinctAscArray<number>(['']));
 expectError<types.ImmutableTree<string> | null>(map<number, string>(stringTree, toString));
 expectError<number>(maxValue<number>(nonNullStringTree));
@@ -168,6 +172,7 @@ expectType<typeof create>(wbt.create);
 expectType<typeof difference>(wbt.difference);
 expectType<typeof equals>(wbt.equals);
 expectType<typeof find>(wbt.find);
+expectType<typeof findBy>(wbt.findBy);
 expectType<typeof findNext>(wbt.findNext);
 expectType<typeof findPrev>(wbt.findPrev);
 expectType<typeof fromDistinctAscArray>(wbt.fromDistinctAscArray);

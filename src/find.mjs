@@ -3,6 +3,7 @@
 /*::
 import type {ImmutableTree} from './types.mjs';
 */
+import findBy from './findBy.mjs';
 
 export default function find/*:: <T, K = T, D = T> */(
   tree/*: ImmutableTree<T> | null */,
@@ -10,16 +11,9 @@ export default function find/*:: <T, K = T, D = T> */(
   cmp/*: (a: K, b: T) => number */,
   defaultValue/*: D */,
 )/*: T | D */ {
-  let cursor = tree;
-  while (cursor !== null) {
-    const order = cmp(key, cursor.value);
-    if (order === 0) {
-      return cursor.value;
-    } else if (order < 0) {
-      cursor = cursor.left;
-    } else {
-      cursor = cursor.right;
-    }
-  }
-  return defaultValue;
+  return findBy/*:: <T, D> */(
+    tree,
+    (treeValue) => cmp(key, treeValue),
+    defaultValue,
+  );
 }

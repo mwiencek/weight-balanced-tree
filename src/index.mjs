@@ -4,6 +4,7 @@ export {default as create} from './create.mjs';
 export {default as difference} from './difference.mjs';
 export {default as equals} from './equals.mjs';
 export {default as find} from './find.mjs';
+export {default as findBy} from './findBy.mjs';
 export {default as findNext} from './findNext.mjs';
 export {default as findPrev} from './findPrev.mjs';
 export {default as fromDistinctAscArray} from './fromDistinctAscArray.mjs';

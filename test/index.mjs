@@ -109,7 +109,7 @@ test('all', function (t) {
   t.end();
 });
 
-test('find with different value type', function (t) {
+test('find/findBy with different value type', function (t) {
   const compareX2 = (
     x/*: string */,
     value/*: {+x: string} */,
@@ -125,6 +125,11 @@ test('find with different value type', function (t) {
   let foundValue = tree.find(node, 'b', compareX2, null);
   t.ok(foundValue?.x === 'b')
   foundValue = tree.find(node, 'c', compareX2, {x: 'c'});
+  t.ok(foundValue.x === 'c');
+
+  foundValue = tree.findBy(node, (x) => compareX2('b', x), null);
+  t.ok(foundValue?.x === 'b')
+  foundValue = tree.findBy(node, (x) => compareX2('c', x), {x: 'c'});
   t.ok(foundValue.x === 'c');
 
   t.end();

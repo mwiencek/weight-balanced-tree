@@ -249,6 +249,22 @@ Finds a value in `tree` using the given `key` and returns it, or
 `cmp` receives `key` as its first argument, and a value of type `T` from
 `tree` as its second argument.
 
+### findBy()
+
+```
+findBy<T, D = T>(
+  tree: ImmutableTree<T> | null,
+  cmp: (treeValue: T) => number,
+  defaultValue: D,
+): T | D;
+```
+
+Finds a value in `tree` and returns it, or `defaultValue` if not found.
+
+`cmp` receives a value of type `T` from `tree` as its first argument.
+This allows you to pass in a closure that compares `treeValue` against a
+static key.
+
 ### findNext()
 
 ```

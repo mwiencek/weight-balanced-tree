@@ -14,6 +14,7 @@
     "./equals": "./src/equals.mjs",
     "./errors": "./src/errors.mjs",
     "./find": "./src/find.mjs",
+    "./findBy": "./src/findBy.mjs",
     "./findNext": "./src/findNext.mjs",
     "./findPrev": "./src/findPrev.mjs",
     "./fromDistinctAscArray": "./src/fromDistinctAscArray.mjs",
