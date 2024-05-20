@@ -9,6 +9,7 @@
   "main": "src/index.mjs",
   "exports": {
     ".": "./src/index.mjs",
+    "./at": "./src/at.mjs",
     "./create": "./src/create.mjs",
     "./difference": "./src/difference.mjs",
     "./equals": "./src/equals.mjs",

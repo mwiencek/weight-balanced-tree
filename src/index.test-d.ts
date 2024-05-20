@@ -6,6 +6,7 @@ import {
 
 import * as types from '../src/types';
 import * as wbt from '../src/index';
+import at from '../src/at';
 import create from '../src/create';
 import difference from '../src/difference';
 import {
@@ -87,6 +88,7 @@ expectType<string>(findNext<string>(stringTree, '', cmpStrings, ''));
 expectType<string>(findPrev<string>(stringTree, '', cmpStrings, ''));
 expectType<types.ImmutableTree<string> | null>(fromDistinctAscArray<string>(['']));
 expectType<number>(indexOf<number>(numberTree, 1, cmpNumbers));
+expectType<string>(at<string>(nonNullStringTree, 0));
 expectType<types.ImmutableTree<string> | null>(map<number, string>(numberTree, toString));
 expectType<string>(maxValue<string>(nonNullStringTree));
 expectType<string>(minValue<string>(nonNullStringTree));
@@ -171,6 +173,7 @@ expectAssignable<Error>(new ValueExistsError('a'));
 expectAssignable<Error>(new ValueNotFoundError('a'));
 expectAssignable<Error>(new ValueOrderError('a', 'b'));
 
+expectType<typeof at>(wbt.at);
 expectType<typeof create>(wbt.create);
 expectType<typeof difference>(wbt.difference);
 expectType<typeof equals>(wbt.equals);

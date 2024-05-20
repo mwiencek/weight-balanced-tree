@@ -5,6 +5,7 @@ import test from 'tape';
 import checkTreeInvariants from './checkTreeInvariants.mjs';
 import compareIntegers from './compareIntegers.mjs';
 import {
+  IndexOutOfRangeError,
   ValueExistsError,
   ValueNotFoundError,
   ValueOrderError,
@@ -964,6 +965,30 @@ test('indexOf', function (t) {
   node = tree.fromDistinctAscArray(oneToThirtyOne.slice(0).reverse());
   for (const num of oneToThirtyOne) {
     t.equals(tree.indexOf(node, num, compareIntegersReverse), 31 - num);
+  }
+  t.end();
+});
+
+test('at', function (t) {
+  const node = tree.fromDistinctAscArray(oneToThirtyOne);
+  /*:: invariant(node !== null); */
+  t.throws(
+    function () {
+      tree.at(tree.create(1), 1);
+    },
+    IndexOutOfRangeError,
+    'IndexOutOfRangeError exception is thrown for index 1 of size 1 tree',
+  );
+  t.throws(
+    function () {
+      tree.at(tree.create(1), -2);
+    },
+    IndexOutOfRangeError,
+    'IndexOutOfRangeError exception is thrown for index -2 of size 1 tree',
+  );
+  for (const num of oneToThirtyOne) {
+    t.equals(tree.at(node, num - 1), num);
+    t.equals(tree.at(node, -num), oneToThirtyOne.length - (num - 1));
   }
   t.end();
 });

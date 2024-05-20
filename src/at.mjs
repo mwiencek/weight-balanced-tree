@@ -1,0 +1,31 @@
+// @flow strict
+
+/*::
+import invariant from './invariant.mjs';
+import type {ImmutableTree} from './types.mjs';
+*/
+import {IndexOutOfRangeError} from './errors.mjs';
+
+export default function at/*:: <T> */(
+  tree/*: ImmutableTree<T> */,
+  index/*: number */,
+)/*: T */ {
+  let adjustedIndex = index < 0 ? (tree.size + index) : index;
+  if (adjustedIndex < 0 || adjustedIndex >= tree.size) {
+    throw new IndexOutOfRangeError(adjustedIndex);
+  }
+  let cursor/*: ImmutableTree<T> | null */ = tree;
+  while (cursor !== null) {
+    const leftSize = cursor.left == null ? 0 : cursor.left.size;
+    if (adjustedIndex < leftSize) {
+      cursor = cursor.left;
+    } else if (adjustedIndex == leftSize) {
+      break;
+    } else {
+      adjustedIndex -= (leftSize + 1);
+      cursor = cursor.right;
+    }
+  }
+  /*:: invariant(cursor !== null); */
+  return cursor.value;
+}
