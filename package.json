@@ -32,10 +32,8 @@
   },
   "author": "Michael Wiencek <mwtuea@gmail.com>",
   "license": "MIT",
-  "private": false,
   "sideEffects": false,
   "type": "module",
-  "dependencies": {},
   "devDependencies": {
     "benchmark": "2.1.4",
     "c8": "7.12.0",
@@ -43,5 +41,6 @@
     "immutable": "4.1.0",
     "tape": "5.6.0",
     "tsd": "0.22.0"
-  }
+  },
+  "packageManager": "yarn@4.9.2"
 }

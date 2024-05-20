@@ -1,5 +1,9 @@
 # Changelog
 
+## v0.7.0 (unreleased)
+
+  * Migrated the project to Yarn v4.
+
 ## v0.6.1 (2022-09-13)
 
   * The return type of `toArray` is no longer read-only.
