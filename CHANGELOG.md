@@ -11,6 +11,8 @@
   * Upgraded Flow to 0.272.2.
   * Upgraded various other `devDependencies`.
   * Reorganized the source files to live under `src/`.
+  * Renamed all files to use the `.js` extension (from `.mjs`).
+    (`"type": "module"` had already been set in package.json.)
 
 ## v0.6.1 (2022-09-13)
 

@@ -1,9 +1,9 @@
 // @flow strict
 
-import fromDistinctAscArray from './fromDistinctAscArray.mjs';
-import iterate from './iterate.mjs';
+import fromDistinctAscArray from './fromDistinctAscArray.js';
+import iterate from './iterate.js';
 /*::
-import type {ImmutableTree} from './types.mjs';
+import type {ImmutableTree} from './types.js';
 */
 
 export default function difference/*:: <T> */(

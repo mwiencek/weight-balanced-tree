@@ -1,8 +1,8 @@
 // @flow strict
 
-import minNode from './minNode.mjs';
+import minNode from './minNode.js';
 /*::
-import type {ImmutableTree} from './types.mjs';
+import type {ImmutableTree} from './types.js';
 */
 
 export default function minValue/*:: <T> */(

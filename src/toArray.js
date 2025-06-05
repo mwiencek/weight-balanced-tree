@@ -1,8 +1,8 @@
 // @flow strict
 
-import iterate from './iterate.mjs';
+import iterate from './iterate.js';
 /*::
-import type {ImmutableTree} from './types.mjs';
+import type {ImmutableTree} from './types.js';
 */
 
 export default function toArray/*:: <T> */(

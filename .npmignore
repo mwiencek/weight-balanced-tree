@@ -1,9 +1,9 @@
-benchmark.mjs
+benchmark.js
 CHANGELOG.md
-checkTreeInvariants.mjs
-compareIntegers.mjs
+checkTreeInvariants.js
+compareIntegers.js
 coverage/
 flow-typed/
 flow-typed.config.json
-shuffle.mjs
-test.mjs
+shuffle.js
+test.js

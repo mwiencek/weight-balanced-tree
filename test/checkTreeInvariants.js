@@ -1,7 +1,7 @@
 // @flow strict
 
 /*::
-import type {ImmutableTree} from '../src/types.mjs';
+import type {ImmutableTree} from '../src/types.js';
 */
 
 function countSize(

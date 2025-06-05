@@ -5,11 +5,11 @@ import update, {
   onConflictThrowError,
   onConflictUseGivenValue,
   onNotFoundUseGivenValue,
-} from './update.mjs';
+} from './update.js';
 /*::
-import invariant from './invariant.mjs';
-import type {ImmutableTree} from './types.mjs';
-import type {InsertConflictHandler} from './update.mjs';
+import invariant from './invariant.js';
+import type {ImmutableTree} from './types.js';
+import type {InsertConflictHandler} from './update.js';
 */
 
 export default function insert/*:: <T> */(

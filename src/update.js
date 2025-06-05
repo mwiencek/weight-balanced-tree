@@ -1,14 +1,14 @@
 // @flow strict
 
-import {balanceLeft, balanceRight} from './balance.mjs';
-import checkOrder from './checkOrder.mjs';
+import {balanceLeft, balanceRight} from './balance.js';
+import checkOrder from './checkOrder.js';
 import {
   ValueExistsError,
   ValueNotFoundError,
-} from './errors.mjs';
+} from './errors.js';
 /*::
-import invariant from './invariant.mjs';
-import type {ImmutableTree} from './types.mjs';
+import invariant from './invariant.js';
+import type {ImmutableTree} from './types.js';
 
 export type InsertConflictHandler<T, K> =
   (existingTreeValue: T, key: K) => T;

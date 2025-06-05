@@ -1,10 +1,10 @@
 // @flow strict
 
-import {balanceLeft, balanceRight} from './balance.mjs';
-import {ValueNotFoundError} from './errors.mjs';
-import minValue from './minValue.mjs';
+import {balanceLeft, balanceRight} from './balance.js';
+import {ValueNotFoundError} from './errors.js';
+import minValue from './minValue.js';
 /*::
-import type {ImmutableTree, MutableTree} from './types.mjs';
+import type {ImmutableTree, MutableTree} from './types.js';
 */
 
 export default function remove/*:: <T> */(

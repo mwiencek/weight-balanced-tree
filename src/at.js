@@ -1,10 +1,10 @@
 // @flow strict
 
 /*::
-import invariant from './invariant.mjs';
-import type {ImmutableTree} from './types.mjs';
+import invariant from './invariant.js';
+import type {ImmutableTree} from './types.js';
 */
-import {IndexOutOfRangeError} from './errors.mjs';
+import {IndexOutOfRangeError} from './errors.js';
 
 export default function at/*:: <T> */(
   tree/*: ImmutableTree<T> */,

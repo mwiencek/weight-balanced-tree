@@ -1,8 +1,8 @@
 // @flow strict
 
 /*::
-import type {MutableTree} from './types.mjs';
-import invariant from './invariant.mjs';
+import type {MutableTree} from './types.js';
+import invariant from './invariant.js';
 */
 
 /*

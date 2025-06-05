@@ -1,10 +1,10 @@
 import Benchmark from 'benchmark';
 import * as Immutable from 'immutable';
 
-import * as wbt from '../src/index.mjs';
+import * as wbt from '../src/index.js';
 
-import compareIntegers from './compareIntegers.mjs';
-import shuffle from './shuffle.mjs';
+import compareIntegers from './compareIntegers.js';
+import shuffle from './shuffle.js';
 
 const suite = new Benchmark.Suite();
 

@@ -87,7 +87,7 @@ If you return `existingTreeValue` from `onConflict`, `update` will return the
 same `tree` reference back.  `Object.is` is used to determine if the value
 you return is the same as `existingTreeValue`.
 
-There are several exports in [update.mjs](update.mjs) that can be used for
+There are several exports in [update.js](update.js) that can be used for
 `onConflict`:
 
  * `onConflictThrowError`, which throws `ValueExistsError`.
@@ -107,7 +107,7 @@ expected to return a final value of type `T` to be inserted.
   * You want to throw an error if the value doesn't exist (because you expect
     to replace it).
 
-The following exports in [update.mjs](update.mjs) can be used for `onNotFound`
+The following exports in [update.js](update.js) can be used for `onNotFound`
 instead of defining your own:
 
  * `onNotFoundUseGivenValue`, which is what `insert` and all associated
@@ -468,17 +468,17 @@ values of both trees, and so on.  If the trees are of different sizes,
 ## Performance
 
 Performance will largely depend on the size of your data and the cost of your
-comparator function.  [benchmark.mjs](benchmark.mjs) tests an ASCII table with
+comparator function.  [benchmark.js](benchmark.js) tests an ASCII table with
 uniform-length string keys and a simple string comparator function.
 
 Comparisons against [Immutable.List](https://immutable-js.com/) and plain
 arrays are included for insertions and removals.
 
-You can run `node test/benchmark.mjs` yourself.
+You can run `node test/benchmark.js` yourself.
 
 ## Tests
 
-Run `./node_modules/.bin/c8 node test/index.mjs`.
+Run `./node_modules/.bin/c8 node test/index.js`.
 
 To test the .d.ts files, run `./node_modules/.bin/tsd src`.
 

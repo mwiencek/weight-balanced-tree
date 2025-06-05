@@ -1,10 +1,10 @@
 // @flow strict
 
-import iterate from './iterate.mjs';
-import {zipSameSize} from './zip.mjs';
+import iterate from './iterate.js';
+import {zipSameSize} from './zip.js';
 /*::
-import invariant from './invariant.mjs';
-import type {ImmutableTree} from './types.mjs';
+import invariant from './invariant.js';
+import type {ImmutableTree} from './types.js';
 */
 
 export default function equals/*:: <T> */(

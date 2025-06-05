@@ -1,7 +1,7 @@
 // @flow strict
 
 /*::
-import type {ImmutableTree} from './types.mjs';
+import type {ImmutableTree} from './types.js';
 */
 
 function _fromDistinctAscArray/*:: <T> */(

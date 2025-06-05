@@ -1,9 +1,9 @@
 // @flow strict
 
-import iterate from './iterate.mjs';
+import iterate from './iterate.js';
 /*::
-import invariant from './invariant.mjs';
-import type {ImmutableTree} from './types.mjs';
+import invariant from './invariant.js';
+import type {ImmutableTree} from './types.js';
 */
 
 export default function* zip/*:: <T, U> */(

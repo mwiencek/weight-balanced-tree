@@ -1,8 +1,8 @@
 // @flow strict
 
 /*::
-import type {ImmutableTree} from './types.mjs';
-import invariant from './invariant.mjs';
+import type {ImmutableTree} from './types.js';
+import invariant from './invariant.js';
 */
 
 export default function* reverseIterate/*:: <T> */(

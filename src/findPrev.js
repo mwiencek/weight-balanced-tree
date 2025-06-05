@@ -1,8 +1,8 @@
 // @flow strict
 
-import maxNode from './maxNode.mjs';
+import maxNode from './maxNode.js';
 /*::
-import type {ImmutableTree} from './types.mjs';
+import type {ImmutableTree} from './types.js';
 */
 
 export default function findPrev/*:: <T, K = T, D = T> */(

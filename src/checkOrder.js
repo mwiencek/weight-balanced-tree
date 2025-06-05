@@ -1,6 +1,6 @@
 // @flow strict
 
-import {ValueOrderError} from './errors.mjs';
+import {ValueOrderError} from './errors.js';
 
 export default function checkOrder/*:: <T, U> */(
   expected/*: T */,

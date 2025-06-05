@@ -2,15 +2,15 @@
 
 import test from 'tape';
 
-import checkTreeInvariants from './checkTreeInvariants.mjs';
-import compareIntegers from './compareIntegers.mjs';
+import checkTreeInvariants from './checkTreeInvariants.js';
+import compareIntegers from './compareIntegers.js';
 import {
   IndexOutOfRangeError,
   ValueExistsError,
   ValueNotFoundError,
   ValueOrderError,
-} from '../src/errors.mjs';
-import * as tree from '../src/index.mjs';
+} from '../src/errors.js';
+import * as tree from '../src/index.js';
 import {
   onConflictKeepTreeValue,
   onConflictThrowError,
@@ -18,13 +18,13 @@ import {
   onNotFoundDoNothing,
   onNotFoundThrowError,
   onNotFoundUseGivenValue,
-} from '../src/update.mjs';
+} from '../src/update.js';
 /*::
-import invariant from '../src/invariant.mjs';
-import type {ImmutableTree} from '../src/types.mjs';
+import invariant from '../src/invariant.js';
+import type {ImmutableTree} from '../src/types.js';
 */
 
-import shuffle from './shuffle.mjs';
+import shuffle from './shuffle.js';
 
 const compareStringX = (
   a/*: {+x: string} */,
