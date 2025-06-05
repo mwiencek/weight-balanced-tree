@@ -7,6 +7,8 @@
     compares against a key in its scope instead.
   * Added `indexOf` to find the position of a value in a tree.
   * Added `at` to find the value positioned at an index in a tree.
+  * Added a `types` field to all `exports` in package.json, for better
+    TypeScript compatibility.
   * Migrated the project to Yarn v4.
   * Upgraded Flow to 0.272.2.
   * Upgraded various other `devDependencies`.
