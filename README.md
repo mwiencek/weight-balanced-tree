@@ -465,6 +465,19 @@ contains the first values of both trees, the second tuple contains the second
 values of both trees, and so on.  If the trees are of different sizes,
 `undefined` is used within a tuple where a corresponding value is missing.
 
+### withComparator()
+
+Returns an object with methods that have the passed `comparator` pre-bound.
+
+```TypeScript
+const integerTree = withComparator(compareIntegers);
+
+let node = integerTree.insert(tree.create(1), 2);
+node = integerTree.remove(node, 1);
+```
+
+Any function above that accepts a `cmp` argument is available.
+
 ## Performance
 
 Performance will largely depend on the size of your data and the cost of your

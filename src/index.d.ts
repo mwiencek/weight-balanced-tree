@@ -27,5 +27,6 @@ export {default as reverseIterate} from './reverseIterate';
 export {default as toArray} from './toArray';
 export {default as union} from './union';
 export {default as update} from './update';
+export {default as withComparator} from './withComparator';
 export {default as zip} from './zip';
 export * from './types';

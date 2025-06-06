@@ -47,6 +47,7 @@ import update, {
   onNotFoundThrowError,
   onNotFoundUseGivenValue,
 } from '../src/update';
+import withComparator from '../src/withComparator';
 import type {
   InsertConflictHandler,
   InsertNotFoundHandler,
@@ -173,6 +174,28 @@ expectAssignable<Error>(new ValueExistsError('a'));
 expectAssignable<Error>(new ValueNotFoundError('a'));
 expectAssignable<Error>(new ValueOrderError('a', 'b'));
 
+// withComparator
+const numberTreeWrapper = withComparator(cmpNumbers);
+expectType<types.ImmutableTree<number> | null>(numberTreeWrapper.difference(numberTree, null));
+expectType<number>(numberTreeWrapper.find(numberTree, 0, -1));
+expectType<number | string>(numberTreeWrapper.find<string>(numberTree, 0, ''));
+expectType<number>(numberTreeWrapper.findNext(numberTree, 0, -1));
+expectType<number | string>(numberTreeWrapper.findNext<string>(numberTree, 0, ''));
+expectType<number>(numberTreeWrapper.findPrev(numberTree, 1, -1));
+expectType<number | string>(numberTreeWrapper.findPrev<string>(numberTree, 1, ''));
+expectType<number>(numberTreeWrapper.indexOf(numberTree, 1));
+expectType<types.ImmutableTree<number>>(numberTreeWrapper.insert(numberTree, 1));
+expectType<types.ImmutableTree<number>>(numberTreeWrapper.insert(numberTree, 1, onConflictThrowError));
+expectType<types.ImmutableTree<number>>(numberTreeWrapper.insertIfNotExists(numberTree, 1));
+expectType<types.ImmutableTree<number>>(numberTreeWrapper.insertOrReplaceIfExists(numberTree, 1));
+expectType<types.ImmutableTree<number>>(numberTreeWrapper.insertOrThrowIfExists(numberTree, 1));
+expectType<types.ImmutableTree<number> | null>(numberTreeWrapper.remove(numberTree, 1));
+expectType<types.ImmutableTree<number> | null>(numberTreeWrapper.removeIfExists(numberTree, 1));
+expectType<types.ImmutableTree<number> | null>(numberTreeWrapper.removeOrThrowIfNotExists(numberTree, 1));
+expectType<types.ImmutableTree<number> | null>(numberTreeWrapper.union(numberTree, numberTree));
+expectType<types.ImmutableTree<number> | null>(numberTreeWrapper.union(numberTree, numberTree, onConflictThrowError));
+expectType<types.ImmutableTree<number> | null>(numberTreeWrapper.update(numberTree, 1, onConflictThrowError, onNotFoundUseGivenValue));
+
 expectType<typeof at>(wbt.at);
 expectType<typeof create>(wbt.create);
 expectType<typeof difference>(wbt.difference);
@@ -198,4 +221,5 @@ expectType<typeof removeOrThrowIfNotExists>(wbt.removeOrThrowIfNotExists);
 expectType<typeof toArray>(wbt.toArray);
 expectType<typeof union>(wbt.union);
 expectType<typeof update>(wbt.update);
+expectType<typeof withComparator>(wbt.withComparator);
 expectType<typeof zip>(wbt.zip);

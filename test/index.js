@@ -19,6 +19,7 @@ import {
   onNotFoundThrowError,
   onNotFoundUseGivenValue,
 } from '../src/update.js';
+import withComparator from '../src/withComparator.js';
 /*::
 import invariant from '../src/invariant.js';
 import type {ImmutableTree} from '../src/types.js';
@@ -990,5 +991,105 @@ test('at', function (t) {
     t.equals(tree.at(node, num - 1), num);
     t.equals(tree.at(node, -num), oneToThirtyOne.length - (num - 1));
   }
+  t.end();
+});
+
+test('withComparator', function (t) {
+  const integerTree = withComparator(compareIntegers);
+
+  t.ok(
+    tree.equals(
+      integerTree.difference(
+        tree.fromDistinctAscArray([1, 2, 3]),
+        tree.fromDistinctAscArray([2]),
+      ),
+      tree.fromDistinctAscArray([1, 3]),
+    ),
+  );
+
+  let node = tree.fromDistinctAscArray(oneToThirtyOne);
+  t.equals(integerTree.find(node, 0), undefined);
+  t.equals(integerTree.find(node, 0, null), null);
+  t.equals(integerTree.find(node, 1), 1);
+
+  t.equals(integerTree.findNext(node, 31), undefined);
+  t.equals(integerTree.findNext(node, 31, null), null);
+  t.equals(integerTree.findNext(node, 1), 2);
+
+  t.equals(integerTree.findPrev(node, 1), undefined);
+  t.equals(integerTree.findPrev(node, 1, null), null);
+  t.equals(integerTree.findPrev(node, 31), 30);
+
+  t.equals(integerTree.indexOf(node, 0), -1);
+  t.equals(integerTree.indexOf(node, 1), 0);
+
+  t.throws(
+    function () {
+      node = integerTree.insert(node, 1);
+    },
+    ValueExistsError,
+    'exception is thrown with insert',
+  );
+  node = integerTree.insert(node, 1, onConflictKeepTreeValue);
+  node = integerTree.insert(node, 32, onConflictKeepTreeValue);
+  node = integerTree.insertIfNotExists(node, 1);
+  node = integerTree.insertIfNotExists(node, 33);
+  node = integerTree.insertOrReplaceIfExists(node, 1);
+  node = integerTree.insertOrReplaceIfExists(node, 34);
+  t.throws(
+    function () {
+      node = integerTree.insertOrThrowIfExists(node, 1);
+    },
+    ValueExistsError,
+    'exception is thrown with insertOrThrowIfExists',
+  );
+  t.equals(integerTree.find(node, 32), 32);
+  t.equals(integerTree.find(node, 33), 33);
+  t.equals(integerTree.find(node, 34), 34);
+
+  node = integerTree.remove(node, 34);
+  node = integerTree.removeIfExists(node, 33);
+  node = integerTree.removeOrThrowIfNotExists(node, 32);
+  t.throws(
+    function () {
+      node = integerTree.removeOrThrowIfNotExists(node, 32);
+    },
+    ValueNotFoundError,
+    'exception is thrown with removeOrThrowIfNotExists',
+  );
+  t.equals(integerTree.find(node, 32), undefined);
+  t.equals(integerTree.find(node, 33), undefined);
+  t.equals(integerTree.find(node, 34), undefined);
+
+  t.ok(
+    tree.equals(
+      integerTree.union(
+        tree.fromDistinctAscArray([1, 3, 5]),
+        tree.fromDistinctAscArray([2, 4, 6]),
+      ),
+      tree.fromDistinctAscArray([1, 2, 3, 4, 5, 6]),
+    ),
+  );
+
+  const num1 = new Number(1);
+  // $FlowIgnore[incompatible-call]
+  node = integerTree.update(node, num1, onConflictKeepTreeValue, onNotFoundThrowError);
+  t.equals(integerTree.find(node, 1), 1);
+  // $FlowIgnore[incompatible-call]
+  node = integerTree.update(node, num1, onConflictUseGivenValue, onNotFoundThrowError);
+  // $FlowIgnore[incompatible-call]
+  t.equals(integerTree.find(node, 1), num1);
+  t.throws(
+    function () {
+      node = integerTree.update(node, 1, onConflictThrowError, onNotFoundThrowError);
+    },
+    ValueExistsError,
+    'exception is thrown with update using onConflictThrowError',
+  );
+  node = integerTree.update(node, 32, onConflictThrowError, onNotFoundDoNothing);
+  t.equals(integerTree.find(node, 32), undefined);
+  node = integerTree.update(node, 32, onConflictThrowError, onNotFoundUseGivenValue);
+  t.equals(integerTree.find(node, 32), 32);
+
   t.end();
 });

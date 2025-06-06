@@ -2,6 +2,8 @@
 
 ## v0.7.0 (unreleased)
 
+  * Added `withComparator`, which returns an object with methods that have a
+    `comparator` pre-bound.
   * Added `findBy`, which is like `find`, but omits the key parameter and
     passes a single tree value to `cmp`.  `cmp` can be a closure that
     compares against a key in its scope instead.

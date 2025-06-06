@@ -31,6 +31,7 @@ export {default as reverseIterate} from './reverseIterate.js';
 export {default as toArray} from './toArray.js';
 export {default as union} from './union.js';
 export {default as update} from './update.js';
+export {default as withComparator} from './withComparator.js';
 export {default as zip} from './zip.js';
 /*::
 export * from './types.js';
