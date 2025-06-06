@@ -1,6 +1,6 @@
 # Changelog
 
-## v0.7.0 (unreleased)
+## v0.7.0 (2025-06-05)
 
   * Added `withComparator`, which returns an object with methods that have a
     `comparator` pre-bound.
