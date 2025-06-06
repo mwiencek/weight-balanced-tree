@@ -1,9 +1,7 @@
-benchmark.js
+.yarn/
+.yarnrc.yml
 CHANGELOG.md
-checkTreeInvariants.js
-compareIntegers.js
 coverage/
-flow-typed/
 flow-typed.config.json
-shuffle.js
-test.js
+flow-typed/
+test/
