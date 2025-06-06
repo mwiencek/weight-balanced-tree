@@ -87,8 +87,8 @@ If you return `existingTreeValue` from `onConflict`, `update` will return the
 same `tree` reference back.  `Object.is` is used to determine if the value
 you return is the same as `existingTreeValue`.
 
-There are several exports in [update.js](update.js) that can be used for
-`onConflict`:
+There are several exports in [`weight-balanced-tree/update`](src/update.js)
+that can be used for `onConflict`:
 
  * `onConflictThrowError`, which throws `ValueExistsError`.
  * `onConflictKeepTreeValue`, which just returns the existing tree value back
@@ -107,8 +107,8 @@ expected to return a final value of type `T` to be inserted.
   * You want to throw an error if the value doesn't exist (because you expect
     to replace it).
 
-The following exports in [update.js](update.js) can be used for `onNotFound`
-instead of defining your own:
+The following exports in [`weight-balanced-tree/update`](src/update.js)
+can be used for `onNotFound` instead of defining your own:
 
  * `onNotFoundUseGivenValue`, which is what `insert` and all associated
    helpers default to.  Note that the given value in this case is the `key`,
