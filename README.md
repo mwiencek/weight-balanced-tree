@@ -481,7 +481,7 @@ Any function above that accepts a `cmp` argument is available.
 ## Performance
 
 Performance will largely depend on the size of your data and the cost of your
-comparator function.  [benchmark.js](benchmark.js) tests an ASCII table with
+comparator function.  [test/benchmark.js](test/benchmark.js) tests an ASCII table with
 uniform-length string keys and a simple string comparator function.
 
 Comparisons against [Immutable.List](https://immutable-js.com/) and plain
