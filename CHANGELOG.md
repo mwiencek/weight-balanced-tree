@@ -1,5 +1,11 @@
 # Changelog
 
+## v0.7.1 (2025-06-05)
+
+  * Fixed the `exports` in package.json to let Flow find them again.
+  * Fixed some entries in .npmignore for the changes in v0.7.0.
+  * Fixed some broken links in README.md.
+
 ## v0.7.0 (2025-06-05)
 
   * Added `withComparator`, which returns an object with methods that have a
