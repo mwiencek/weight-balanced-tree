@@ -47,6 +47,9 @@ import update, {
   onNotFoundThrowError,
   onNotFoundUseGivenValue,
 } from '../src/update';
+import validate, {
+  type ValidateResult,
+} from '../src/validate';
 import withComparator from '../src/withComparator';
 import type {
   InsertConflictHandler,
@@ -101,6 +104,7 @@ expectType<types.ImmutableTree<string> | null>(union(stringTree, stringTree, cmp
 expectType<types.ImmutableTree<string> | null>(union(stringTree, stringTree, cmpStrings, onConflictUseSecondValue));
 expectType<types.ImmutableTree<string> | null>(difference(stringTree, stringTree, cmpStrings));
 expectType<Generator<[string | undefined, number | undefined], undefined, undefined>>(zip(stringTree, numberTree));
+expectType<ValidateResult<string>>(validate(stringTree, cmpStrings));
 
 // Value type override
 expectType<string | null>(find<string, number, null>(stringTree, 0, cmpNumberAndString, null));
@@ -195,6 +199,7 @@ expectType<types.ImmutableTree<number> | null>(numberTreeWrapper.removeOrThrowIf
 expectType<types.ImmutableTree<number> | null>(numberTreeWrapper.union(numberTree, numberTree));
 expectType<types.ImmutableTree<number> | null>(numberTreeWrapper.union(numberTree, numberTree, onConflictThrowError));
 expectType<types.ImmutableTree<number> | null>(numberTreeWrapper.update(numberTree, 1, onConflictThrowError, onNotFoundUseGivenValue));
+expectType<ValidateResult<number>>(numberTreeWrapper.validate(numberTree));
 
 expectType<typeof at>(wbt.at);
 expectType<typeof create>(wbt.create);
@@ -221,5 +226,6 @@ expectType<typeof removeOrThrowIfNotExists>(wbt.removeOrThrowIfNotExists);
 expectType<typeof toArray>(wbt.toArray);
 expectType<typeof union>(wbt.union);
 expectType<typeof update>(wbt.update);
+expectType<typeof validate>(wbt.validate);
 expectType<typeof withComparator>(wbt.withComparator);
 expectType<typeof zip>(wbt.zip);

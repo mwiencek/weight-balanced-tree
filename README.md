@@ -39,6 +39,14 @@ type InsertConflictHandler<T, K> =
 
 type InsertNotFoundHandler<T, K> =
   (key: T) => T;
+
+type ValidateResult<+T> =
+  | {+valid: true}
+  | {
+      +valid: false,
+      +tree: ImmutableTree<T>,
+      +subtree: 'left' | 'right',
+    };
 ```
 
 ### size
@@ -312,7 +320,21 @@ valid, and balanced tree with the values from `array`.  (This is faster than
 building the tree value-by-value with `insert`.)
 
 If `array` is not sorted or contains duplicate values, then this returns an
-invalid tree.  (Do not do this.)
+invalid tree.  (Do not do this.)  You can check if a tree is valid using
+`validate(tree, cmp)`.
+
+### validate()
+
+```
+validate<T>(
+  tree: ImmutableTree<T> | null,
+  cmp: (a: T, b: T) => number,
+): ValidateResult<T>;
+```
+
+Returns a `ValidateResult<T>` indicating whether the given `tree` is valid
+for the comparator `cmp`: all left subtree values are less than the parent
+value, and all right subtrees values are greater than the parent value.
 
 ### indexOf()
 

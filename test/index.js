@@ -1091,5 +1091,46 @@ test('withComparator', function (t) {
   node = integerTree.update(node, 32, onConflictThrowError, onNotFoundUseGivenValue);
   t.equals(integerTree.find(node, 32), 32);
 
+  t.ok(integerTree.validate(node).valid);
+
+  t.end();
+});
+
+test('validate', function (t) {
+  t.ok(tree.validate(null, compareIntegers).valid, 'null tree is valid');
+  t.ok(tree.validate(tree.create(1), compareIntegers).valid, 'tree of size 1 is valid');
+
+  let node/*: ImmutableTree<number> */ = {
+    left: {
+      left: null,
+      right: null,
+      value: 2,
+      size: 1,
+    },
+    right: null,
+    value: 1,
+    size: 2,
+  };
+  let result = tree.validate(node, compareIntegers);
+  t.ok(!result.valid, 'tree is invalid');
+  t.equals(result.subtree, 'left');
+  t.equals(result.tree, node);
+
+  node = {
+    left: null,
+    right: {
+      left: null,
+      right: null,
+      value: 0,
+      size: 1,
+    },
+    value: 1,
+    size: 2,
+  };
+  result = tree.validate(node, compareIntegers);
+  t.ok(!result.valid, 'tree is invalid');
+  t.equals(result.subtree, 'right');
+  t.equals(result.tree, node);
+
   t.end();
 });

@@ -1,5 +1,6 @@
 // @flow strict
 
+import validate from '../src/validate.js';
 /*::
 import type {ImmutableTree} from '../src/types.js';
 */
@@ -54,24 +55,17 @@ export default function checkTreeInvariants/*:: <T> */(
   }
   /* c8 ignore stop */
 
-  const left = tree.left;
-  if (left) {
-    /* c8 ignore start */
-    if (cmp(left.value, tree.value) >= 0) {
-      throw Error('Invalid left subtree');
-    }
-    /* c8 ignore stop */
-    checkTreeInvariants(left, cmp);
+  const validateResult = validate(tree, cmp);
+  if (!validateResult.valid) {
+    throw Error(`Invalid ${validateResult.subtree} subtree`);
   }
 
-  const right = tree.right;
-  if (right) {
-    /* c8 ignore start */
-    if (cmp(right.value, tree.value) <= 0) {
-      throw Error('Invalid right subtree');
-    }
-    /* c8 ignore stop */
-    checkTreeInvariants(right, cmp);
+  if (tree.left) {
+    checkTreeInvariants(tree.left, cmp);
+  }
+
+  if (tree.right) {
+    checkTreeInvariants(tree.right, cmp);
   }
 
   return true;

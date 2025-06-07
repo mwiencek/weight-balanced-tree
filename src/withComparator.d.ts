@@ -3,6 +3,7 @@ import type {
   InsertConflictHandler,
   InsertNotFoundHandler,
 } from './update';
+import type {ValidateResult} from './validate';
 
 export default function withComparator<T>(
   cmp: (a: T, b: T) => number,
@@ -83,4 +84,8 @@ export default function withComparator<T>(
     onConflict: InsertConflictHandler<T, T>,
     onNotFound: InsertNotFoundHandler<T, T>,
   ): ImmutableTree<T> | null,
+
+  validate(
+    tree: ImmutableTree<T> | null,
+  ): ValidateResult<T>,
 };

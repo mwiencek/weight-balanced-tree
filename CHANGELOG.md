@@ -1,5 +1,9 @@
 # Changelog
 
+## v0.8.0 (unreleased)
+
+  * Added `validate` to check if a tree is valid for a given comparator.
+
 ## v0.7.1 (2025-06-05)
 
   * Fixed the `exports` in package.json to let Flow find them again.

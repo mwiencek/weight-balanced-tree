@@ -16,12 +16,14 @@ import remove, {
 } from './remove.js';
 import union from './union.js';
 import update from './update.js';
+import validate from './validate.js';
 /*::
 import type {ImmutableTree} from './types.js';
 import type {
   InsertConflictHandler,
   InsertNotFoundHandler,
 } from './update.js';
+import type {ValidateResult} from './validate.js';
 */
 
 export default function withComparator/*:: <T> */(
@@ -103,6 +105,10 @@ export default function withComparator/*:: <T> */(
     onConflict: InsertConflictHandler<T, T>,
     onNotFound: InsertNotFoundHandler<T, T>,
   ): ImmutableTree<T> | null,
+
+  validate(
+    tree: ImmutableTree<T> | null,
+  ): ValidateResult<T>,
 } */ {
   return {
     difference(t1, t2) {
@@ -146,6 +152,9 @@ export default function withComparator/*:: <T> */(
     },
     update(tree, value, onConflict, onNotFound) {
       return update(tree, value, cmp, onConflict, onNotFound);
-    }
+    },
+    validate(tree) {
+      return validate(tree, cmp);
+    },
   };
 }
