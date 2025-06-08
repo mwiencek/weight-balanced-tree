@@ -8,31 +8,106 @@
   ],
   "main": "src/index.js",
   "exports": {
-    ".": {"types": "./src/index.d.ts", "default": "./src/index.js"},
-    "./at": {"types": "./src/at.d.ts", "default": "./src/at.js"},
-    "./create": {"types": "./src/create.d.ts", "default": "./src/create.js"},
-    "./difference": {"types": "./src/difference.d.ts", "default": "./src/difference.js"},
-    "./equals": {"types": "./src/equals.d.ts", "default": "./src/equals.js"},
-    "./errors": {"types": "./src/errors.d.ts", "default": "./src/errors.js"},
-    "./find": {"types": "./src/find.d.ts", "default": "./src/find.js"},
-    "./findBy": {"types": "./src/findBy.d.ts", "default": "./src/findBy.js"},
-    "./findNext": {"types": "./src/findNext.d.ts", "default": "./src/findNext.js"},
-    "./findPrev": {"types": "./src/findPrev.d.ts", "default": "./src/findPrev.js"},
-    "./fromDistinctAscArray": {"types": "./src/fromDistinctAscArray.d.ts", "default": "./src/fromDistinctAscArray.js"},
-    "./indexOf": {"types": "./indexOf.d.ts", "default": "./indexOf.js"},
-    "./iterate": {"types": "./src/iterate.d.ts", "default": "./src/iterate.js"},
-    "./maxNode": {"types": "./src/maxNode.d.ts", "default": "./src/maxNode.js"},
-    "./maxValue": {"types": "./src/maxValue.d.ts", "default": "./src/maxValue.js"},
-    "./minNode": {"types": "./src/minNode.d.ts", "default": "./src/minNode.js"},
-    "./minValue": {"types": "./src/minValue.d.ts", "default": "./src/minValue.js"},
-    "./remove": {"types": "./src/remove.d.ts", "default": "./src/remove.js"},
-    "./reverseIterate": {"types": "./src/reverseIterate.d.ts", "default": "./src/reverseIterate.js"},
-    "./toArray": {"types": "./src/toArray.d.ts", "default": "./src/toArray.js"},
-    "./types": {"types": "./src/types.d.ts", "default": "./src/types.js"},
-    "./union": {"types": "./src/union.d.ts", "default": "./src/union.js"},
-    "./update": {"types": "./src/update.d.ts", "default": "./src/update.js"},
-    "./withComparator": {"types": "./src/withComparator.d.ts", "default": "./src/withComparator.js"},
-    "./zip": {"types": "./src/zip.d.ts", "default": "./src/zip.js"}
+    ".": {
+      "types": "./src/index.d.ts",
+      "default": "./src/index.js"
+    },
+    "./at": {
+      "types": "./src/at.d.ts",
+      "default": "./src/at.js"
+    },
+    "./create": {
+      "types": "./src/create.d.ts",
+      "default": "./src/create.js"
+    },
+    "./difference": {
+      "types": "./src/difference.d.ts",
+      "default": "./src/difference.js"
+    },
+    "./equals": {
+      "types": "./src/equals.d.ts",
+      "default": "./src/equals.js"
+    },
+    "./errors": {
+      "types": "./src/errors.d.ts",
+      "default": "./src/errors.js"
+    },
+    "./find": {
+      "types": "./src/find.d.ts",
+      "default": "./src/find.js"
+    },
+    "./findBy": {
+      "types": "./src/findBy.d.ts",
+      "default": "./src/findBy.js"
+    },
+    "./findNext": {
+      "types": "./src/findNext.d.ts",
+      "default": "./src/findNext.js"
+    },
+    "./findPrev": {
+      "types": "./src/findPrev.d.ts",
+      "default": "./src/findPrev.js"
+    },
+    "./fromDistinctAscArray": {
+      "types": "./src/fromDistinctAscArray.d.ts",
+      "default": "./src/fromDistinctAscArray.js"
+    },
+    "./indexOf": {
+      "types": "./indexOf.d.ts",
+      "default": "./indexOf.js"
+    },
+    "./iterate": {
+      "types": "./src/iterate.d.ts",
+      "default": "./src/iterate.js"
+    },
+    "./maxNode": {
+      "types": "./src/maxNode.d.ts",
+      "default": "./src/maxNode.js"
+    },
+    "./maxValue": {
+      "types": "./src/maxValue.d.ts",
+      "default": "./src/maxValue.js"
+    },
+    "./minNode": {
+      "types": "./src/minNode.d.ts",
+      "default": "./src/minNode.js"
+    },
+    "./minValue": {
+      "types": "./src/minValue.d.ts",
+      "default": "./src/minValue.js"
+    },
+    "./remove": {
+      "types": "./src/remove.d.ts",
+      "default": "./src/remove.js"
+    },
+    "./reverseIterate": {
+      "types": "./src/reverseIterate.d.ts",
+      "default": "./src/reverseIterate.js"
+    },
+    "./toArray": {
+      "types": "./src/toArray.d.ts",
+      "default": "./src/toArray.js"
+    },
+    "./types": {
+      "types": "./src/types.d.ts",
+      "default": "./src/types.js"
+    },
+    "./union": {
+      "types": "./src/union.d.ts",
+      "default": "./src/union.js"
+    },
+    "./update": {
+      "types": "./src/update.d.ts",
+      "default": "./src/update.js"
+    },
+    "./withComparator": {
+      "types": "./src/withComparator.d.ts",
+      "default": "./src/withComparator.js"
+    },
+    "./zip": {
+      "types": "./src/zip.d.ts",
+      "default": "./src/zip.js"
+    }
   },
   "author": "Michael Wiencek <mwtuea@gmail.com>",
   "license": "MIT",
