@@ -639,7 +639,17 @@ test('equals', function () {
     tree2 = tree.insert(tree2, num, compareIntegers);
   }
 
+  let stringTree/*: ImmutableTree<string> | null */ = null;
+  for (const num of oneToThirtyOne) {
+    stringTree = tree.insert(
+      stringTree,
+      String(num),
+      (a, b) => parseInt(a, 10) - parseInt(b, 10),
+    );
+  }
+
   assert.ok(tree.equals(tree1, tree2));
+  assert.ok(tree.equals/*:: <number, string> */(tree1, stringTree, (a, b) => a === parseInt(b, 10)));
 
   tree1 = tree.remove(tree1, 1, compareIntegers);
   assert.ok(!tree.equals(tree1, tree2));

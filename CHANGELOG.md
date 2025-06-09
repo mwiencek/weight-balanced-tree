@@ -3,6 +3,8 @@
 ## v0.8.0 (unreleased)
 
   * Added `validate` to check if a tree is valid for a given comparator.
+  * Changed the type signature of `equals` to allow comparing trees of
+    different types.
   * Added `setBalancingParameters` (undocumented).
   * Added monkey tests for insert, remove, union, and difference.
   * Converted the tests from tape to the built-in Node test runner.

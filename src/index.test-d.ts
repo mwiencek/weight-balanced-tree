@@ -64,6 +64,7 @@ declare const numberTree: types.ImmutableTree<number> | null;
 
 declare function areStringsEqual(a: string, b: string): boolean;
 declare function areNumbersEqual(a: number, b: number): boolean;
+declare function areNumberAndStringEqual(a: number, b: string): boolean;
 declare function cmpStrings(a: string, b: string): number;
 declare function cmpNumbers(a: number, b: number): number;
 declare function cmpNullableNumbers(a: number | null, b: number | null): number;
@@ -87,6 +88,7 @@ expectType<Generator<string, undefined, undefined>>(iterate<string>(stringTree))
 expectType<Generator<string, undefined, undefined>>(reverseIterate<string>(stringTree));
 expectType<boolean>(equals<string>(stringTree, stringTree));
 expectType<boolean>(equals<string>(stringTree, stringTree, areStringsEqual));
+expectType<boolean>(equals<number, string>(numberTree, stringTree, areNumberAndStringEqual));
 expectType<string>(find<string>(stringTree, '', cmpStrings, ''));
 expectType<string>(findBy<string>(stringTree, (treeValue: string) => cmpStrings(treeValue, ''), ''));
 expectType<string>(findNext<string>(stringTree, '', cmpStrings, ''));

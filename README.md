@@ -225,10 +225,10 @@ This simply checks if the tree returned from `remove` is the same reference.
 ### equals()
 
 ```
-equals<T>(
+equals<T, U = T>(
   a: ImmutableTree<T> | null,
-  b: ImmutableTree<T> | null,
-  isEqual?: (a: T, b: T) => boolean,
+  b: ImmutableTree<U> | null,
+  isEqual?: (a: T, b: U) => boolean,
 ): boolean;
 ```
 

@@ -7,12 +7,12 @@ import invariant from './invariant.js';
 import type {ImmutableTree} from './types.js';
 */
 
-export default function equals/*:: <T> */(
+export default function equals/*:: <T, U = T> */(
   a/*: ImmutableTree<T> | null */,
-  b/*: ImmutableTree<T> | null */,
+  b/*: ImmutableTree<U> | null */,
   // `Object.is` is a static method, so Flow shouldn't care about unbinding.
   // $FlowIssue[method-unbinding]
-  isEqual/*:: ?: (a: T, b: T) => boolean */ = Object.is,
+  isEqual/*:: ?: (a: T, b: U) => boolean */ = Object.is,
 )/*: boolean */ {
   if (a === null && b === null) {
     return true;
@@ -31,7 +31,7 @@ export default function equals/*:: <T> */(
      * case above.
      */
     // $FlowIgnore[incompatible-cast]
-    zip(a, b) /*:: as Generator<[T, T], void, void> */
+    zip(a, b) /*:: as Generator<[T, U], void, void> */
   ) {
     if (!isEqual(aValue, bValue)) {
       return false;
