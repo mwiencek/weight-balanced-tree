@@ -1,6 +1,8 @@
 // @flow strict
 
-import test from 'tape';
+import assert from 'node:assert/strict';
+// $FlowIssue[cannot-resolve-module]
+import test from 'node:test';
 
 import checkTreeInvariants from './checkTreeInvariants.js';
 import compareIntegers from './compareIntegers.js';
@@ -46,7 +48,7 @@ for (let i = 1; i <= 31; i++) {
   oneToThirtyOne.push(i);
 }
 
-test('all', function (t) {
+test('all', function () {
   const thirtyOneToOne = oneToThirtyOne.slice(0).reverse();
 
   const numbers = oneToThirtyOne.slice(0);
@@ -56,40 +58,40 @@ test('all', function (t) {
 
     for (const num of numbers) {
       node = tree.insert(node, num, compareIntegers);
-      t.ok(checkTreeInvariants(node, compareIntegers), 'tree is valid and balanced');
+      assert.ok(checkTreeInvariants(node, compareIntegers), 'tree is valid and balanced');
     }
 
-    t.deepEqual(
+    assert.deepEqual(
       Array.from(tree.iterate(node)),
       oneToThirtyOne,
       'tree is in order',
     );
 
-    t.deepEqual(
+    assert.deepEqual(
       Array.from(tree.reverseIterate(node)),
       thirtyOneToOne,
       'tree is in order (reversed)',
     );
 
     if (node !== null) {
-      t.equal(tree.minNode(node).value, 1, 'min node value is 1');
-      t.equal(tree.maxNode(node).value, 31, 'max node value is 31');
-      t.equal(tree.minValue(node), 1, 'min value is 1');
-      t.equal(tree.maxValue(node), 31, 'max value is 31');
+      assert.equal(tree.minNode(node).value, 1, 'min node value is 1');
+      assert.equal(tree.maxNode(node).value, 31, 'max node value is 31');
+      assert.equal(tree.minValue(node), 1, 'min value is 1');
+      assert.equal(tree.maxValue(node), 31, 'max value is 31');
     }
 
     shuffle(numbers);
 
     for (const num of numbers) {
       const next = tree.findNext(node, num, compareIntegers, -1);
-      t.equal(
+      assert.equal(
         next,
         num < 31 ? (num + 1) : -1,
         'next node is found',
       );
 
       const prev = tree.findPrev(node, num, compareIntegers, -1);
-      t.equal(
+      assert.equal(
         prev,
         num > 1 ? (num - 1) : -1,
         'prev node is found',
@@ -98,25 +100,23 @@ test('all', function (t) {
 
     for (const num of numbers) {
       let foundValue = tree.find(node, num, compareIntegers, null);
-      t.ok(foundValue === num, 'existing node is found');
+      assert.ok(foundValue === num, 'existing node is found');
 
       node = tree.remove(node, num, compareIntegers);
-      t.ok(checkTreeInvariants(node, compareIntegers), 'tree is valid and balanced');
+      assert.ok(checkTreeInvariants(node, compareIntegers), 'tree is valid and balanced');
 
       foundValue = tree.find(node, num, compareIntegers, -1);
-      t.ok(foundValue === -1, 'removed node is not found');
+      assert.ok(foundValue === -1, 'removed node is not found');
     }
 
-    t.ok(node === null, 'tree is empty');
+    assert.ok(node === null, 'tree is empty');
 
     node = tree.remove(node, 0, compareIntegers);
-    t.ok(node === null, 'tree is still empty');
+    assert.ok(node === null, 'tree is still empty');
   }
-
-  t.end();
 });
 
-test('find/findBy with different value type', function (t) {
+test('find/findBy with different value type', function () {
   const compareX2 = (
     x/*: string */,
     value/*: {+x: string} */,
@@ -130,19 +130,17 @@ test('find/findBy with different value type', function (t) {
   node = tree.insert(node, xb, compareStringX);
 
   let foundValue = tree.find(node, 'b', compareX2, null);
-  t.ok(foundValue?.x === 'b')
+  assert.ok(foundValue?.x === 'b')
   foundValue = tree.find(node, 'c', compareX2, {x: 'c'});
-  t.ok(foundValue.x === 'c');
+  assert.ok(foundValue.x === 'c');
 
   foundValue = tree.findBy(node, (x) => compareX2('b', x), null);
-  t.ok(foundValue?.x === 'b')
+  assert.ok(foundValue?.x === 'b')
   foundValue = tree.findBy(node, (x) => compareX2('c', x), {x: 'c'});
-  t.ok(foundValue.x === 'c');
-
-  t.end();
+  assert.ok(foundValue.x === 'c');
 });
 
-test('findNext/findPrev with non-existent values', function (t) {
+test('findNext/findPrev with non-existent values', function () {
   let node = null;
   node = tree.insert(node, 1, compareIntegers);
   node = tree.insert(node, 3, compareIntegers);
@@ -150,32 +148,30 @@ test('findNext/findPrev with non-existent values', function (t) {
   node = tree.insert(node, 7, compareIntegers);
   node = tree.insert(node, 9, compareIntegers);
 
-  t.equal(tree.findNext(node, 0, compareIntegers, null), 1);
-  t.equal(tree.findNext(node, 1, compareIntegers, null), 3);
-  t.equal(tree.findNext(node, 2, compareIntegers, null), 3);
-  t.equal(tree.findNext(node, 3, compareIntegers, null), 5);
-  t.equal(tree.findNext(node, 4, compareIntegers, null), 5);
-  t.equal(tree.findNext(node, 5, compareIntegers, null), 7);
-  t.equal(tree.findNext(node, 6, compareIntegers, null), 7);
-  t.equal(tree.findNext(node, 7, compareIntegers, null), 9);
-  t.equal(tree.findNext(node, 8, compareIntegers, null), 9);
-  t.equal(tree.findNext(node, 9, compareIntegers, null), null);
+  assert.equal(tree.findNext(node, 0, compareIntegers, null), 1);
+  assert.equal(tree.findNext(node, 1, compareIntegers, null), 3);
+  assert.equal(tree.findNext(node, 2, compareIntegers, null), 3);
+  assert.equal(tree.findNext(node, 3, compareIntegers, null), 5);
+  assert.equal(tree.findNext(node, 4, compareIntegers, null), 5);
+  assert.equal(tree.findNext(node, 5, compareIntegers, null), 7);
+  assert.equal(tree.findNext(node, 6, compareIntegers, null), 7);
+  assert.equal(tree.findNext(node, 7, compareIntegers, null), 9);
+  assert.equal(tree.findNext(node, 8, compareIntegers, null), 9);
+  assert.equal(tree.findNext(node, 9, compareIntegers, null), null);
 
-  t.equal(tree.findPrev(node, 1, compareIntegers, null), null);
-  t.equal(tree.findPrev(node, 2, compareIntegers, null), 1);
-  t.equal(tree.findPrev(node, 3, compareIntegers, null), 1);
-  t.equal(tree.findPrev(node, 4, compareIntegers, null), 3);
-  t.equal(tree.findPrev(node, 5, compareIntegers, null), 3);
-  t.equal(tree.findPrev(node, 6, compareIntegers, null), 5);
-  t.equal(tree.findPrev(node, 7, compareIntegers, null), 5);
-  t.equal(tree.findPrev(node, 8, compareIntegers, null), 7);
-  t.equal(tree.findPrev(node, 9, compareIntegers, null), 7);
-  t.equal(tree.findPrev(node, 10, compareIntegers, null), 9);
-
-  t.end();
+  assert.equal(tree.findPrev(node, 1, compareIntegers, null), null);
+  assert.equal(tree.findPrev(node, 2, compareIntegers, null), 1);
+  assert.equal(tree.findPrev(node, 3, compareIntegers, null), 1);
+  assert.equal(tree.findPrev(node, 4, compareIntegers, null), 3);
+  assert.equal(tree.findPrev(node, 5, compareIntegers, null), 3);
+  assert.equal(tree.findPrev(node, 6, compareIntegers, null), 5);
+  assert.equal(tree.findPrev(node, 7, compareIntegers, null), 5);
+  assert.equal(tree.findPrev(node, 8, compareIntegers, null), 7);
+  assert.equal(tree.findPrev(node, 9, compareIntegers, null), 7);
+  assert.equal(tree.findPrev(node, 10, compareIntegers, null), 9);
 });
 
-test('insertIfNotExists', function (t) {
+test('insertIfNotExists', function () {
   const cmp = (
     a/*: {+value: number} */,
     b/*: {+value: number} */,
@@ -186,10 +182,10 @@ test('insertIfNotExists', function (t) {
     node = tree.insert(node, {value: num}, cmp, onConflictKeepTreeValue);
 
     const sameNode1 = tree.insert(node, {value: num}, cmp, onConflictKeepTreeValue);
-    t.equal(node, sameNode1);
+    assert.equal(node, sameNode1);
 
     const sameNode2 = tree.insertIfNotExists(node, {value: num}, cmp);
-    t.equal(node, sameNode2);
+    assert.equal(node, sameNode2);
   }
 
   const finalNode = node;
@@ -197,13 +193,12 @@ test('insertIfNotExists', function (t) {
     node = tree.insert(node, {value: num}, cmp, onConflictKeepTreeValue);
     node = tree.insertIfNotExists(node, {value: num}, cmp);
   }
-  t.equal(node, finalNode);
+  assert.equal(node, finalNode);
 
-  t.equal(node?.size, 31);
-  t.end();
+  assert.equal(node?.size, 31);
 });
 
-test('insertOrReplaceIfExists', function (t) {
+test('insertOrReplaceIfExists', function () {
   const cmp = (
     a/*: {+value: number} */,
     b/*: {+value: number} */,
@@ -219,23 +214,22 @@ test('insertOrReplaceIfExists', function (t) {
     const newValue1 = {value: num};
     const newNode1 = tree.insert(node, newValue1, cmp, onConflictUseGivenValue);
     checkTreeInvariants(newNode1, cmp);
-    t.notEqual(node, newNode1);
-    t.equal(tree.find(newNode1, {value: num}, cmp, null), newValue1);
+    assert.notEqual(node, newNode1);
+    assert.equal(tree.find(newNode1, {value: num}, cmp, null), newValue1);
   }
 
   for (const num of oneToThirtyOne) {
     const newValue2 = {value: num};
     const newNode2 = tree.insertOrReplaceIfExists(node, newValue2, cmp);
     checkTreeInvariants(newNode2, cmp);
-    t.notEqual(node, newNode2);
-    t.equal(tree.find(newNode2, {value: num}, cmp, null), newValue2);
+    assert.notEqual(node, newNode2);
+    assert.equal(tree.find(newNode2, {value: num}, cmp, null), newValue2);
   }
 
-  t.equal(node?.size, 31);
-  t.end();
+  assert.equal(node?.size, 31);
 });
 
-test('insertOrThrowIfExists', function (t) {
+test('insertOrThrowIfExists', function () {
   const cmp = (
     a/*: {+value: number} */,
     b/*: {+value: number} */,
@@ -244,21 +238,21 @@ test('insertOrThrowIfExists', function (t) {
   let node/*: ImmutableTree<{+value: number}> | null */ = null;
   for (const num of oneToThirtyOne) {
     node = tree.insert(node, {value: num}, cmp);
-    t.throws(
+    assert.throws(
       function () {
         node = tree.insertOrThrowIfExists(node, {value: num}, cmp);
       },
       ValueExistsError,
       'exception is thrown with insertOrThrowIfExists',
     );
-    t.throws(
+    assert.throws(
       function () {
         node = tree.insert(node, {value: num}, cmp, onConflictThrowError);
       },
       ValueExistsError,
       'exception is thrown with insert plus onConflictThrowError',
     );
-    t.throws(
+    assert.throws(
       function () {
         node = tree.insert(node, {value: num}, cmp);
       },
@@ -267,12 +261,11 @@ test('insertOrThrowIfExists', function (t) {
     );
   }
 
-  t.equal(node?.size, 31);
-  t.end();
+  assert.equal(node?.size, 31);
 });
 
-test('replacing a node preserves the existing node size', function (t) {
-  t.equal(
+test('replacing a node preserves the existing node size', function () {
+  assert.equal(
     tree.insertOrReplaceIfExists(
       {
         left: null,
@@ -290,32 +283,31 @@ test('replacing a node preserves the existing node size', function (t) {
     ).size,
     2,
   );
-  t.end();
 });
 
-test('removeIfExists', function (t) {
+test('removeIfExists', function () {
   let node/*: ImmutableTree<number> | null */ = tree.create(1);
   node = tree.insert(node, 2, compareIntegers);
 
   const origNode = node;
   node = tree.removeIfExists(node, 3, compareIntegers);
-  t.equal(node, origNode);
+  assert.equal(node, origNode);
   node = tree.remove(node, 3, compareIntegers);
-  t.equal(node, origNode);
+  assert.equal(node, origNode);
   const node2 = tree.removeIfExists(node, 2, compareIntegers);
-  t.equal(node2?.size, 1);
-  t.equal(node2?.value, 1);
+  assert.equal(node2?.size, 1);
+  assert.equal(node2?.value, 1);
   const node3 = tree.remove(node, 2, compareIntegers);
-  t.equal(node3?.size, 1);
-  t.equal(node3?.value, 1);
+  assert.equal(node3?.size, 1);
+  assert.equal(node3?.value, 1);
   const node4 = tree.removeIfExists(node2, 1, compareIntegers);
-  t.equal(node4, null);
+  assert.equal(node4, null);
   const node5 = tree.remove(node3, 1, compareIntegers);
-  t.equal(node5, null);
+  assert.equal(node5, null);
   const node6 = tree.removeIfExists(null, 1, compareIntegers);
-  t.equal(node6, null);
+  assert.equal(node6, null);
   const node7 = tree.remove(null, 1, compareIntegers);
-  t.equal(node7, null);
+  assert.equal(node7, null);
 
   node = tree.fromDistinctAscArray(oneToThirtyOne);
 
@@ -323,30 +315,26 @@ test('removeIfExists', function (t) {
   for (const num of oneToThirtyOne) {
     node = tree.removeIfExists(node, num, compareIntegers);
     checkTreeInvariants(node, compareIntegers);
-    t.equal(tree.find(node, num, compareIntegers, null), null);
-    t.equal((node?.size ?? 0), --size);
+    assert.equal(tree.find(node, num, compareIntegers, null), null);
+    assert.equal((node?.size ?? 0), --size);
   }
-
-  t.end();
 });
 
-test('removeOrThrowIfNotExists', function (t) {
+test('removeOrThrowIfNotExists', function () {
   let node/*: ImmutableTree<number> | null */ = tree.create(1);
-  t.throws(
+  assert.throws(
     function () {
       node = tree.removeOrThrowIfNotExists(node, 2, compareIntegers);
     },
     ValueNotFoundError,
     'exception is thrown with removeOrThrowIfNotExists',
   );
-  t.equal(node?.size, 1);
+  assert.equal(node?.size, 1);
   node = tree.removeOrThrowIfNotExists(node, 1, compareIntegers);
-  t.equal(node, null);
-
-  t.end();
+  assert.equal(node, null);
 });
 
-test('remove returns the same tree back if there is no value to remove', function (t) {
+test('remove returns the same tree back if there is no value to remove', function () {
   let node/*: ImmutableTree<number> | null */ = null;
   for (const num of oneToThirtyOne) {
     node = tree.insert(node, num, compareIntegers);
@@ -356,29 +344,26 @@ test('remove returns the same tree back if there is no value to remove', functio
   for (const num of oneToThirtyOne) {
     node = tree.remove(node, num + 31, compareIntegers);
     checkTreeInvariants(node, compareIntegers);
-    t.equal(node, origNode);
+    assert.equal(node, origNode);
   }
   for (const num of oneToThirtyOne) {
     node = tree.remove(node, num - 31, compareIntegers);
     checkTreeInvariants(node, compareIntegers);
-    t.equal(node, origNode);
+    assert.equal(node, origNode);
   }
-
-  t.end();
 });
 
-test('create', function (t) {
+test('create', function () {
   const node = tree.create(1);
-  t.deepEqual(node, {
+  assert.deepEqual(node, {
     left: null,
     right: null,
     size: 1,
     value: 1,
   });
-  t.end();
 });
 
-test('insert with onConflict', function (t) {
+test('insert with onConflict', function () {
   /*:: type Item = {+key: number, +value: number}; */
 
   const cmp = (a/*: Item */, b/*: Item */) => compareIntegers(a.key, b.key);
@@ -392,16 +377,16 @@ test('insert with onConflict', function (t) {
     {key: 1, value: 100},
     cmp,
     (treeValue, newValue) => {
-      t.equal(treeValue, v1);
-      t.deepEqual(newValue, {key: 1, value: 100});
+      assert.equal(treeValue, v1);
+      assert.deepEqual(newValue, {key: 1, value: 100});
       v1 = {key: 1, value: 1000};
       return v1;
     },
   );
-  t.equal(tree.find(node, 1, cmpKeyWithItem, null), v1);
-  t.deepEqual(v1, {key: 1, value: 1000});
+  assert.equal(tree.find(node, 1, cmpKeyWithItem, null), v1);
+  assert.deepEqual(v1, {key: 1, value: 1000});
 
-  t.throws(
+  assert.throws(
     function () {
       node = tree.insert(
         node,
@@ -414,10 +399,9 @@ test('insert with onConflict', function (t) {
     },
     ValueOrderError,
   );
-  t.end();
 });
 
-test('update', function (t) {
+test('update', function () {
   /*:: type Item = {+key: number, +value: number}; */
 
   const cmp = (a/*: Item */, b/*: Item */) => compareIntegers(a.key, b.key);
@@ -434,11 +418,11 @@ test('update', function (t) {
     cmp,
     onConflictThrowError,
     (newItem) => {
-      t.equal(newItem, v2);
+      assert.equal(newItem, v2);
       return v2;
     },
   );
-  t.equal(tree.find(node, v2, cmp, null), v2);
+  assert.equal(tree.find(node, v2, cmp, null), v2);
 
   node = tree.update(
     node,
@@ -450,7 +434,7 @@ test('update', function (t) {
     },
   );
   let v3 = tree.find(node, 3, cmpKeyWithItem, null);
-  t.deepEqual(v3, {key: 3, value: 30});
+  assert.deepEqual(v3, {key: 3, value: 30});
 
   node = tree.update(
     node,
@@ -461,7 +445,7 @@ test('update', function (t) {
       return {key: newKey, value: newKey * 10};
     },
   );
-  t.deepEqual(
+  assert.deepEqual(
     tree.find(node, 3, cmpKeyWithItem, null),
     v3,
     'existing tree value it kept',
@@ -479,13 +463,13 @@ test('update', function (t) {
       throw new Error('unexpected');
     },
   );
-  t.deepEqual(
+  assert.deepEqual(
     tree.find(node, 3, cmpKeyWithItem, null),
     v3,
     'new tree value is used',
   );
 
-  t.throws(
+  assert.throws(
     function () {
       node = tree.update(
         node,
@@ -502,7 +486,7 @@ test('update', function (t) {
 
   class CustomNotFoundError extends Error {}
 
-  t.throws(
+  assert.throws(
     function () {
       node = tree.update(
         node,
@@ -516,10 +500,9 @@ test('update', function (t) {
     },
     CustomNotFoundError,
   );
-  t.end();
 });
 
-test('onNotFoundDoNothing', function (t) {
+test('onNotFoundDoNothing', function () {
   let node = tree.create(1);
 
   const newNode = tree.update(
@@ -529,12 +512,11 @@ test('onNotFoundDoNothing', function (t) {
     onConflictThrowError,
     onNotFoundDoNothing,
   );
-  t.equals(newNode, node, 'tree was not updated with onNotFoundDoNothing');
-  t.end();
+  assert.equal(newNode, node, 'tree was not updated with onNotFoundDoNothing');
 });
 
-test('onNotFoundThrowError', function (t) {
-  t.throws(
+test('onNotFoundThrowError', function () {
+  assert.throws(
     () => {
       const node = tree.update/*:: <number, number> */(
         null,
@@ -546,10 +528,9 @@ test('onNotFoundThrowError', function (t) {
     },
     ValueNotFoundError,
   );
-  t.end();
 });
 
-test('onNotFoundUseGivenValue', function (t) {
+test('onNotFoundUseGivenValue', function () {
   const node = tree.update/*:: <number, number> */(
     null,
     1,
@@ -557,21 +538,20 @@ test('onNotFoundUseGivenValue', function (t) {
     onConflictKeepTreeValue,
     onNotFoundUseGivenValue,
   );
-  t.equals(node?.value, 1);
-  t.end();
+  assert.equal(node?.value, 1);
 });
 
-test('difference', function (t) {
-  t.equals(tree.difference(null, null, compareIntegers), null);
-  t.deepEqual(
+test('difference', function () {
+  assert.equal(tree.difference(null, null, compareIntegers), null);
+  assert.deepEqual(
     tree.difference(tree.create(1), null, compareIntegers),
     tree.create(1),
   );
-  t.deepEqual(
+  assert.deepEqual(
     tree.difference(null, tree.create(1), compareIntegers),
     null,
   );
-  t.ok(
+  assert.ok(
     tree.equals(
       tree.difference(
         tree.fromDistinctAscArray([1, 2, 3]),
@@ -581,7 +561,7 @@ test('difference', function (t) {
       null,
     ),
   );
-  t.ok(
+  assert.ok(
     tree.equals(
       tree.difference(
         tree.fromDistinctAscArray([1, 2, 3, 4]),
@@ -591,7 +571,7 @@ test('difference', function (t) {
       tree.create(1),
     ),
   );
-  t.ok(
+  assert.ok(
     tree.equals(
       tree.difference(
         tree.fromDistinctAscArray([2, 3, 4, 5]),
@@ -601,7 +581,7 @@ test('difference', function (t) {
       tree.create(5),
     ),
   );
-  t.ok(
+  assert.ok(
     tree.equals(
       tree.difference(
         tree.fromDistinctAscArray([1, 4]),
@@ -611,7 +591,7 @@ test('difference', function (t) {
       tree.create(4),
     ),
   );
-  t.ok(
+  assert.ok(
     tree.equals(
       tree.difference(
         tree.fromDistinctAscArray([1, 2, 3]),
@@ -625,7 +605,7 @@ test('difference', function (t) {
     tree.fromDistinctAscArray(oneToThirtyOne.filter(x => x % 2));
   const oneToThirtyOneEvens =
     tree.fromDistinctAscArray(oneToThirtyOne.filter(x => !(x % 2)));
-  t.ok(
+  assert.ok(
     tree.equals(
       tree.difference(
         tree.fromDistinctAscArray(oneToThirtyOne),
@@ -635,7 +615,7 @@ test('difference', function (t) {
       oneToThirtyOneEvens,
     ),
   );
-  t.ok(
+  assert.ok(
     tree.equals(
       tree.difference(
         tree.fromDistinctAscArray(oneToThirtyOne),
@@ -645,12 +625,10 @@ test('difference', function (t) {
       oneToThirtyOneOdds,
     ),
   );
-
-  t.end();
 });
 
 
-test('equals', function (t) {
+test('equals', function () {
   let tree1/*: ImmutableTree<number> | null */ = null;
   for (const num of oneToThirtyOne) {
     tree1 = tree.insert(tree1, num, compareIntegers);
@@ -661,19 +639,19 @@ test('equals', function (t) {
     tree2 = tree.insert(tree2, num, compareIntegers);
   }
 
-  t.ok(tree.equals(tree1, tree2));
+  assert.ok(tree.equals(tree1, tree2));
 
   tree1 = tree.remove(tree1, 1, compareIntegers);
-  t.ok(!tree.equals(tree1, tree2));
+  assert.ok(!tree.equals(tree1, tree2));
 
   tree2 = tree.remove(tree2, 1, compareIntegers);
-  t.ok(tree.equals(tree1, tree2));
+  assert.ok(tree.equals(tree1, tree2));
 
-  t.ok(tree.equals(null, null));
-  t.ok(!tree.equals(tree1, null));
-  t.ok(!tree.equals(null, tree1));
+  assert.ok(tree.equals(null, null));
+  assert.ok(!tree.equals(tree1, null));
+  assert.ok(!tree.equals(null, tree1));
 
-  t.ok(tree.equals(
+  assert.ok(tree.equals(
     {
       left: {
         left: null,
@@ -699,7 +677,7 @@ test('equals', function (t) {
     (a, b) => objectIs(a.num, b.num),
   ));
 
-  t.ok(!tree.equals(
+  assert.ok(!tree.equals(
     {
       left: {
         left: null,
@@ -734,54 +712,49 @@ test('equals', function (t) {
     },
     (a, b) => objectIs(a.num, b.num),
   ));
-
-  t.end();
 });
 
-test('fromDistinctAscArray', function (t) {
+test('fromDistinctAscArray', function () {
   const node = tree.fromDistinctAscArray(oneToThirtyOne);
-  t.ok(checkTreeInvariants(node, compareIntegers), 'tree is valid and balanced');
-  t.end();
+  assert.ok(checkTreeInvariants(node, compareIntegers), 'tree is valid and balanced');
 });
 
-test('map', function (t) {
+test('map', function () {
   const toString = (x/*: mixed */)/*: string */ => String(x);
 
-  t.equals(tree.map(null, toString), null);
-  t.deepEqual(
+  assert.equal(tree.map(null, toString), null);
+  assert.deepEqual(
     tree.map(
       tree.fromDistinctAscArray(oneToThirtyOne),
       toString,
     ),
     tree.fromDistinctAscArray(oneToThirtyOne.map(toString)),
   );
-  t.end();
 });
 
-test('toArray', function (t) {
-  t.deepEqual(tree.toArray/*:: <mixed> */(null).sort(), []);
-  t.deepEqual(tree.toArray(tree.create(1)), [1]);
-  t.deepEqual(tree.toArray(tree.fromDistinctAscArray([1, 2, 3])), [1, 2, 3]);
-  t.deepEqual(tree.toArray(tree.fromDistinctAscArray([3, 2, 1])), [3, 2, 1]);
-  t.end();
+test('toArray', function () {
+  assert.deepEqual(tree.toArray/*:: <mixed> */(null).sort(), []);
+  assert.deepEqual(tree.toArray(tree.create(1)), [1]);
+  assert.deepEqual(tree.toArray(tree.fromDistinctAscArray([1, 2, 3])), [1, 2, 3]);
+  assert.deepEqual(tree.toArray(tree.fromDistinctAscArray([3, 2, 1])), [3, 2, 1]);
 });
 
-test('union', function (t) {
+test('union', function () {
   const compareValues = (
     a/*: {+v: number} */,
     b/*: {+v: number} */,
   )/*: number */ => compareIntegers(a.v, b.v);
 
-  t.equals(tree.union(null, null, compareIntegers), null);
-  t.deepEqual(
+  assert.equal(tree.union(null, null, compareIntegers), null);
+  assert.deepEqual(
     tree.union(tree.create(1), null, compareIntegers),
     tree.create(1),
   );
-  t.deepEqual(
+  assert.deepEqual(
     tree.union(null, tree.create(1), compareIntegers),
     tree.create(1),
   );
-  t.ok(
+  assert.ok(
     tree.equals(
       tree.union(
         tree.fromDistinctAscArray([1, 2, 3]),
@@ -791,7 +764,7 @@ test('union', function (t) {
       tree.fromDistinctAscArray([1, 2, 3, 4, 5, 6]),
     ),
   );
-  t.ok(
+  assert.ok(
     tree.equals(
       tree.union(
         tree.fromDistinctAscArray([4, 5, 6]),
@@ -801,7 +774,7 @@ test('union', function (t) {
       tree.fromDistinctAscArray([1, 2, 3, 4, 5, 6]),
     ),
   );
-  t.ok(
+  assert.ok(
     tree.equals(
       tree.union(
         tree.fromDistinctAscArray([2, 3]),
@@ -811,7 +784,7 @@ test('union', function (t) {
       tree.fromDistinctAscArray([1, 2, 3, 4]),
     ),
   );
-  t.ok(
+  assert.ok(
     tree.equals(
       tree.union(
         tree.fromDistinctAscArray([1, 4]),
@@ -821,7 +794,7 @@ test('union', function (t) {
       tree.fromDistinctAscArray([1, 2, 3, 4]),
     ),
   );
-  t.ok(
+  assert.ok(
     tree.equals(
       tree.union(
         tree.fromDistinctAscArray([1, 2, 3]),
@@ -831,7 +804,7 @@ test('union', function (t) {
       tree.fromDistinctAscArray([1, 2, 3, 4]),
     ),
   );
-  t.ok(
+  assert.ok(
     tree.equals(
       tree.union(
         tree.fromDistinctAscArray(oneToThirtyOne),
@@ -850,13 +823,13 @@ test('union', function (t) {
     tree.fromDistinctAscArray([v3b, {v: 4}, {v: 5}]),
     compareValues,
   );
-  t.deepEqual(
+  assert.deepEqual(
     tree.toArray(
       unionWithDefaultConflictHandler,
     ),
     [{v: 1}, {v: 2}, {v: 3}, {v: 4}, {v: 5}],
   );
-  t.equals(
+  assert.equal(
     tree.find(unionWithDefaultConflictHandler, {v: 3}, compareValues, null),
     v3b,
   );
@@ -867,18 +840,18 @@ test('union', function (t) {
     compareValues,
     (v1, v2) => v1,
   );
-  t.deepEqual(
+  assert.deepEqual(
     tree.toArray(
       unionWithCustomConflictHandler,
     ),
     [{v: 1}, {v: 2}, {v: 3}, {v: 4}, {v: 5}],
   );
-  t.equals(
+  assert.equal(
     tree.find(unionWithCustomConflictHandler, {v: 3}, compareValues, null),
     v3a,
   );
 
-  t.throws(
+  assert.throws(
     function () {
       tree.union(
         tree.fromDistinctAscArray([1]),
@@ -889,15 +862,13 @@ test('union', function (t) {
     },
     ValueOrderError,
   );
-
-  t.end();
 });
 
-test('zip', function (t) {
-  t.deepEqual(Array.from(tree.zip/*:: <mixed, mixed> */(null, null)), []);
-  t.deepEqual(Array.from(tree.zip/*:: <number, number> */(tree.create(1), null)), [[1, undefined]]);
-  t.deepEqual(Array.from(tree.zip/*:: <number, number> */(null, tree.create(1))), [[undefined, 1]]);
-  t.deepEqual(
+test('zip', function () {
+  assert.deepEqual(Array.from(tree.zip/*:: <mixed, mixed> */(null, null)), []);
+  assert.deepEqual(Array.from(tree.zip/*:: <number, number> */(tree.create(1), null)), [[1, undefined]]);
+  assert.deepEqual(Array.from(tree.zip/*:: <number, number> */(null, tree.create(1))), [[undefined, 1]]);
+  assert.deepEqual(
     Array.from(
       tree.zip(
         tree.fromDistinctAscArray(['a', 'b', 'c']),
@@ -911,10 +882,9 @@ test('zip', function (t) {
       [undefined, undefined],
     ],
   );
-  t.end();
 });
 
-test('GHC issue #4242', function (t) {
+test('GHC issue #4242', function () {
   // https://gitlab.haskell.org/ghc/ghc/-/issues/4242
 
   let node/*: ImmutableTree<number> | null */ = null;
@@ -926,23 +896,21 @@ test('GHC issue #4242', function (t) {
 
   node = tree.remove(node, tree.minValue(node), compareIntegers);
 
-  t.ok(checkTreeInvariants(node, compareIntegers));
+  assert.ok(checkTreeInvariants(node, compareIntegers));
 
   /*:: invariant(node !== null); */
 
   node = tree.remove(node, tree.minValue(node), compareIntegers);
 
-  t.ok(checkTreeInvariants(node, compareIntegers));
-
-  t.end();
+  assert.ok(checkTreeInvariants(node, compareIntegers));
 });
 
-test('indexOf', function (t) {
+test('indexOf', function () {
   let node = tree.fromDistinctAscArray(oneToThirtyOne);
-  t.equals(tree.indexOf(null, 1, compareIntegers), -1);
-  t.equals(tree.indexOf(node, 0, compareIntegers), -1);
-  t.equals(tree.indexOf(node, 32, compareIntegers), -1);
-  t.equals(
+  assert.equal(tree.indexOf(null, 1, compareIntegers), -1);
+  assert.equal(tree.indexOf(node, 0, compareIntegers), -1);
+  assert.equal(tree.indexOf(node, 32, compareIntegers), -1);
+  assert.equal(
     tree.indexOf(
       {
         left: null,
@@ -961,26 +929,25 @@ test('indexOf', function (t) {
     1,
   );
   for (const num of oneToThirtyOne) {
-    t.equals(tree.indexOf(node, num, compareIntegers), num - 1);
+    assert.equal(tree.indexOf(node, num, compareIntegers), num - 1);
   }
   node = tree.fromDistinctAscArray(oneToThirtyOne.slice(0).reverse());
   for (const num of oneToThirtyOne) {
-    t.equals(tree.indexOf(node, num, compareIntegersReverse), 31 - num);
+    assert.equal(tree.indexOf(node, num, compareIntegersReverse), 31 - num);
   }
-  t.end();
 });
 
-test('at', function (t) {
+test('at', function () {
   const node = tree.fromDistinctAscArray(oneToThirtyOne);
   /*:: invariant(node !== null); */
-  t.throws(
+  assert.throws(
     function () {
       tree.at(tree.create(1), 1);
     },
     IndexOutOfRangeError,
     'IndexOutOfRangeError exception is thrown for index 1 of size 1 tree',
   );
-  t.throws(
+  assert.throws(
     function () {
       tree.at(tree.create(1), -2);
     },
@@ -988,16 +955,15 @@ test('at', function (t) {
     'IndexOutOfRangeError exception is thrown for index -2 of size 1 tree',
   );
   for (const num of oneToThirtyOne) {
-    t.equals(tree.at(node, num - 1), num);
-    t.equals(tree.at(node, -num), oneToThirtyOne.length - (num - 1));
+    assert.equal(tree.at(node, num - 1), num);
+    assert.equal(tree.at(node, -num), oneToThirtyOne.length - (num - 1));
   }
-  t.end();
 });
 
-test('withComparator', function (t) {
+test('withComparator', function () {
   const integerTree = withComparator(compareIntegers);
 
-  t.ok(
+  assert.ok(
     tree.equals(
       integerTree.difference(
         tree.fromDistinctAscArray([1, 2, 3]),
@@ -1008,22 +974,22 @@ test('withComparator', function (t) {
   );
 
   let node = tree.fromDistinctAscArray(oneToThirtyOne);
-  t.equals(integerTree.find(node, 0), undefined);
-  t.equals(integerTree.find(node, 0, null), null);
-  t.equals(integerTree.find(node, 1), 1);
+  assert.equal(integerTree.find(node, 0), undefined);
+  assert.equal(integerTree.find(node, 0, null), null);
+  assert.equal(integerTree.find(node, 1), 1);
 
-  t.equals(integerTree.findNext(node, 31), undefined);
-  t.equals(integerTree.findNext(node, 31, null), null);
-  t.equals(integerTree.findNext(node, 1), 2);
+  assert.equal(integerTree.findNext(node, 31), undefined);
+  assert.equal(integerTree.findNext(node, 31, null), null);
+  assert.equal(integerTree.findNext(node, 1), 2);
 
-  t.equals(integerTree.findPrev(node, 1), undefined);
-  t.equals(integerTree.findPrev(node, 1, null), null);
-  t.equals(integerTree.findPrev(node, 31), 30);
+  assert.equal(integerTree.findPrev(node, 1), undefined);
+  assert.equal(integerTree.findPrev(node, 1, null), null);
+  assert.equal(integerTree.findPrev(node, 31), 30);
 
-  t.equals(integerTree.indexOf(node, 0), -1);
-  t.equals(integerTree.indexOf(node, 1), 0);
+  assert.equal(integerTree.indexOf(node, 0), -1);
+  assert.equal(integerTree.indexOf(node, 1), 0);
 
-  t.throws(
+  assert.throws(
     function () {
       node = integerTree.insert(node, 1);
     },
@@ -1036,32 +1002,32 @@ test('withComparator', function (t) {
   node = integerTree.insertIfNotExists(node, 33);
   node = integerTree.insertOrReplaceIfExists(node, 1);
   node = integerTree.insertOrReplaceIfExists(node, 34);
-  t.throws(
+  assert.throws(
     function () {
       node = integerTree.insertOrThrowIfExists(node, 1);
     },
     ValueExistsError,
     'exception is thrown with insertOrThrowIfExists',
   );
-  t.equals(integerTree.find(node, 32), 32);
-  t.equals(integerTree.find(node, 33), 33);
-  t.equals(integerTree.find(node, 34), 34);
+  assert.equal(integerTree.find(node, 32), 32);
+  assert.equal(integerTree.find(node, 33), 33);
+  assert.equal(integerTree.find(node, 34), 34);
 
   node = integerTree.remove(node, 34);
   node = integerTree.removeIfExists(node, 33);
   node = integerTree.removeOrThrowIfNotExists(node, 32);
-  t.throws(
+  assert.throws(
     function () {
       node = integerTree.removeOrThrowIfNotExists(node, 32);
     },
     ValueNotFoundError,
     'exception is thrown with removeOrThrowIfNotExists',
   );
-  t.equals(integerTree.find(node, 32), undefined);
-  t.equals(integerTree.find(node, 33), undefined);
-  t.equals(integerTree.find(node, 34), undefined);
+  assert.equal(integerTree.find(node, 32), undefined);
+  assert.equal(integerTree.find(node, 33), undefined);
+  assert.equal(integerTree.find(node, 34), undefined);
 
-  t.ok(
+  assert.ok(
     tree.equals(
       integerTree.union(
         tree.fromDistinctAscArray([1, 3, 5]),
@@ -1074,12 +1040,12 @@ test('withComparator', function (t) {
   const num1 = new Number(1);
   // $FlowIgnore[incompatible-call]
   node = integerTree.update(node, num1, onConflictKeepTreeValue, onNotFoundThrowError);
-  t.equals(integerTree.find(node, 1), 1);
+  assert.equal(integerTree.find(node, 1), 1);
   // $FlowIgnore[incompatible-call]
   node = integerTree.update(node, num1, onConflictUseGivenValue, onNotFoundThrowError);
   // $FlowIgnore[incompatible-call]
-  t.equals(integerTree.find(node, 1), num1);
-  t.throws(
+  assert.equal(integerTree.find(node, 1), num1);
+  assert.throws(
     function () {
       node = integerTree.update(node, 1, onConflictThrowError, onNotFoundThrowError);
     },
@@ -1087,18 +1053,16 @@ test('withComparator', function (t) {
     'exception is thrown with update using onConflictThrowError',
   );
   node = integerTree.update(node, 32, onConflictThrowError, onNotFoundDoNothing);
-  t.equals(integerTree.find(node, 32), undefined);
+  assert.equal(integerTree.find(node, 32), undefined);
   node = integerTree.update(node, 32, onConflictThrowError, onNotFoundUseGivenValue);
-  t.equals(integerTree.find(node, 32), 32);
+  assert.equal(integerTree.find(node, 32), 32);
 
-  t.ok(integerTree.validate(node).valid);
-
-  t.end();
+  assert.ok(integerTree.validate(node).valid);
 });
 
-test('validate', function (t) {
-  t.ok(tree.validate(null, compareIntegers).valid, 'null tree is valid');
-  t.ok(tree.validate(tree.create(1), compareIntegers).valid, 'tree of size 1 is valid');
+test('validate', function () {
+  assert.ok(tree.validate(null, compareIntegers).valid, 'null tree is valid');
+  assert.ok(tree.validate(tree.create(1), compareIntegers).valid, 'tree of size 1 is valid');
 
   let node/*: ImmutableTree<number> */ = {
     left: {
@@ -1112,9 +1076,9 @@ test('validate', function (t) {
     size: 2,
   };
   let result = tree.validate(node, compareIntegers);
-  t.ok(!result.valid, 'tree is invalid');
-  t.equals(result.subtree, 'left');
-  t.equals(result.tree, node);
+  assert.ok(!result.valid, 'tree is invalid');
+  assert.equal(result.subtree, 'left');
+  assert.equal(result.tree, node);
 
   node = {
     left: null,
@@ -1128,16 +1092,13 @@ test('validate', function (t) {
     size: 2,
   };
   result = tree.validate(node, compareIntegers);
-  t.ok(!result.valid, 'tree is invalid');
-  t.equals(result.subtree, 'right');
-  t.equals(result.tree, node);
-
-  t.end();
+  assert.ok(!result.valid, 'tree is invalid');
+  assert.equal(result.subtree, 'right');
+  assert.equal(result.tree, node);
 });
 
-test('setBalancingParameters', function (t) {
-  t.doesNotThrow(function () {
+test('setBalancingParameters', function () {
+  assert.doesNotThrow(function () {
     tree.setBalancingParameters(3, 2);
   });
-  t.end();
 });

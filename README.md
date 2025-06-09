@@ -515,7 +515,7 @@ You can run `node test/benchmark.js` yourself.
 
 ```sh
 # Unit tests
-./node_modules/.bin/c8 node test/index.js
+./node_modules/.bin/c8 node --test test/index.js
 
 # Monkey tests
 node --test test/monkey.js
