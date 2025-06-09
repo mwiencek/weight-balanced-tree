@@ -1813,10 +1813,10 @@ __metadata:
   languageName: node
   linkType: hard
 
-"immutable@npm:4.3.7":
-  version: 4.3.7
-  resolution: "immutable@npm:4.3.7"
-  checksum: 10c0/9b099197081b22f6433003e34929da8ecddbbdc1474cdc8aa3b7669dee4adda349c06143de22def36016d1b6de5322b043eccd7a11db1dad2ca85dad4fff5435
+"immutable@npm:5.1.2":
+  version: 5.1.2
+  resolution: "immutable@npm:5.1.2"
+  checksum: 10c0/da5af92d2c70323c1f9a0e418832c9eef441feadaf6a295a4e07764bd2400c85186872e016071d9253549d58d364160d55dca8dcdf59fd4a6a06c6756fe61657
   languageName: node
   linkType: hard
 
@@ -3925,7 +3925,7 @@ __metadata:
     c8: "npm:10.1.3"
     flow-bin: "npm:0.272.2"
     flow-typed: "npm:4.1.1"
-    immutable: "npm:4.3.7"
+    immutable: "npm:5.1.2"
     tape: "npm:5.9.0"
     tsd: "npm:0.32.0"
   languageName: unknown
