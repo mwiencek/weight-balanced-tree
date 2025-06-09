@@ -1,6 +1,7 @@
 // @flow strict
 
 export {default as at} from './at.js';
+export {setBalancingParameters} from './balance.js';
 export {default as create} from './create.js';
 export {default as difference} from './difference.js';
 export {default as equals} from './equals.js';

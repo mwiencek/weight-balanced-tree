@@ -3,6 +3,7 @@
 ## v0.8.0 (unreleased)
 
   * Added `validate` to check if a tree is valid for a given comparator.
+  * Added `setBalancingParameters` (undocumented).
   * Added monkey tests for insert, remove, union, and difference.
 
 ## v0.7.1 (2025-06-05)

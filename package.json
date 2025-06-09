@@ -16,6 +16,10 @@
       "types": "./src/at.d.ts",
       "default": "./src/at.js"
     },
+    "./balance": {
+      "types": "./src/balance.d.ts",
+      "default": "./src/balance.js"
+    },
     "./create": {
       "types": "./src/create.d.ts",
       "default": "./src/create.js"

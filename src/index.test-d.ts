@@ -7,6 +7,7 @@ import {
 import * as types from '../src/types';
 import * as wbt from '../src/index';
 import at from '../src/at';
+import {setBalancingParameters} from '../src/balance';
 import create from '../src/create';
 import difference from '../src/difference';
 import {
@@ -105,6 +106,7 @@ expectType<types.ImmutableTree<string> | null>(union(stringTree, stringTree, cmp
 expectType<types.ImmutableTree<string> | null>(difference(stringTree, stringTree, cmpStrings));
 expectType<Generator<[string | undefined, number | undefined], undefined, undefined>>(zip(stringTree, numberTree));
 expectType<ValidateResult<string>>(validate(stringTree, cmpStrings));
+expectType<undefined>(setBalancingParameters(3, 2));
 
 // Value type override
 expectType<string | null>(find<string, number, null>(stringTree, 0, cmpNumberAndString, null));
@@ -202,6 +204,7 @@ expectType<types.ImmutableTree<number> | null>(numberTreeWrapper.update(numberTr
 expectType<ValidateResult<number>>(numberTreeWrapper.validate(numberTree));
 
 expectType<typeof at>(wbt.at);
+expectType<typeof setBalancingParameters>(wbt.setBalancingParameters);
 expectType<typeof create>(wbt.create);
 expectType<typeof difference>(wbt.difference);
 expectType<typeof equals>(wbt.equals);

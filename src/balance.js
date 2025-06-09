@@ -9,8 +9,16 @@ import invariant from './invariant.js';
  * DELTA and RATIO are taken from GHC:
  * https://gitlab.haskell.org/ghc/packages/containers/-/blob/f00aa02/containers/src/Data/Map/Internal.hs#L4011-4017
  */
-const DELTA = 3;
-const RATIO = 2;
+let DELTA = 3;
+let RATIO = 2;
+
+export function setBalancingParameters(
+  delta/*: number */,
+  ratio/*: number */,
+)/*: void */ {
+  DELTA = delta;
+  RATIO = ratio;
+}
 
 export function rotateLeft/*:: <T> */(a/*: MutableTree<T> */)/*: void */ {
   const b = a.right;

@@ -1134,3 +1134,10 @@ test('validate', function (t) {
 
   t.end();
 });
+
+test('setBalancingParameters', function (t) {
+  t.doesNotThrow(function () {
+    tree.setBalancingParameters(3, 2);
+  });
+  t.end();
+});
