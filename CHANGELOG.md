@@ -6,6 +6,7 @@
   * Added `setBalancingParameters` (undocumented).
   * Added monkey tests for insert, remove, union, and difference.
   * Converted the tests from tape to the built-in Node test runner.
+  * Minor code cleanup.
 
 ## v0.7.1 (2025-06-05)
 

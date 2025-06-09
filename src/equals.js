@@ -1,7 +1,7 @@
 // @flow strict
 
 import iterate from './iterate.js';
-import {zipSameSize} from './zip.js';
+import zip from './zip.js';
 /*::
 import invariant from './invariant.js';
 import type {ImmutableTree} from './types.js';
@@ -23,7 +23,16 @@ export default function equals/*:: <T> */(
   if (a.size !== b.size) {
     return false;
   }
-  for (const [aValue, bValue] of zipSameSize(a, b)) {
+  for (
+    const [aValue, bValue] of
+    /*
+     * `zip` yields `[T | void, U | void]` due to the possibility of
+     * `a` and `b` having different sizes, but we've excluded that
+     * case above.
+     */
+    // $FlowIgnore[incompatible-cast]
+    zip(a, b) /*:: as Generator<[T, T], void, void> */
+  ) {
     if (!isEqual(aValue, bValue)) {
       return false;
     }
