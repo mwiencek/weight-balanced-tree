@@ -4,7 +4,12 @@ import * as Immutable from 'immutable';
 import * as wbt from '../src/index.js';
 
 import compareIntegers from './compareIntegers.js';
+import getSortedIndex from './getSortedIndex.js';
 import shuffle from './shuffle.js';
+import {
+  sortedArrayFindOrInsert,
+  sortedArrayRemove,
+} from './sortedArray.js';
 
 const suite = new Benchmark.Suite();
 
@@ -33,46 +38,6 @@ const compareKeys2 = (ai, b) => {
 const isTableEntryEqual = (a, b) => (
   a[0] === b[0] && a[1] === b[1]
 );
-
-function getSortedIndex(array, size, value, get, cmp) {
-  let low = 0;
-  let high = size;
-  let middle;
-  let order;
-  while (low < high) {
-    middle = Math.floor((low + high) / 2);
-    order = cmp(get(array, middle), value);
-    if (order < 0) {
-      low = middle + 1;
-    } else {
-      high = middle;
-    }
-  }
-  if (middle !== undefined && high !== middle && high < size) {
-    order = cmp(get(array, high), value);
-  }
-  return [high, order === 0];
-}
-
-function getInArray(array, index) {
-  return array[index];
-}
-
-function sortedFindOrInsertArray(array, value, cmp) {
-  const [index, exists] = getSortedIndex(
-    array,
-    array.length,
-    value,
-    getInArray,
-    cmp,
-  );
-  if (exists) {
-    return array;
-  }
-  const copy = array.slice(0);
-  copy.splice(index, 0, value);
-  return copy;
-}
 
 function getInImmutableList(array, index) {
   return array.get(index);
@@ -137,7 +102,7 @@ suite.add('insertion (array)', function () {
 
   let array = [];
   for (const pair of asciiTableCopy) {
-    array = sortedFindOrInsertArray(array, pair, compareKeys);
+    array = sortedArrayFindOrInsert(array, pair, compareKeys, true);
   }
 });
 
@@ -167,17 +132,12 @@ suite.add('removal (Immutable.List)', function () {
 suite.add('removal (array)', function () {
   let array = asciiTable;
   for (const pair of asciiTable) {
-    const [index, exists] = getSortedIndex(
+    array = sortedArrayRemove(
       array,
-      array.length,
       pair,
-      getInArray,
       compareKeys,
+      /* copy = */ true,
     );
-    if (exists) {
-      array = array.slice(0);
-      array.splice(index, 1);
-    }
   }
 });
 

@@ -513,9 +513,16 @@ You can run `node test/benchmark.js` yourself.
 
 ## Tests
 
-Run `./node_modules/.bin/c8 node test/index.js`.
+```sh
+# Unit tests
+./node_modules/.bin/c8 node test/index.js
 
-To test the .d.ts files, run `./node_modules/.bin/tsd src`.
+# Monkey tests
+node --test test/monkey.js
+
+# TypeScript tests
+./node_modules/.bin/tsd src
+```
 
 ## Changelog
 
