@@ -14,9 +14,9 @@ export default function at/*:: <T> */(
   if (adjustedIndex < 0 || adjustedIndex >= tree.size) {
     throw new IndexOutOfRangeError(adjustedIndex);
   }
-  let cursor/*: ImmutableTree<T> | null */ = tree;
-  while (cursor !== null) {
-    const leftSize = cursor.left == null ? 0 : cursor.left.size;
+  let cursor/*: ImmutableTree<T> */ = tree;
+  while (cursor.size !== 0) {
+    const leftSize = cursor.left.size;
     if (adjustedIndex < leftSize) {
       cursor = cursor.left;
     } else if (adjustedIndex == leftSize) {
@@ -26,6 +26,6 @@ export default function at/*:: <T> */(
       cursor = cursor.right;
     }
   }
-  /*:: invariant(cursor !== null); */
+  /*:: invariant(cursor.size !== 0); */
   return cursor.value;
 }

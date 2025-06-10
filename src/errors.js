@@ -1,5 +1,11 @@
 // @flow strict
 
+export class EmptyTreeError extends Error {
+  constructor() {
+    super('The tree is empty');
+  }
+}
+
 export class IndexOutOfRangeError extends Error {
   constructor(value/*: mixed */) {
     super(

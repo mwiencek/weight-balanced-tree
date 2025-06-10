@@ -4,6 +4,7 @@ export {default as at} from './at.js';
 export {setBalancingParameters} from './balance.js';
 export {default as create} from './create.js';
 export {default as difference} from './difference.js';
+export {default as empty} from './empty.js';
 export {default as equals} from './equals.js';
 export {default as find} from './find.js';
 export {default as findBy} from './findBy.js';

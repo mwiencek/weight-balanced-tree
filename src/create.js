@@ -1,15 +1,16 @@
 // @flow strict
 
+import empty from './empty.js';
 /*::
-import type {ImmutableTree} from './types.js';
+import type {NonEmptyImmutableTree} from './types.js';
 */
 
 export default function create/*:: <T> */(
   value/*: T */,
-)/*: ImmutableTree<T> */ {
+)/*: NonEmptyImmutableTree<T> */ {
   return {
-    left: null,
-    right: null,
+    left: empty,
+    right: empty,
     size: 1,
     value,
   };

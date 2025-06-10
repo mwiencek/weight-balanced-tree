@@ -10,6 +10,7 @@ import at from '../src/at';
 import {setBalancingParameters} from '../src/balance';
 import create from '../src/create';
 import difference from '../src/difference';
+import empty from '../src/empty';
 import {
   ValueExistsError,
   ValueNotFoundError,
@@ -58,9 +59,8 @@ import type {
 } from '../src/update';
 import zip from '../src/zip';
 
-declare const stringTree: types.ImmutableTree<string> | null;
-declare const nonNullStringTree: types.ImmutableTree<string>;
-declare const numberTree: types.ImmutableTree<number> | null;
+declare const stringTree: types.ImmutableTree<string>;
+declare const numberTree: types.ImmutableTree<number>;
 
 declare function areStringsEqual(a: string, b: string): boolean;
 declare function areNumbersEqual(a: number, b: number): boolean;
@@ -72,10 +72,11 @@ declare function cmpNumberAndString(a: number, b: string): number;
 declare function toString(num: number): string;
 
 // Basic usage
+expectType<types.EmptyImmutableTree>(empty);
 expectType<types.ImmutableTree<string>>(create<string>(''));
-expectType<types.ImmutableTree<number | null> | null>(update<number | null, number>(numberTree, 0, cmpNullableNumbers, onConflictKeepTreeValue, onNotFoundUseGivenValue));
-expectType<types.ImmutableTree<string> | null>(update<string, number>(stringTree, 0, cmpNumberAndString, onConflictKeepTreeValue, onNotFoundDoNothing));
-expectType<types.ImmutableTree<string> | null>(update<string, number>(stringTree, 0, cmpNumberAndString, onConflictKeepTreeValue, onNotFoundThrowError));
+expectType<types.ImmutableTree<number | null>>(update<number | null, number>(numberTree, 0, cmpNullableNumbers, onConflictKeepTreeValue, onNotFoundUseGivenValue));
+expectType<types.ImmutableTree<string>>(update<string, number>(stringTree, 0, cmpNumberAndString, onConflictKeepTreeValue, onNotFoundDoNothing));
+expectType<types.ImmutableTree<string>>(update<string, number>(stringTree, 0, cmpNumberAndString, onConflictKeepTreeValue, onNotFoundThrowError));
 expectType<types.ImmutableTree<string>>(insert<string>(stringTree, '', cmpStrings));
 expectType<types.ImmutableTree<string>>(insert<string>(stringTree, '', cmpStrings, onConflictKeepTreeValue));
 expectType<types.ImmutableTree<string>>(insert<string>(stringTree, '', cmpStrings, onConflictThrowError));
@@ -93,19 +94,16 @@ expectType<string>(find<string>(stringTree, '', cmpStrings, ''));
 expectType<string>(findBy<string>(stringTree, (treeValue: string) => cmpStrings(treeValue, ''), ''));
 expectType<string>(findNext<string>(stringTree, '', cmpStrings, ''));
 expectType<string>(findPrev<string>(stringTree, '', cmpStrings, ''));
-expectType<types.ImmutableTree<string> | null>(fromDistinctAscArray<string>(['']));
+expectType<types.ImmutableTree<string>>(fromDistinctAscArray<string>(['']));
 expectType<number>(indexOf<number>(numberTree, 1, cmpNumbers));
-expectType<string>(at<string>(nonNullStringTree, 0));
-expectType<types.ImmutableTree<string> | null>(map<number, string>(numberTree, toString));
-expectType<string>(maxValue<string>(nonNullStringTree));
-expectType<string>(minValue<string>(nonNullStringTree));
-expectType<types.ImmutableTree<string> | null>(remove<string>(stringTree, '', cmpStrings));
-expectType<types.ImmutableTree<string> | null>(removeIfExists<string>(stringTree, '', cmpStrings));
-expectType<types.ImmutableTree<string> | null>(removeOrThrowIfNotExists<string>(stringTree, '', cmpStrings));
+expectType<types.ImmutableTree<string>>(map<number, string>(numberTree, toString));
+expectType<types.ImmutableTree<string>>(remove<string>(stringTree, '', cmpStrings));
+expectType<types.ImmutableTree<string>>(removeIfExists<string>(stringTree, '', cmpStrings));
+expectType<types.ImmutableTree<string>>(removeOrThrowIfNotExists<string>(stringTree, '', cmpStrings));
 expectType<Array<string>>(toArray(stringTree));
-expectType<types.ImmutableTree<string> | null>(union(stringTree, stringTree, cmpStrings));
-expectType<types.ImmutableTree<string> | null>(union(stringTree, stringTree, cmpStrings, onConflictUseSecondValue));
-expectType<types.ImmutableTree<string> | null>(difference(stringTree, stringTree, cmpStrings));
+expectType<types.ImmutableTree<string>>(union(stringTree, stringTree, cmpStrings));
+expectType<types.ImmutableTree<string>>(union(stringTree, stringTree, cmpStrings, onConflictUseSecondValue));
+expectType<types.ImmutableTree<string>>(difference(stringTree, stringTree, cmpStrings));
 expectType<Generator<[string | undefined, number | undefined], undefined, undefined>>(zip(stringTree, numberTree));
 expectType<ValidateResult<string>>(validate(stringTree, cmpStrings));
 expectType<undefined>(setBalancingParameters(3, 2));
@@ -129,33 +127,31 @@ expectError<boolean>(equals<number>(stringTree, stringTree, areStringsEqual));
 expectError<number>(find<number>(stringTree, 0, cmpNumbers, 0));
 expectError<number>(findBy<number>(stringTree, (treeValue: number) => cmpStrings(treeValue, 0), 0));
 expectError<types.ImmutableTree<number>>(fromDistinctAscArray<number>(['']));
-expectError<types.ImmutableTree<string> | null>(map<number, string>(stringTree, toString));
-expectError<number>(maxValue<number>(nonNullStringTree));
-expectError<number>(minValue<number>(nonNullStringTree));
-expectError<string>(maxValue<string>(stringTree));
-expectError<string>(minValue<string>(stringTree));
-expectError<types.ImmutableTree<number> | null>(remove<number>(stringTree, '', cmpNumbers));
-expectError<types.ImmutableTree<number> | null>(removeIfExists<number>(stringTree, '', cmpNumbers));
-expectError<types.ImmutableTree<number> | null>(removeOrThrowIfNotExists<number>(stringTree, '', cmpNumbers));
+expectError<types.ImmutableTree<string>>(map<number, string>(stringTree, toString));
+expectError<number>(maxValue<number>(stringTree));
+expectError<number>(minValue<number>(stringTree));
+expectError<types.ImmutableTree<number>>(remove<number>(stringTree, '', cmpNumbers));
+expectError<types.ImmutableTree<number>>(removeIfExists<number>(stringTree, '', cmpNumbers));
+expectError<types.ImmutableTree<number>>(removeOrThrowIfNotExists<number>(stringTree, '', cmpNumbers));
 expectError<ReadonlyArray<string>>(toArray<string>(numberTree));
-expectError<types.ImmutableTree<number> | null>(union<number>(stringTree, stringTree, cmpNumbers));
-expectError<types.ImmutableTree<number> | null>(difference<number>(stringTree, stringTree, cmpNumbers));
+expectError<types.ImmutableTree<number>>(union<number>(stringTree, stringTree, cmpNumbers));
+expectError<types.ImmutableTree<number>>(difference<number>(stringTree, stringTree, cmpNumbers));
 expectError<Generator<[string | undefined, number | undefined], undefined, undefined>>(zip(numberTree, stringTree));
 
 // Wrong comparator function type
-expectError<types.ImmutableTree<string> | null>(equals<string>(stringTree, stringTree, areNumbersEqual));
+expectError<types.ImmutableTree<string>>(equals<string>(stringTree, stringTree, areNumbersEqual));
 expectError<string>(find<string>(stringTree, '', cmpNumbers, ''));
 expectError<string>(findNext<string>(stringTree, '', cmpNumbers, ''));
 expectError<string>(findPrev<string>(stringTree, '', cmpNumbers, ''));
 expectError<types.ImmutableTree<string>>(insert<string>(stringTree, '', cmpNumbers));
-expectError<types.ImmutableTree<string> | null>(remove<string>(stringTree, '', cmpNumbers));
-expectError<types.ImmutableTree<string> | null>(removeIfExists<string>(stringTree, '', cmpNumbers));
-expectError<types.ImmutableTree<string> | null>(removeOrThrowIfNotExists<string>(stringTree, '', cmpNumbers));
-expectError<types.ImmutableTree<string> | null>(union<string>(stringTree, stringTree, cmpNumbers));
-expectError<types.ImmutableTree<string> | null>(difference<string>(stringTree, stringTree, cmpNumbers));
+expectError<types.ImmutableTree<string>>(remove<string>(stringTree, '', cmpNumbers));
+expectError<types.ImmutableTree<string>>(removeIfExists<string>(stringTree, '', cmpNumbers));
+expectError<types.ImmutableTree<string>>(removeOrThrowIfNotExists<string>(stringTree, '', cmpNumbers));
+expectError<types.ImmutableTree<string>>(union<string>(stringTree, stringTree, cmpNumbers));
+expectError<types.ImmutableTree<string>>(difference<string>(stringTree, stringTree, cmpNumbers));
 
 // Wrong 'mapper' function type.
-expectError<types.ImmutableTree<string> | null>(map<number, string>(numberTree, (x: string) => parseInt(x, 10)));
+expectError<types.ImmutableTree<string>>(map<number, string>(numberTree, (x: string) => parseInt(x, 10)));
 
 // Value type override + wrong comparator function type
 expectError<string>(find<string, number>(stringTree, 0, cmpStrings, ''));
@@ -184,7 +180,7 @@ expectAssignable<Error>(new ValueOrderError('a', 'b'));
 
 // withComparator
 const numberTreeWrapper = withComparator(cmpNumbers);
-expectType<types.ImmutableTree<number> | null>(numberTreeWrapper.difference(numberTree, null));
+expectType<types.ImmutableTree<number>>(numberTreeWrapper.difference(numberTree, empty));
 expectType<number>(numberTreeWrapper.find(numberTree, 0, -1));
 expectType<number | string>(numberTreeWrapper.find<string>(numberTree, 0, ''));
 expectType<number>(numberTreeWrapper.findNext(numberTree, 0, -1));
@@ -197,18 +193,19 @@ expectType<types.ImmutableTree<number>>(numberTreeWrapper.insert(numberTree, 1, 
 expectType<types.ImmutableTree<number>>(numberTreeWrapper.insertIfNotExists(numberTree, 1));
 expectType<types.ImmutableTree<number>>(numberTreeWrapper.insertOrReplaceIfExists(numberTree, 1));
 expectType<types.ImmutableTree<number>>(numberTreeWrapper.insertOrThrowIfExists(numberTree, 1));
-expectType<types.ImmutableTree<number> | null>(numberTreeWrapper.remove(numberTree, 1));
-expectType<types.ImmutableTree<number> | null>(numberTreeWrapper.removeIfExists(numberTree, 1));
-expectType<types.ImmutableTree<number> | null>(numberTreeWrapper.removeOrThrowIfNotExists(numberTree, 1));
-expectType<types.ImmutableTree<number> | null>(numberTreeWrapper.union(numberTree, numberTree));
-expectType<types.ImmutableTree<number> | null>(numberTreeWrapper.union(numberTree, numberTree, onConflictThrowError));
-expectType<types.ImmutableTree<number> | null>(numberTreeWrapper.update(numberTree, 1, onConflictThrowError, onNotFoundUseGivenValue));
+expectType<types.ImmutableTree<number>>(numberTreeWrapper.remove(numberTree, 1));
+expectType<types.ImmutableTree<number>>(numberTreeWrapper.removeIfExists(numberTree, 1));
+expectType<types.ImmutableTree<number>>(numberTreeWrapper.removeOrThrowIfNotExists(numberTree, 1));
+expectType<types.ImmutableTree<number>>(numberTreeWrapper.union(numberTree, numberTree));
+expectType<types.ImmutableTree<number>>(numberTreeWrapper.union(numberTree, numberTree, onConflictThrowError));
+expectType<types.ImmutableTree<number>>(numberTreeWrapper.update(numberTree, 1, onConflictThrowError, onNotFoundUseGivenValue));
 expectType<ValidateResult<number>>(numberTreeWrapper.validate(numberTree));
 
 expectType<typeof at>(wbt.at);
 expectType<typeof setBalancingParameters>(wbt.setBalancingParameters);
 expectType<typeof create>(wbt.create);
 expectType<typeof difference>(wbt.difference);
+expectType<typeof empty>(wbt.empty);
 expectType<typeof equals>(wbt.equals);
 expectType<typeof find>(wbt.find);
 expectType<typeof findBy>(wbt.findBy);

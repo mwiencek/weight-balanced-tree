@@ -1,15 +1,16 @@
 // @flow strict
 
+import empty from './empty.js';
 /*::
 import type {ImmutableTree} from './types.js';
 */
 
 export default function map/*:: <T, U> */(
-  tree/*: ImmutableTree<T> | null */,
+  tree/*: ImmutableTree<T> */,
   mapper/*: (value: T) => U */,
-)/*: ImmutableTree<U> | null */ {
-  if (tree === null) {
-    return null;
+)/*: ImmutableTree<U> */ {
+  if (tree.size === 0) {
+    return empty;
   }
   return {
     left: map(tree.left, mapper),

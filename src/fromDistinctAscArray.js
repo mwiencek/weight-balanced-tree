@@ -1,5 +1,6 @@
 // @flow strict
 
+import empty from './empty.js';
 /*::
 import type {ImmutableTree} from './types.js';
 */
@@ -8,25 +9,23 @@ function _fromDistinctAscArray/*:: <T> */(
   array/*: $ReadOnlyArray<T> */,
   start/*: number */,
   end/*: number */,
-)/*: ImmutableTree<T> | null */ {
+)/*: ImmutableTree<T> */ {
   if (start > end) {
-    return null;
+    return empty;
   }
   const middle = start + Math.floor((end - start) / 2);
   const left = _fromDistinctAscArray(array, start, middle - 1);
   const right = _fromDistinctAscArray(array, middle + 1, end);
-  const leftSize = left === null ? 0 : left.size;
-  const rightSize = right === null ? 0 : right.size;
   return {
     left,
     right,
-    size: leftSize + rightSize + 1,
+    size: left.size + right.size + 1,
     value: array[middle],
   };
 }
 
 export default function fromDistinctAscArray/*:: <T> */(
   array/*: $ReadOnlyArray<T> */,
-)/*: ImmutableTree<T> | null */ {
+)/*: ImmutableTree<T> */ {
   return _fromDistinctAscArray(array, 0, array.length - 1);
 }

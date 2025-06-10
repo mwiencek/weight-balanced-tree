@@ -1,19 +1,20 @@
 // @flow strict
 
+import empty from './empty.js';
 import maxNode from './maxNode.js';
 /*::
 import type {ImmutableTree} from './types.js';
 */
 
 export default function findPrev/*:: <T, K = T, D = T> */(
-  tree/*: ImmutableTree<T> | null */,
+  tree/*: ImmutableTree<T> */,
   key/*: K */,
   cmp/*: (a: K, b: T) => number */,
   defaultValue/*: D */,
 )/*: T | D */ {
   let cursor = tree;
-  let smallerParent = null;
-  while (cursor !== null) {
+  let smallerParent/*: ImmutableTree<T> */ = empty;
+  while (cursor.size !== 0) {
     const order = cmp(key, cursor.value);
     if (order === 0) {
       break;
@@ -24,10 +25,10 @@ export default function findPrev/*:: <T, K = T, D = T> */(
       cursor = cursor.right;
     }
   }
-  if (cursor !== null && cursor.left !== null) {
+  if (cursor.size !== 0 && cursor.left.size !== 0) {
     return maxNode(cursor.left).value;
   }
-  if (smallerParent !== null) {
+  if (smallerParent.size !== 0) {
     return smallerParent.value;
   }
   return defaultValue;

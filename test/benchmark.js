@@ -57,12 +57,12 @@ function sortedFindOrInsertImmutableList(list, value, cmp) {
   return list.insert(index, value);
 }
 
-let prefilledTree = null;
+let prefilledTree = wbt.empty;
 for (const pair of asciiTable) {
   prefilledTree = wbt.insert(prefilledTree, pair, compareKeys);
 }
 
-let prefilledTree2 = null;
+let prefilledTree2 = wbt.empty;
 for (const pair of asciiTable) {
   prefilledTree2 = wbt.insert(prefilledTree2, pair, compareKeys);
 }
@@ -82,7 +82,7 @@ suite.add('equals (weight-balanced-tree)', function () {
 suite.add('insertion (weight-balanced-tree)', function () {
   const asciiTableCopy = copyAndShuffleAsciiTable();
 
-  let tree = null;
+  let tree = wbt.empty;
   for (const pair of asciiTableCopy) {
     tree = wbt.insert(tree, pair, compareKeys);
   }

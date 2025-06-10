@@ -6,20 +6,20 @@ import invariant from './invariant.js';
 */
 
 export default function* reverseIterate/*:: <T> */(
-  tree/*: ImmutableTree<T> | null */,
+  tree/*: ImmutableTree<T> */,
 )/*: Generator<T, void, void> */ {
   const stack = [];
-  let cursor/*: ?ImmutableTree<T> */ = tree;
+  let cursor/*: ImmutableTree<T> */ = tree;
   do {
-    while (cursor != null) {
+    while (cursor.size !== 0) {
       stack.push(cursor);
       cursor = cursor.right;
     }
-    cursor = stack.pop();
-    if (cursor) {
-      yield cursor.value;
-      /*:: invariant(cursor != null); */
-      cursor = cursor.left;
+    const next = stack.pop();
+    if (next) {
+      yield next.value;
+      /*:: invariant(next != null); */
+      cursor = next.left;
     }
-  } while (stack.length || cursor != null);
+  } while (stack.length || cursor.size !== 0);
 }

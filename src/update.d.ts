@@ -22,9 +22,9 @@ export function onNotFoundThrowError(): never;
 export function onNotFoundUseGivenValue<T>(givenValue: T): T;
 
 export default function update<T, K>(
-  tree: ImmutableTree<T> | null,
+  tree: ImmutableTree<T>,
   key: K,
   cmp: (key: K, treeValue: T) => number,
   onConflict: InsertConflictHandler<T, K>,
   onNotFound: InsertNotFoundHandler<T, K>,
-): ImmutableTree<T> | null;
+): ImmutableTree<T>;

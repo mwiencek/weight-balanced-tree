@@ -162,7 +162,7 @@ test('weight-balanced-tree', () => {
       function (cmds) {
         const initial = {
           model: [],
-          real: {tree: null},
+          real: {tree: wbt.empty},
         };
         fc.modelRun(() => ({...initial}), cmds);
       },

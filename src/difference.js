@@ -7,10 +7,10 @@ import type {ImmutableTree} from './types.js';
 */
 
 export default function difference/*:: <T> */(
-  t1/*: ImmutableTree<T> | null */,
-  t2/*: ImmutableTree<T> | null */,
+  t1/*: ImmutableTree<T> */,
+  t2/*: ImmutableTree<T> */,
   cmp/*: (a: T, b: T) => number */,
-)/*: ImmutableTree<T> | null */ {
+)/*: ImmutableTree<T> */ {
   const arrayDifference/*: Array<T> */ = [],
         iter1 = iterate(t1),
         iter2 = iterate(t2);

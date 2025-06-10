@@ -2,6 +2,8 @@
 
 ## v0.8.0 (unreleased)
 
+  * Empty trees are now represented by `empty` (a tree of size 0) rather
+    than `null`. Many function type signatures were updated to reflect this.
   * Added `validate` to check if a tree is valid for a given comparator.
   * Changed the type signature of `equals` to allow comparing trees of
     different types.

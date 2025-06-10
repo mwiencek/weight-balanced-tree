@@ -2,6 +2,7 @@
 
 import {balanceLeft, balanceRight} from './balance.js';
 import checkOrder from './checkOrder.js';
+import empty from './empty.js';
 import {
   ValueExistsError,
   ValueNotFoundError,
@@ -47,20 +48,20 @@ export function onNotFoundUseGivenValue/*:: <T> */(
 }
 
 export default function update/*:: <T, K> */(
-  tree/*: ImmutableTree<T> | null */,
+  tree/*: ImmutableTree<T> */,
   key/*: K */,
   cmp/*: (key: K, treeValue: T) => number */,
   onConflict/*: InsertConflictHandler<T, K> */,
   onNotFound/*: InsertNotFoundHandler<T, K> */,
-)/*: ImmutableTree<T> | null */ {
-  if (tree === null) {
+)/*: ImmutableTree<T> */ {
+  if (tree.size === 0) {
     let valueToInsert;
     try {
       valueToInsert = onNotFound(key);
     } catch (error) {
       if (error === DO_NOTHING_SYMBOL) {
-        // This is the only case where `update` can return null.
-        return null;
+        // This is the only case where `update` can return `empty`.
+        return empty;
       }
       throw error;
     }
@@ -72,8 +73,8 @@ export default function update/*:: <T, K> */(
       );
     }
     return {
-      left: null,
-      right: null,
+      left: empty,
+      right: empty,
       size: 1,
       value: valueToInsert,
     };
@@ -105,13 +106,13 @@ export default function update/*:: <T, K> */(
 
   if (order < 0) {
     const newLeftBranch = update(left, key, cmp, onConflict, onNotFound);
-    if (newLeftBranch === null || newLeftBranch === left) {
+    if (newLeftBranch.size === 0 || newLeftBranch === left) {
       return tree;
     }
     const newTree = {
       left: newLeftBranch,
       right,
-      size: newLeftBranch.size + (right === null ? 0 : right.size) + 1,
+      size: newLeftBranch.size + right.size + 1,
       value: tree.value,
     };
     if (newTree.size !== tree.size) {
@@ -120,13 +121,13 @@ export default function update/*:: <T, K> */(
     return newTree;
   } else {
     const newRightBranch = update(right, key, cmp, onConflict, onNotFound);
-    if (newRightBranch === null || newRightBranch === right) {
+    if (newRightBranch.size === 0 || newRightBranch === right) {
       return tree;
     }
     const newTree = {
       left,
       right: newRightBranch,
-      size: (left === null ? 0 : left.size) + newRightBranch.size + 1,
+      size: left.size + newRightBranch.size + 1,
       value: tree.value,
     };
     if (newTree.size !== tree.size) {

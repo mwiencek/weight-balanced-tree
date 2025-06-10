@@ -28,6 +28,10 @@
       "types": "./src/difference.d.ts",
       "default": "./src/difference.js"
     },
+    "./empty": {
+      "types": "./src/empty.d.ts",
+      "default": "./src/empty.js"
+    },
     "./equals": {
       "types": "./src/equals.d.ts",
       "default": "./src/equals.js"

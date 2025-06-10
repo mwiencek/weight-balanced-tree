@@ -20,19 +20,29 @@ so you can install it using `yarn` or `npm`.
 
 To create a tree, see `create`, `insert`, or `fromDistinctAscArray` below.
 
-A tree consists of at least one value.  There's no tree of size 0; an empty
-tree is represented by `null`.
+An empty tree is represented by `empty`.
 
 Although there's only one datum stored per node, for maps you can store a
 `[key, value]` tuple, or store `key` directly on `value` if it's an object.
 
 ```
-type ImmutableTree<+T> = {
-  +left: ImmutableTree<T> | null,
-  +right: ImmutableTree<T> | null,
+type EmptyImmutableTree = {
+  +left: EmptyImmutableTree,
+  +right: EmptyImmutableTree,
+  +size: 0,
+  +value: void,
+};
+
+type NonEmptyImmutableTree<+T> = {
+  +left: ImmutableTree<T>,
+  +right: ImmutableTree<T>,
   +size: number,
   +value: T,
 };
+
+type ImmutableTree<+T> =
+  | EmptyImmutableTree
+  | NonEmptyImmutableTree<T>;
 
 type InsertConflictHandler<T, K> =
   (existingTreeValue: T, key: K) => T;
@@ -57,12 +67,12 @@ How many values are contained in the tree.
 
 ```
 update<T, K>(
-    tree: ImmutableTree<T> | null,
+    tree: ImmutableTree<T>,
     key: K,
     cmp: (key: K, treeValue: T) => number,
     onConflict: InsertConflictHandler<T, K>,
     onNotFound: InsertNotFoundHandler<T, K>,
-): ImmutableTree<T> | null;
+): ImmutableTree<T>;
 ```
 
 Updates the value in `tree` found with `key`.  This is a generalized way of
@@ -171,11 +181,11 @@ update<Item, number>(
 
 ```
 insert<T>(
-    tree: ImmutableTree<T> | null,
+    tree: ImmutableTree<T>,
     value: T,
     cmp: (T, T) => number,
     onConflict?: InsertConflictHandler<T, T>,
-): ImmutableTree<T>;
+): NonEmptyImmutableTree<T>;
 ```
 
 Returns a new version of `tree` with `value` inserted.  This is a more
@@ -199,10 +209,10 @@ values of `onConflict` for you:
 
 ```
 remove<T>(
-    tree: ImmutableTree<T> | null,
+    tree: ImmutableTree<T>,
     value: T,
     cmp: (T, T) => number,
-): ImmutableTree<T> | null;
+): ImmutableTree<T>;
 ```
 
 Returns a new version of `tree` with `value` removed.
@@ -210,7 +220,7 @@ Returns a new version of `tree` with `value` removed.
 If `value` is not found in the tree, the same tree reference is returned
 back.
 
-If this was the last value in `tree`, `null` is returned.
+If this was the last value in `tree`, `empty` is returned.
 
 The `cmp` (comparator) function is the same as used for `insert`.
 
@@ -226,8 +236,8 @@ This simply checks if the tree returned from `remove` is the same reference.
 
 ```
 equals<T, U = T>(
-  a: ImmutableTree<T> | null,
-  b: ImmutableTree<U> | null,
+  a: ImmutableTree<T>,
+  b: ImmutableTree<U>,
   isEqual?: (a: T, b: U) => boolean,
 ): boolean;
 ```
@@ -244,7 +254,7 @@ values to `isEqual`.
 
 ```
 find<T, K = T, D = T>(
-  tree: ImmutableTree<T> | null,
+  tree: ImmutableTree<T>,
   key: K,
   cmp: (a: K, b: T) => number,
   defaultValue: D,
@@ -261,7 +271,7 @@ Finds a value in `tree` using the given `key` and returns it, or
 
 ```
 findBy<T, D = T>(
-  tree: ImmutableTree<T> | null,
+  tree: ImmutableTree<T>,
   cmp: (treeValue: T) => number,
   defaultValue: D,
 ): T | D;
@@ -277,7 +287,7 @@ static key.
 
 ```
 findNext<T, K = T, D = T>(
-  tree: ImmutableTree<T> | null,
+  tree: ImmutableTree<T>,
   key: K,
   cmp: (a: K, b: T) => number,
   defaultValue: D,
@@ -294,7 +304,7 @@ value from 2 is 3.
 
 ```
 findPrev<T, K = T, D = T>(
-  tree: ImmutableTree<T> | null,
+  tree: ImmutableTree<T>,
   key: K,
   cmp: (a: K, b: T) => number,
   defaultValue: D,
@@ -312,7 +322,7 @@ value from 2 is 1.
 ```
 fromDistinctAscArray<T>(
   array: $ReadOnlyArray<T>,
-): ImmutableTree<T> | null;
+): ImmutableTree<T>;
 ```
 
 If `array` is sorted and contains only unique values, then this returns a new,
@@ -327,7 +337,7 @@ invalid tree.  (Do not do this.)  You can check if a tree is valid using
 
 ```
 validate<T>(
-  tree: ImmutableTree<T> | null,
+  tree: ImmutableTree<T>,
   cmp: (a: T, b: T) => number,
 ): ValidateResult<T>;
 ```
@@ -340,7 +350,7 @@ value, and all right subtrees values are greater than the parent value.
 
 ```
 indexOf<T, K = T>(
-  tree: ImmutableTree<T> | null,
+  tree: ImmutableTree<T>,
   key: K,
   cmp: (a: K, b: T) => number,
 ): number;
@@ -366,7 +376,7 @@ An out-of-bounds `index` will throw `IndexOutOfRangeError`.
 ### iterate()
 
 ```
-iterate<T>(tree: ImmutableTree<T> | null): Generator<T, void, void>;
+iterate<T>(tree: ImmutableTree<T>): Generator<T, void, void>;
 ```
 
 Returns a JS iterator that traverses the values of the tree in order.
@@ -374,7 +384,7 @@ Returns a JS iterator that traverses the values of the tree in order.
 ### reverseIterate()
 
 ```
-reverseIterate<T>(tree: ImmutableTree<T> | null): Generator<T, void, void>;
+reverseIterate<T>(tree: ImmutableTree<T>): Generator<T, void, void>;
 ```
 
 Returns a JS iterator that traverses the values of the tree in reverse order.
@@ -382,7 +392,7 @@ Returns a JS iterator that traverses the values of the tree in reverse order.
 ### map()
 
 ```
-map<T, U>(tree: ImmutableTree<T> | null, mapper: (T) => U): ImmutableTree<U> | null;
+map<T, U>(tree: ImmutableTree<T>, mapper: (T) => U): ImmutableTree<U>;
 ```
 
 Returns a new tree with every value passed through `mapper`.
@@ -400,7 +410,7 @@ const stringTree = map<number, string>(
 ### minNode()
 
 ```
-minNode<T>(tree: ImmutableTree<T>): ImmutableTree<T>;
+minNode<T>(tree: ImmutableTree<T>): NonEmptyImmutableTree<T>;
 ```
 
 Returns the "smallest" (left-most) node in `tree`.
@@ -418,7 +428,7 @@ This is equivalent to `minNode(tree).value`.
 ### maxNode()
 
 ```
-maxNode<T>(tree: ImmutableTree<T>): ImmutableTree<T>;
+maxNode<T>(tree: ImmutableTree<T>): NonEmptyImmutableTree<T>;
 ```
 
 Returns the "largest" (right-most) node in `tree`.
@@ -437,7 +447,7 @@ This is equivalent to `maxNode(tree).value`.
 
 ```
 toArray<T>(
-  tree: ImmutableTree<T> | null,
+  tree: ImmutableTree<T>,
 ): Array<T>;
 ```
 
@@ -447,11 +457,11 @@ Flattens `tree` into an array of values.
 
 ```
 union<T>(
-  t1: ImmutableTree<T> | null,
-  t2: ImmutableTree<T> | null,
+  t1: ImmutableTree<T>,
+  t2: ImmutableTree<T>,
   cmp: (a: T, b: T) => number,
   onConflict?: (v1: T, v2: T) => T,
-): ImmutableTree<T> | null;
+): ImmutableTree<T>;
 ```
 
 Merges two trees together using the comparator `cmp`.  `onConflict` handles
@@ -464,10 +474,10 @@ will prefer values in `t2` when resolving conflicts.
 
 ```
 difference<T>(
-  t1: ImmutableTree<T> | null,
-  t2: ImmutableTree<T> | null,
+  t1: ImmutableTree<T>,
+  t2: ImmutableTree<T>,
   cmp: (a: T, b: T) => number,
-): ImmutableTree<T> | null;
+): ImmutableTree<T>;
 ```
 
 Returns a new tree with values in `t1` that aren't in `t2`, using the
@@ -477,8 +487,8 @@ comparator `cmp`.
 
 ```
 zip<T, U>(
-  t1: ImmutableTree<T> | null,
-  t2: ImmutableTree<U> | null,
+  t1: ImmutableTree<T>,
+  t2: ImmutableTree<U>,
 ): Generator<[T | void, U | void], void, void>;
 ```
 

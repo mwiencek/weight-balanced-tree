@@ -13,15 +13,15 @@ export type ValidateResult<+T> =
 */
 
 export default function validate/*:: <T> */(
-  tree/*: ImmutableTree<T> | null */,
+  tree/*: ImmutableTree<T> */,
   cmp/*: (T, T) => number */,
 )/*: ValidateResult<T> */ {
-  if (tree === null) {
+  if (tree.size === 0) {
     return {valid: true};
   }
 
   const left = tree.left;
-  if (left) {
+  if (left.size !== 0) {
     if (cmp(left.value, tree.value) >= 0) {
       return {valid: false, tree, subtree: 'left'};
     }
@@ -29,7 +29,7 @@ export default function validate/*:: <T> */(
   }
 
   const right = tree.right;
-  if (right) {
+  if (right.size !== 0) {
     if (cmp(right.value, tree.value) <= 0) {
       return {valid: false, tree, subtree: 'right'};
     }

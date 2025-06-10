@@ -5,12 +5,12 @@ import type {ImmutableTree} from './types.js';
 */
 
 export default function findBy/*:: <T, D = T> */(
-  tree/*: ImmutableTree<T> | null */,
+  tree/*: ImmutableTree<T> */,
   cmp/*: (treeValue: T) => number */,
   defaultValue/*: D */,
 )/*: T | D */ {
   let cursor = tree;
-  while (cursor !== null) {
+  while (cursor.size !== 0) {
     const order = cmp(cursor.value);
     if (order === 0) {
       return cursor.value;

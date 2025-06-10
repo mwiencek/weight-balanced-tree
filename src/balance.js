@@ -21,14 +21,14 @@ export function setBalancingParameters(
 }
 
 export function rotateLeft/*:: <T> */(a/*: MutableTree<T> */)/*: void */ {
-  const b = a.right;
-  /*:: invariant(b); */
-  const c = b.right;
-  /*:: invariant(c); */
+   const b = a.right;
+  /*:: invariant(b.size !== 0); */
+   const c = b.right;
+  /*:: invariant(c.size !== 0); */
   const left = {
     left: a.left,
     right: b.left,
-    size: (a.left === null ? 0 : a.left.size) + (b.left === null ? 0 : b.left.size) + 1,
+    size: a.left.size + b.left.size + 1,
     value: a.value,
   };
   a.left = left;
@@ -38,14 +38,14 @@ export function rotateLeft/*:: <T> */(a/*: MutableTree<T> */)/*: void */ {
 }
 
 export function rotateRight/*:: <T> */(c/*: MutableTree<T> */)/*: void */ {
-  const b = c.left;
-  /*:: invariant(b); */
-  const a = b.left;
-  /*:: invariant(a); */
+   const b = c.left;
+  /*:: invariant(b.size !== 0); */
+   const a = b.left;
+  /*:: invariant(a.size !== 0); */
   const right = {
     left: b.right,
     right: c.right,
-    size: (b.right === null ? 0 : b.right.size) + (c.right === null ? 0 : c.right.size) + 1,
+    size: b.right.size + c.right.size + 1,
     value: c.value,
   };
   c.left = a;
@@ -55,22 +55,22 @@ export function rotateRight/*:: <T> */(c/*: MutableTree<T> */)/*: void */ {
 }
 
 export function rotateLeftRight/*:: <T> */(tree/*: MutableTree<T> */)/*: void */ {
-  const a = tree.left;
-  /*:: invariant(a); */
-  const b = a.right;
-  /*:: invariant(b); */
-  const c = b.right;
-  /*:: invariant(c); */
+   const a = tree.left;
+  /*:: invariant(a.size !== 0); */
+   const b = a.right;
+  /*:: invariant(b.size !== 0); */
+   const c = b.right;
+  /*:: invariant(c.size !== 0); */
   const left = {
     left: a.left,
     right: b.left,
-    size: (a.left === null ? 0 : a.left.size) + (b.left === null ? 0 : b.left.size) + 1,
+    size: a.left.size + b.left.size + 1,
     value: a.value,
   };
   const right = {
     left: c,
     right: tree.right,
-    size: (c === null ? 0 : c.size) + (tree.right === null ? 0 : tree.right.size) + 1,
+    size: c.size + tree.right.size + 1,
     value: tree.value,
   };
   tree.left = left;
@@ -80,22 +80,22 @@ export function rotateLeftRight/*:: <T> */(tree/*: MutableTree<T> */)/*: void */
 }
 
 export function rotateRightLeft/*:: <T> */(tree/*: MutableTree<T> */)/*: void */ {
-  const c = tree.right;
-  /*:: invariant(c); */
-  const b = c.left;
-  /*:: invariant(b); */
-  const a = b.left;
-  /*:: invariant(a); */
+   const c = tree.right;
+  /*:: invariant(c.size !== 0); */
+   const b = c.left;
+  /*:: invariant(b.size !== 0); */
+   const a = b.left;
+  /*:: invariant(a.size !== 0); */
   const right = {
     left: b.right,
     right: c.right,
-    size: (b.right === null ? 0 : b.right.size) + (c.right === null ? 0 : c.right.size) + 1,
+    size: b.right.size + c.right.size + 1,
     value: c.value,
   };
   const left = {
     left: tree.left,
     right: a,
-    size: (tree.left === null ? 0 : tree.left.size) + (a === null ? 0 : a.size) + 1,
+    size: tree.left.size + a.size + 1,
     value: tree.value,
   };
   tree.left = left;
@@ -107,12 +107,11 @@ export function rotateRightLeft/*:: <T> */(tree/*: MutableTree<T> */)/*: void */
 export function balanceLeft/*:: <T> */(tree/*: MutableTree<T> */)/*: void */ {
   const left = tree.left;
   const right = tree.right;
-  const leftSize = (left === null ? 0 : left.size);
-  const rightSize = (right === null ? 0 : right.size);
+  const leftSize = left.size;
+  const rightSize = right.size;
 
   if ((leftSize + rightSize) >= 2 && leftSize > (DELTA * rightSize)) {
-    /*:: invariant(left); */
-    if ((left.right === null ? 0 : left.right.size) < (RATIO * (left.left === null ? 0 : left.left.size))) {
+    if (left.right.size < (RATIO * left.left.size)) {
       rotateRight(tree);
     } else {
       rotateLeftRight(tree);
@@ -123,12 +122,11 @@ export function balanceLeft/*:: <T> */(tree/*: MutableTree<T> */)/*: void */ {
 export function balanceRight/*:: <T> */(tree/*: MutableTree<T> */)/*: void */ {
   const left = tree.left;
   const right = tree.right;
-  const leftSize = (left === null ? 0 : left.size);
-  const rightSize = (right === null ? 0 : right.size);
+  const leftSize = left.size;
+  const rightSize = right.size;
 
   if ((leftSize + rightSize) >= 2 && rightSize > (DELTA * leftSize)) {
-    /*:: invariant(right); */
-    if ((right.left === null ? 0 : right.left.size) < (RATIO * (right.right === null ? 0 : right.right.size))) {
+    if (right.left.size < (RATIO * right.right.size)) {
       rotateLeft(tree);
     } else {
       rotateRightLeft(tree);

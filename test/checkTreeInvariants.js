@@ -6,9 +6,9 @@ import type {ImmutableTree} from '../src/types.js';
 */
 
 function countSize(
-  tree/*: ImmutableTree<mixed> | null */,
+  tree/*: ImmutableTree<mixed> */,
 )/*: number */ {
-  if (tree === null) {
+  if (tree.size === 0) {
     return 0;
   }
   return 1 + countSize(tree.left) + countSize(tree.right);
@@ -17,27 +17,22 @@ function countSize(
 function checkBalance(
   tree/*: ImmutableTree<mixed> */,
 )/*: boolean */ {
-  if (
-    (tree.left === null || tree.left.size === 1) &&
-    (tree.right === null || tree.right.size === 1)
-  ) {
+  if (tree.left.size <= 1 && tree.right.size <= 1) {
     return true;
   }
   /* c8 ignore start */
   return (
-    (tree.left === null ? 0 : tree.left.size) <=
-      (3 * (tree.right === null ? 0 : tree.right.size)) &&
-    (tree.right === null ? 0 : tree.right.size) <=
-      (3 * (tree.left === null ? 0 : tree.left.size))
+    tree.left.size <= (3 * tree.right.size) &&
+    tree.right.size <= (3 * tree.left.size)
   );
   /* c8 ignore stop */
 }
 
 export default function checkTreeInvariants/*:: <T> */(
-  tree/*: ImmutableTree<T> | null */,
+  tree/*: ImmutableTree<T> */,
   cmp/*: (T, T) => number */,
 )/*: boolean */ {
-  if (tree === null) {
+  if (tree.size === 0) {
     return true;
   }
 

@@ -2,14 +2,14 @@ import type {ImmutableTree} from './types';
 import type {InsertConflictHandler} from './update';
 
 export default function insert<T>(
-  tree: ImmutableTree<T> | null,
+  tree: ImmutableTree<T>,
   value: T,
   cmp: (a: T, b: T) => number,
   onConflict?: InsertConflictHandler<T, T>,
 ): ImmutableTree<T>;
 
 type InsertHelper = <T>(
-  tree: ImmutableTree<T> | null,
+  tree: ImmutableTree<T>,
   value: T,
   cmp: (a: T, b: T) => number,
 ) => ImmutableTree<T>;

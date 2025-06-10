@@ -9,6 +9,6 @@ export type ValidateResult<T> =
     };
 
 export default function validate<T>(
-  tree: ImmutableTree<T> | null,
+  tree: ImmutableTree<T>,
   cmp: (a: T, b: T) => number,
 ): ValidateResult<T>;

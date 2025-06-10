@@ -7,6 +7,7 @@ import test from 'node:test';
 import checkTreeInvariants from './checkTreeInvariants.js';
 import compareIntegers from './compareIntegers.js';
 import {
+  EmptyTreeError,
   IndexOutOfRangeError,
   ValueExistsError,
   ValueNotFoundError,
@@ -54,7 +55,7 @@ test('all', function () {
   const numbers = oneToThirtyOne.slice(0);
 
   for (let i = 0; i < 5; i++) {
-    let node/*: ImmutableTree<number> | null */ = null;
+    let node/*: ImmutableTree<number> */ = tree.empty;
 
     for (const num of numbers) {
       node = tree.insert(node, num, compareIntegers);
@@ -73,12 +74,21 @@ test('all', function () {
       'tree is in order (reversed)',
     );
 
-    if (node !== null) {
-      assert.equal(tree.minNode(node).value, 1, 'min node value is 1');
-      assert.equal(tree.maxNode(node).value, 31, 'max node value is 31');
-      assert.equal(tree.minValue(node), 1, 'min value is 1');
-      assert.equal(tree.maxValue(node), 31, 'max value is 31');
-    }
+    assert.throws(
+      () => { tree.minNode/*:: <number> */(tree.empty); },
+      EmptyTreeError,
+      'minNode throws EmptyTreeError',
+    );
+    assert.throws(
+      () => { tree.maxNode/*:: <number> */(tree.empty); },
+      EmptyTreeError,
+      'maxNode throws EmptyTreeError',
+    );
+
+    assert.equal(tree.minNode(node).value, 1, 'min node value is 1');
+    assert.equal(tree.maxNode(node).value, 31, 'max node value is 31');
+    assert.equal(tree.minValue(node), 1, 'min value is 1');
+    assert.equal(tree.maxValue(node), 31, 'max value is 31');
 
     shuffle(numbers);
 
@@ -109,10 +119,10 @@ test('all', function () {
       assert.ok(foundValue === -1, 'removed node is not found');
     }
 
-    assert.ok(node === null, 'tree is empty');
+    assert.ok(node.size === 0, 'tree is empty');
 
     node = tree.remove(node, 0, compareIntegers);
-    assert.ok(node === null, 'tree is still empty');
+    assert.ok(node.size === 0, 'tree is still empty');
   }
 });
 
@@ -125,7 +135,7 @@ test('find/findBy with different value type', function () {
   const xa = {x: 'a'};
   const xb = {x: 'b'};
 
-  let node = null;
+  let node/*: ImmutableTree<{+x: string}> */ = tree.empty;
   node = tree.insert(node, xa, compareStringX);
   node = tree.insert(node, xb, compareStringX);
 
@@ -141,7 +151,7 @@ test('find/findBy with different value type', function () {
 });
 
 test('findNext/findPrev with non-existent values', function () {
-  let node = null;
+  let node/*: ImmutableTree<number> */ = tree.empty;
   node = tree.insert(node, 1, compareIntegers);
   node = tree.insert(node, 3, compareIntegers);
   node = tree.insert(node, 5, compareIntegers);
@@ -177,7 +187,7 @@ test('insertIfNotExists', function () {
     b/*: {+value: number} */,
   )/*: number */ => compareIntegers(a.value, b.value);
 
-  let node/*: ImmutableTree<{+value: number}> | null */ = null;
+  let node/*: ImmutableTree<{+value: number}> */ = tree.empty;
   for (const num of oneToThirtyOne) {
     node = tree.insert(node, {value: num}, cmp, onConflictKeepTreeValue);
 
@@ -195,7 +205,7 @@ test('insertIfNotExists', function () {
   }
   assert.equal(node, finalNode);
 
-  assert.equal(node?.size, 31);
+  assert.equal(node.size, 31);
 });
 
 test('insertOrReplaceIfExists', function () {
@@ -204,7 +214,7 @@ test('insertOrReplaceIfExists', function () {
     b/*: {+value: number} */,
   )/*: number */ => compareIntegers(a.value, b.value);
 
-  let node/*: ImmutableTree<{+value: number}> | null */ = null;
+  let node/*: ImmutableTree<{+value: number}> */ = tree.empty;
   for (const num of oneToThirtyOne) {
     node = tree.insert(node, {value: num}, cmp, onConflictUseGivenValue);
     checkTreeInvariants(node, cmp);
@@ -226,7 +236,7 @@ test('insertOrReplaceIfExists', function () {
     assert.equal(tree.find(newNode2, {value: num}, cmp, null), newValue2);
   }
 
-  assert.equal(node?.size, 31);
+  assert.equal(node.size, 31);
 });
 
 test('insertOrThrowIfExists', function () {
@@ -235,7 +245,7 @@ test('insertOrThrowIfExists', function () {
     b/*: {+value: number} */,
   )/*: number */ => compareIntegers(a.value, b.value);
 
-  let node/*: ImmutableTree<{+value: number}> | null */ = null;
+  let node/*: ImmutableTree<{+value: number}> */ = tree.empty;
   for (const num of oneToThirtyOne) {
     node = tree.insert(node, {value: num}, cmp);
     assert.throws(
@@ -261,17 +271,17 @@ test('insertOrThrowIfExists', function () {
     );
   }
 
-  assert.equal(node?.size, 31);
+  assert.equal(node.size, 31);
 });
 
 test('replacing a node preserves the existing node size', function () {
   assert.equal(
     tree.insertOrReplaceIfExists(
       {
-        left: null,
+        left: tree.empty,
         right: {
-          left: null,
-          right: null,
+          left: tree.empty,
+          right: tree.empty,
           size: 1,
           value: {value: 2},
         },
@@ -286,7 +296,7 @@ test('replacing a node preserves the existing node size', function () {
 });
 
 test('removeIfExists', function () {
-  let node/*: ImmutableTree<number> | null */ = tree.create(1);
+  let node/*: ImmutableTree<number> */ = tree.create(1);
   node = tree.insert(node, 2, compareIntegers);
 
   const origNode = node;
@@ -295,19 +305,19 @@ test('removeIfExists', function () {
   node = tree.remove(node, 3, compareIntegers);
   assert.equal(node, origNode);
   const node2 = tree.removeIfExists(node, 2, compareIntegers);
-  assert.equal(node2?.size, 1);
-  assert.equal(node2?.value, 1);
+  assert.equal(node2.size, 1);
+  assert.equal(node2.value, 1);
   const node3 = tree.remove(node, 2, compareIntegers);
-  assert.equal(node3?.size, 1);
-  assert.equal(node3?.value, 1);
+  assert.equal(node3.size, 1);
+  assert.equal(node3.value, 1);
   const node4 = tree.removeIfExists(node2, 1, compareIntegers);
-  assert.equal(node4, null);
+  assert.equal(node4, tree.empty);
   const node5 = tree.remove(node3, 1, compareIntegers);
-  assert.equal(node5, null);
-  const node6 = tree.removeIfExists(null, 1, compareIntegers);
-  assert.equal(node6, null);
-  const node7 = tree.remove(null, 1, compareIntegers);
-  assert.equal(node7, null);
+  assert.equal(node5, tree.empty);
+  const node6 = tree.removeIfExists(tree.empty, 1, compareIntegers);
+  assert.equal(node6, tree.empty);
+  const node7 = tree.remove(tree.empty, 1, compareIntegers);
+  assert.equal(node7, tree.empty);
 
   node = tree.fromDistinctAscArray(oneToThirtyOne);
 
@@ -316,12 +326,12 @@ test('removeIfExists', function () {
     node = tree.removeIfExists(node, num, compareIntegers);
     checkTreeInvariants(node, compareIntegers);
     assert.equal(tree.find(node, num, compareIntegers, null), null);
-    assert.equal((node?.size ?? 0), --size);
+    assert.equal(node.size, --size);
   }
 });
 
 test('removeOrThrowIfNotExists', function () {
-  let node/*: ImmutableTree<number> | null */ = tree.create(1);
+  let node/*: ImmutableTree<number> */ = tree.create(1);
   assert.throws(
     function () {
       node = tree.removeOrThrowIfNotExists(node, 2, compareIntegers);
@@ -329,13 +339,13 @@ test('removeOrThrowIfNotExists', function () {
     ValueNotFoundError,
     'exception is thrown with removeOrThrowIfNotExists',
   );
-  assert.equal(node?.size, 1);
+  assert.equal(node.size, 1);
   node = tree.removeOrThrowIfNotExists(node, 1, compareIntegers);
-  assert.equal(node, null);
+  assert.equal(node, tree.empty);
 });
 
 test('remove returns the same tree back if there is no value to remove', function () {
-  let node/*: ImmutableTree<number> | null */ = null;
+  let node/*: ImmutableTree<number> */ = tree.empty;
   for (const num of oneToThirtyOne) {
     node = tree.insert(node, num, compareIntegers);
   }
@@ -356,8 +366,8 @@ test('remove returns the same tree back if there is no value to remove', functio
 test('create', function () {
   const node = tree.create(1);
   assert.deepEqual(node, {
-    left: null,
-    right: null,
+    left: tree.empty,
+    right: tree.empty,
     size: 1,
     value: 1,
   });
@@ -410,7 +420,7 @@ test('update', function () {
   const v1 = {key: 1, value: 10};
   const v2 = {key: 2, value: 20};
 
-  let node/*: ImmutableTree<Item> | null */ = tree.create(v1);
+  let node/*: ImmutableTree<Item> */ = tree.create(v1);
 
   node = tree.update(
     node,
@@ -519,7 +529,7 @@ test('onNotFoundThrowError', function () {
   assert.throws(
     () => {
       const node = tree.update/*:: <number, number> */(
-        null,
+        tree.empty,
         1,
         compareIntegers,
         onConflictKeepTreeValue,
@@ -532,24 +542,24 @@ test('onNotFoundThrowError', function () {
 
 test('onNotFoundUseGivenValue', function () {
   const node = tree.update/*:: <number, number> */(
-    null,
+    tree.empty,
     1,
     compareIntegers,
     onConflictKeepTreeValue,
     onNotFoundUseGivenValue,
   );
-  assert.equal(node?.value, 1);
+  assert.equal(node.value, 1);
 });
 
 test('difference', function () {
-  assert.equal(tree.difference(null, null, compareIntegers), null);
+  assert.equal(tree.difference(tree.empty, tree.empty, compareIntegers), tree.empty);
   assert.deepEqual(
-    tree.difference(tree.create(1), null, compareIntegers),
+    tree.difference(tree.create(1), tree.empty, compareIntegers),
     tree.create(1),
   );
   assert.deepEqual(
-    tree.difference(null, tree.create(1), compareIntegers),
-    null,
+    tree.difference(tree.empty, tree.create(1), compareIntegers),
+    tree.empty,
   );
   assert.ok(
     tree.equals(
@@ -558,7 +568,7 @@ test('difference', function () {
         tree.fromDistinctAscArray([1, 2, 3]),
         compareIntegers,
       ),
-      null,
+      tree.empty,
     ),
   );
   assert.ok(
@@ -629,17 +639,17 @@ test('difference', function () {
 
 
 test('equals', function () {
-  let tree1/*: ImmutableTree<number> | null */ = null;
+  let tree1/*: ImmutableTree<number> */ = tree.empty;
   for (const num of oneToThirtyOne) {
     tree1 = tree.insert(tree1, num, compareIntegers);
   }
 
-  let tree2/*: ImmutableTree<number> | null */ = null;
+  let tree2/*: ImmutableTree<number> */ = tree.empty;
   for (const num of oneToThirtyOne.slice(0).reverse()) {
     tree2 = tree.insert(tree2, num, compareIntegers);
   }
 
-  let stringTree/*: ImmutableTree<string> | null */ = null;
+  let stringTree/*: ImmutableTree<string> */ = tree.empty;
   for (const num of oneToThirtyOne) {
     stringTree = tree.insert(
       stringTree,
@@ -657,27 +667,27 @@ test('equals', function () {
   tree2 = tree.remove(tree2, 1, compareIntegers);
   assert.ok(tree.equals(tree1, tree2));
 
-  assert.ok(tree.equals(null, null));
-  assert.ok(!tree.equals(tree1, null));
-  assert.ok(!tree.equals(null, tree1));
+  assert.ok(tree.equals(tree.empty, tree.empty));
+  assert.ok(!tree.equals(tree1, tree.empty));
+  assert.ok(!tree.equals(tree.empty, tree1));
 
   assert.ok(tree.equals(
     {
       left: {
-        left: null,
-        right: null,
+        left: tree.empty,
+        right: tree.empty,
         size: 1,
         value: {num: 1},
       },
-      right: null,
+      right: tree.empty,
       size: 2,
       value: {num: 2},
     },
     {
-      left: null,
+      left: tree.empty,
       right: {
-        left: null,
-        right: null,
+        left: tree.empty,
+        right: tree.empty,
         size: 1,
         value: {num: 2},
       },
@@ -690,14 +700,14 @@ test('equals', function () {
   assert.ok(!tree.equals(
     {
       left: {
-        left: null,
-        right: null,
+        left: tree.empty,
+        right: tree.empty,
         size: 1,
         value: {num: 1},
       },
       right: {
-        left: null,
-        right: null,
+        left: tree.empty,
+        right: tree.empty,
         size: 1,
         value: {num: 3},
       },
@@ -706,14 +716,14 @@ test('equals', function () {
     },
     {
       left: {
-        left: null,
-        right: null,
+        left: tree.empty,
+        right: tree.empty,
         size: 1,
         value: {num: 0},
       },
       right: {
-        left: null,
-        right: null,
+        left: tree.empty,
+        right: tree.empty,
         size: 1,
         value: {num: 2},
       },
@@ -732,7 +742,7 @@ test('fromDistinctAscArray', function () {
 test('map', function () {
   const toString = (x/*: mixed */)/*: string */ => String(x);
 
-  assert.equal(tree.map(null, toString), null);
+  assert.equal(tree.map(tree.empty, toString), tree.empty);
   assert.deepEqual(
     tree.map(
       tree.fromDistinctAscArray(oneToThirtyOne),
@@ -743,7 +753,7 @@ test('map', function () {
 });
 
 test('toArray', function () {
-  assert.deepEqual(tree.toArray/*:: <mixed> */(null).sort(), []);
+  assert.deepEqual(tree.toArray/*:: <mixed> */(tree.empty).sort(), []);
   assert.deepEqual(tree.toArray(tree.create(1)), [1]);
   assert.deepEqual(tree.toArray(tree.fromDistinctAscArray([1, 2, 3])), [1, 2, 3]);
   assert.deepEqual(tree.toArray(tree.fromDistinctAscArray([3, 2, 1])), [3, 2, 1]);
@@ -755,13 +765,13 @@ test('union', function () {
     b/*: {+v: number} */,
   )/*: number */ => compareIntegers(a.v, b.v);
 
-  assert.equal(tree.union(null, null, compareIntegers), null);
+  assert.equal(tree.union(tree.empty, tree.empty, compareIntegers), tree.empty);
   assert.deepEqual(
-    tree.union(tree.create(1), null, compareIntegers),
+    tree.union(tree.create(1), tree.empty, compareIntegers),
     tree.create(1),
   );
   assert.deepEqual(
-    tree.union(null, tree.create(1), compareIntegers),
+    tree.union(tree.empty, tree.create(1), compareIntegers),
     tree.create(1),
   );
   assert.ok(
@@ -875,9 +885,9 @@ test('union', function () {
 });
 
 test('zip', function () {
-  assert.deepEqual(Array.from(tree.zip/*:: <mixed, mixed> */(null, null)), []);
-  assert.deepEqual(Array.from(tree.zip/*:: <number, number> */(tree.create(1), null)), [[1, undefined]]);
-  assert.deepEqual(Array.from(tree.zip/*:: <number, number> */(null, tree.create(1))), [[undefined, 1]]);
+  assert.deepEqual(Array.from(tree.zip/*:: <mixed, mixed> */(tree.empty, tree.empty)), []);
+  assert.deepEqual(Array.from(tree.zip/*:: <number, number> */(tree.create(1), tree.empty)), [[1, undefined]]);
+  assert.deepEqual(Array.from(tree.zip/*:: <number, number> */(tree.empty, tree.create(1))), [[undefined, 1]]);
   assert.deepEqual(
     Array.from(
       tree.zip(
@@ -897,18 +907,18 @@ test('zip', function () {
 test('GHC issue #4242', function () {
   // https://gitlab.haskell.org/ghc/ghc/-/issues/4242
 
-  let node/*: ImmutableTree<number> | null */ = null;
+  let node/*: ImmutableTree<number> */ = tree.empty;
   for (const num of [0, 2, 5, 1, 6, 4, 8, 9, 7, 11, 10, 3]) {
     node = tree.insert(node, num, compareIntegers);
   }
 
-  /*:: invariant(node !== null); */
+  /*:: invariant(node.size !== 0); */
 
   node = tree.remove(node, tree.minValue(node), compareIntegers);
 
   assert.ok(checkTreeInvariants(node, compareIntegers));
 
-  /*:: invariant(node !== null); */
+  /*:: invariant(node.size !== 0); */
 
   node = tree.remove(node, tree.minValue(node), compareIntegers);
 
@@ -917,16 +927,16 @@ test('GHC issue #4242', function () {
 
 test('indexOf', function () {
   let node = tree.fromDistinctAscArray(oneToThirtyOne);
-  assert.equal(tree.indexOf(null, 1, compareIntegers), -1);
+  assert.equal(tree.indexOf(tree.empty, 1, compareIntegers), -1);
   assert.equal(tree.indexOf(node, 0, compareIntegers), -1);
   assert.equal(tree.indexOf(node, 32, compareIntegers), -1);
   assert.equal(
     tree.indexOf(
       {
-        left: null,
+        left: tree.empty,
         right: {
-          left: null,
-          right: null,
+          left: tree.empty,
+          right: tree.empty,
           value: 2,
           size: 1,
         },
@@ -949,7 +959,7 @@ test('indexOf', function () {
 
 test('at', function () {
   const node = tree.fromDistinctAscArray(oneToThirtyOne);
-  /*:: invariant(node !== null); */
+  /*:: invariant(node.size !== 0); */
   assert.throws(
     function () {
       tree.at(tree.create(1), 1);
@@ -1071,17 +1081,17 @@ test('withComparator', function () {
 });
 
 test('validate', function () {
-  assert.ok(tree.validate(null, compareIntegers).valid, 'null tree is valid');
+  assert.ok(tree.validate(tree.empty, compareIntegers).valid, 'null tree is valid');
   assert.ok(tree.validate(tree.create(1), compareIntegers).valid, 'tree of size 1 is valid');
 
   let node/*: ImmutableTree<number> */ = {
     left: {
-      left: null,
-      right: null,
+      left: tree.empty,
+      right: tree.empty,
       value: 2,
       size: 1,
     },
-    right: null,
+    right: tree.empty,
     value: 1,
     size: 2,
   };
@@ -1091,10 +1101,10 @@ test('validate', function () {
   assert.equal(result.tree, node);
 
   node = {
-    left: null,
+    left: tree.empty,
     right: {
-      left: null,
-      right: null,
+      left: tree.empty,
+      right: tree.empty,
       value: 0,
       size: 1,
     },

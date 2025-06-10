@@ -7,8 +7,8 @@ import type {ImmutableTree} from './types.js';
 */
 
 export default function* zip/*:: <T, U> */(
-  t1/*: ImmutableTree<T> | null */,
-  t2/*: ImmutableTree<U> | null */,
+  t1/*: ImmutableTree<T> */,
+  t2/*: ImmutableTree<U> */,
 )/*: Generator<[T | void, U | void], void, void> */ {
   const iter1 = iterate(t1);
   const iter2 = iterate(t2);

@@ -1,16 +1,27 @@
 // @flow strict
 
 /*::
-export type ImmutableTree<+T> = {
-  +left: ImmutableTree<T> | null,
-  +right: ImmutableTree<T> | null,
+export type EmptyImmutableTree = {
+  +left: EmptyImmutableTree,
+  +right: EmptyImmutableTree,
+  +size: 0,
+  +value: void,
+};
+
+export type NonEmptyImmutableTree<+T> = {
+  +left: ImmutableTree<T>,
+  +right: ImmutableTree<T>,
   +size: number,
   +value: T,
 };
 
+export type ImmutableTree<+T> =
+  | EmptyImmutableTree
+  | NonEmptyImmutableTree<T>;
+
 export type MutableTree<T> = {
-  left: ImmutableTree<T> | null,
-  right: ImmutableTree<T> | null,
+  left: ImmutableTree<T>,
+  right: ImmutableTree<T>,
   size: number,
   value: T,
 };
