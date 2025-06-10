@@ -162,17 +162,18 @@ update<Item, number>(
 
 // a "find or insert" implementation:
 
-let item2;
+let item;
 update<Item, number>(
   tree,
   /* key = */ 1,
   compareKeyWithItemKey,
-  (existingItem: Item) => {
-    item2 = existingItem;
+  function onConflict(existingItem: Item) {
+    item = existingItem;
+    return existingItem;
   },
-  (key: number) => {
-    item2 = onNotFoundCreateItemFromKey(key);
-    return item2;
+  function onNotFound(key: number) {
+    item = onNotFoundCreateItemFromKey(key);
+    return item;
   },
 );
 ```
