@@ -9,64 +9,87 @@ tree for JavaScript.
  * Works in Node.js and the browser
  * Flow and TypeScript definitions included
 
+All API functions are pure and side‑effect free; the tree structure is
+treated as immutable and a structurally‑shared copy is returned when
+modifications are required.
+
 ## Installation
 
-This software is released under the [MIT license](LICENSE).
+This software is released under the
+[MIT license](https://github.com/mwiencek/weight-balanced-tree/blob/master/LICENSE).
 
 It's published on npm as [weight-balanced-tree](https://www.npmjs.com/package/weight-balanced-tree),
-so you can install it using `yarn` or `npm`.
+
+```sh
+npm install weight-balanced-tree
+
+# or using yarn
+yarn add weight-balanced-tree
+```
+
+```TypeScript
+import * as tree from 'weight-balanced-tree';
+
+// or import functions directly
+import insert from 'weight-balanced-tree/insert';
+```
 
 ## API
 
-To create a tree, see `create`, `insert`, or `fromDistinctAscArray` below.
+Many functions of this library require a comparator `cmp`, which
+defines the ordering of the tree. It works in the
+same way as the [comparator passed to `Array.prototype.sort`](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Array/sort#comparefn).
+Obviously, the comparator should be idempotent and behave consistently for a
+particular tree, otherwise the tree can become invalid.
 
-An empty tree is represented by `empty`.
+Having to pass `cmp` to many functions can be repetitive, so an (optional)
+[withComparator()](#withComparator) utility exists to create a wrapper
+around many API functions. However, that loses some flexibility in places
+like [update()](#update) and [find()](#find), which would otherwise support
+locating values by a different `key` of type `K`.
 
-Although there's only one datum stored per node, for maps you can store a
-`[key, value]` tuple, or store `key` directly on `value` if it's an object.
+### empty
 
+```TypeScript
+const empty: EmptyImmutableTree;
 ```
-type EmptyImmutableTree = {
-  +left: EmptyImmutableTree,
-  +right: EmptyImmutableTree,
-  +size: 0,
-  +value: void,
-};
 
-type NonEmptyImmutableTree<+T> = {
-  +left: ImmutableTree<T>,
-  +right: ImmutableTree<T>,
-  +size: number,
-  +value: T,
-};
+The empty tree.
 
-type ImmutableTree<+T> =
-  | EmptyImmutableTree
-  | NonEmptyImmutableTree<T>;
+### create()
 
+```TypeScript
+function create<T>(value: T): ImmutableTree<T>;
+```
+
+Creates a tree of size 1 containing `value`.
+
+### fromDistinctAscArray()
+
+```TypeScript
+function fromDistinctAscArray<T>(
+  array: $ReadOnlyArray<T>,
+): ImmutableTree<T>;
+```
+
+Constructs a new weight-balanced tree from `array`. `array` must be sorted
+and contain only distinct values. (This is faster than building the tree one
+value at a time with [insert()](#insert).)
+
+`fromDistinctAscArray` will create an *invalid* tree if `array` is not
+sorted or contains duplicate values. You can check if a tree is valid using
+[validate()](#validate).
+
+### update()
+
+```TypeScript
 type InsertConflictHandler<T, K> =
   (existingTreeValue: T, key: K) => T;
 
 type InsertNotFoundHandler<T, K> =
-  (key: T) => T;
+  (key: K) => T;
 
-type ValidateResult<+T> =
-  | {+valid: true}
-  | {
-      +valid: false,
-      +tree: ImmutableTree<T>,
-      +subtree: 'left' | 'right',
-    };
-```
-
-### size
-
-How many values are contained in the tree.
-
-### update()
-
-```
-update<T, K>(
+function update<T, K>(
     tree: ImmutableTree<T>,
     key: K,
     cmp: (key: K, treeValue: T) => number,
@@ -75,113 +98,98 @@ update<T, K>(
 ): ImmutableTree<T>;
 ```
 
-Updates the value in `tree` found with `key`.  This is a generalized way of
-updating the tree; for a simpler method of inserting values, see `insert`
-(which calls `update` under the hood).
+A flexible primitive that can both insert and replace values in `tree`.
 
-`update` is particularly convenient where you're using the tree as a map and
-the keys are properties of the items being mapped.
+`key` is located using the comparator `cmp`, which receives the same `key`
+as its first argument, and a value of type `T` from `tree` as its second
+argument.
 
-The `cmp` (comparator) function is used to order the values.  It receives
-`key` as its first argument, and a value of type `T` from `tree` as its
-second argument.  The behavior should match that of `Array.prototype.sort`'s
-`compareFunction`; the only difference is that `K` and `T` can be different
-types.
+ * If `key` exists, `onConflict` is expected to return a final value to
+   live at that position. It receives the existing tree value as its first
+   argument, and `key` as its second argument.
 
-Many other functions of this library require `cmp` in order to navigate the
-tree; obviously, `cmp` should be idempotent and behave consistently for a
-particular tree, otherwise the tree can become invalid.
+   The returned value must have the same relative position in the tree as
+   before, otherwise a `ValueOrderError` is thrown.
 
-`onConflict` allows you to configure what happens when `key` already exists in
-the tree.  It receives the existing tree value as its first argument, and the
-`key` passed to `update` as its second argument.
+   If you return `existingTreeValue` from `onConflict`, `update` will
+   return the same `tree` reference back. `Object.is` is used to determine
+   value equality.
 
-`onConflict` is expected to return a final value to be inserted, or throw an
-error if the value shouldn't exist.  This allows you to merge both values in
-some way if needed.  However, the returned value must have the same order or
-position in the tree as before (otherwise a `ValueOrderError` is thrown).
+   There are several predefined exports in
+   [`weight-balanced-tree/update`](https://github.com/mwiencek/weight-balanced-tree/blob/master/src/update.js)
+   that can be used for `onConflict`:
 
-If you return `existingTreeValue` from `onConflict`, `update` will return the
-same `tree` reference back.  `Object.is` is used to determine if the value
-you return is the same as `existingTreeValue`.
+    * `onConflictThrowError`, which throws `ValueExistsError`.
+    * `onConflictKeepTreeValue`, which returns the existing tree value.
+    * `onConflictUseGivenValue`, which returns `key`. (This is only usable
+      in cases where `K` is a subtype of `T`.)
 
-There are several exports in [`weight-balanced-tree/update`](src/update.js)
-that can be used for `onConflict`:
+ * If `key` doesn't exist, `onNotFound` is invoked to lazily create or
+   reject the missing value. It only receives one argument: the `key` passed
+   to `update`. Like `onConflict`, it's expected to return a value to be
+   inserted or to throw an error.
 
- * `onConflictThrowError`, which throws `ValueExistsError`.
- * `onConflictKeepTreeValue`, which just returns the existing tree value back
-   unmodified.  In this case, `insert` will also return the same tree
-   reference back.
- * `onConflictUseGivenValue`, which replaces the existing tree value with the
-   value given to `update`.
+   The following predefined exports in `weight-balanced-tree/update` can be
+   used for `onNotFound`:
 
-`onNotFound` executes when `key` is not found in the tree.  It only receives
-one argument, the `key` you passed to `update`.  Like `onConflict`, you are
-expected to return a final value of type `T` to be inserted.
+    * `onNotFoundUseGivenValue`, which returns `key`. (This is only usable
+      in cases where `K` is a subtype of `T`.)
+    * `onNotFoundDoNothing`, which causes `update` to perform no insertion
+      and to return the same `tree` reference back.
+    * `onNotFoundThrowError`, which throws a `ValueNotFoundError`.
 
-`onNotFound` is useful in at least a couple scenarios:
+`K` and `T` can be different types. That's convenient when using the tree
+as a map:
 
-  * You want to create the value to insert lazily, only if it doesn't exist.
-  * You want to throw an error if the value doesn't exist (because you expect
-    to replace it).
+```TypeScript
+const cmp = (key1, [key2]) => key1 - key2;
 
-The following exports in [`weight-balanced-tree/update`](src/update.js)
-can be used for `onNotFound` instead of defining your own:
+// key = 1, value = 0
+let node = tree.create([1, 0]);
 
- * `onNotFoundUseGivenValue`, which is what `insert` and all associated
-   helpers default to.  Note that the given value in this case is the `key`,
-   so this only works in cases where `K` is a subtype of `T`.
- * `onNotFoundDoNothing`, which causes `update` to do nothing and return the
-   same `tree` reference back if the key doesn't exist.
- * `onNotFoundThrowError`, which throws a `ValueNotFoundError` if the key
-   doesn't exist.
+// increments the value stored at key 1, or initializes it to 0
+node = tree.update(node, 1, cmp,
+  /* onConflict: */ (currentValue, key) => [key, currentValue + 1],
+  /* onNotFound: */ (key) => [key, 0],
+);
+```
 
-Here's an example of sorting/mapping objects by a simple key property and
-lazily creating them:
+And here's a "find or insert" implementation:
 
 ```TypeScript
 interface Item {
   readonly key: number;
+  readonly value: string;
 }
 
 function compareKeyWithItemKey(key: number, item: Item): number {
   return key - item.key;
 }
 
-function onNotFoundCreateItemFromKey(key: number): Item {
-  return {key};
+function findOrInsert(tree, key) {
+  let item;
+  const newTree = update<Item, number>(
+    tree, key,
+    compareKeyWithItemKey,
+    (existingItem: Item) => {
+      item = existingItem;
+      return existingItem;
+    },
+    function onNotFound(key: number) {
+      item = {key, value: 'initialValue'};
+      return item;
+    },
+  );
+  return [newTree, item];
 }
-
-update<Item, number>(
-  tree,
-  /* key = */ 1,
-  compareKeyWithItemKey,
-  onConflictThrowError,
-  onNotFoundCreateItemFromKey,
-);
-
-// a "find or insert" implementation:
-
-let item;
-update<Item, number>(
-  tree,
-  /* key = */ 1,
-  compareKeyWithItemKey,
-  function onConflict(existingItem: Item) {
-    item = existingItem;
-    return existingItem;
-  },
-  function onNotFound(key: number) {
-    item = onNotFoundCreateItemFromKey(key);
-    return item;
-  },
-);
 ```
+
+For simpler insertion semantics, see [insert()](#insert) below.
 
 ### insert()
 
-```
-insert<T>(
+```TypeScript
+function insert<T>(
     tree: ImmutableTree<T>,
     value: T,
     cmp: (T, T) => number,
@@ -189,17 +197,18 @@ insert<T>(
 ): NonEmptyImmutableTree<T>;
 ```
 
-Returns a new version of `tree` with `value` inserted.  This is a more
-specific version of `update` that only operates on the value type `T`.
+Returns a new version of `tree` with `value` inserted. This is a more
+specific version of [update()](#update) that only operates on the value
+type `T`.
 
-`cmp` is the same as with `update`, except the first argument received is the
-`value` you passed, and both arguments are of type `T`.
+`cmp` is the same as with `update`, except the first argument received
+is the `value` you passed, and both arguments are of type `T`.
 
 `onConflict` is also the same as with `update`, but here it defaults to
 `onConflictThrowError` if not specified.
 
-There are some helper functions available that call `insert` with different
-values of `onConflict` for you:
+There are also some additional exports available that call `insert` with
+different values of `onConflict` for you:
 
  * `insertIfNotExists` (passes `onConflictKeepTreeValue`)
  * `insertOrReplaceIfExists` (passes `onConflictUseGivenValue`)
@@ -208,8 +217,8 @@ values of `onConflict` for you:
 
 ### remove()
 
-```
-remove<T>(
+```TypeScript
+function remove<T>(
     tree: ImmutableTree<T>,
     value: T,
     cmp: (T, T) => number,
@@ -223,20 +232,22 @@ back.
 
 If this was the last value in `tree`, `empty` is returned.
 
-The `cmp` (comparator) function is the same as used for `insert`.
+The `cmp` function is the same one used for `insert`.
 
 `removeIfExists` is an alias of `remove`.
 
-### removeOrThrowIfNotExists
+### removeOrThrowIfNotExists()
 
-Like `remove`, but throws an error if `value` does not exist in the tree.
+Like [remove()](#remove), but throws an error if `value` does not exist
+in the tree.
 
-This simply checks if the tree returned from `remove` is the same reference.
+This simply checks if the tree returned from `remove` is the same
+reference.
 
 ### equals()
 
-```
-equals<T, U = T>(
+```TypeScript
+function equals<T, U = T>(
   a: ImmutableTree<T>,
   b: ImmutableTree<U>,
   isEqual?: (a: T, b: U) => boolean,
@@ -249,12 +260,13 @@ Returns `true` if two trees contain the same values in the same order, or
 This works by zipping the trees' values together, and passing each pair of
 values to `isEqual`.
 
-`isEqual` is optional.  If not provided, it defaults to `Object.is`.
+`isEqual` is optional. If not provided, it defaults to
+[`Object.is`](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object/is).
 
 ### find()
 
-```
-find<T, K = T, D = T>(
+```TypeScript
+function find<T, K = T, D = T>(
   tree: ImmutableTree<T>,
   key: K,
   cmp: (a: K, b: T) => number,
@@ -270,8 +282,8 @@ Finds a value in `tree` using the given `key` and returns it, or
 
 ### findBy()
 
-```
-findBy<T, D = T>(
+```TypeScript
+function findBy<T, D = T>(
   tree: ImmutableTree<T>,
   cmp: (treeValue: T) => number,
   defaultValue: D,
@@ -286,8 +298,8 @@ static key.
 
 ### findNext()
 
-```
-findNext<T, K = T, D = T>(
+```TypeScript
+function findNext<T, K = T, D = T>(
   tree: ImmutableTree<T>,
   key: K,
   cmp: (a: K, b: T) => number,
@@ -303,8 +315,8 @@ value from 2 is 3.
 
 ### findPrev()
 
-```
-findPrev<T, K = T, D = T>(
+```TypeScript
+function findPrev<T, K = T, D = T>(
   tree: ImmutableTree<T>,
   key: K,
   cmp: (a: K, b: T) => number,
@@ -318,26 +330,10 @@ immediately before it, or `defaultValue` if there is no such value.
 `key` does not have to be found in the tree: if a set has 1 & 3, the previous
 value from 2 is 1.
 
-### fromDistinctAscArray()
-
-```
-fromDistinctAscArray<T>(
-  array: $ReadOnlyArray<T>,
-): ImmutableTree<T>;
-```
-
-If `array` is sorted and contains only unique values, then this returns a new,
-valid, and balanced tree with the values from `array`.  (This is faster than
-building the tree value-by-value with `insert`.)
-
-If `array` is not sorted or contains duplicate values, then this returns an
-invalid tree.  (Do not do this.)  You can check if a tree is valid using
-`validate(tree, cmp)`.
-
 ### validate()
 
-```
-validate<T>(
+```TypeScript
+function validate<T>(
   tree: ImmutableTree<T>,
   cmp: (a: T, b: T) => number,
 ): ValidateResult<T>;
@@ -349,8 +345,8 @@ value, and all right subtrees values are greater than the parent value.
 
 ### indexOf()
 
-```
-indexOf<T, K = T>(
+```TypeScript
+function indexOf<T, K = T>(
   tree: ImmutableTree<T>,
   key: K,
   cmp: (a: K, b: T) => number,
@@ -361,39 +357,41 @@ Returns the position of `key` in `tree`, or `-1` if not found.
 
 ### at()
 
-```
-at<T>(
+```TypeScript
+function at<T>(
   tree: ImmutableTree<T>,
   index: number,
 ): T;
 ```
 
-Returns the value positioned at (0-based) `index` in `tree`. Negative indices retrieve values from the end.
+Returns the value positioned at (0-based) `index` in `tree`. Negative indices
+retrieve values from the end.
 
-This is equivalent to `toArray(tree)[index]`, but doesn't create an intermediary array, and locates `index` in `O(log n)`.
+This is equivalent to `toArray(tree)[index]`, but doesn't create an
+intermediary array, and locates `index` in `O(log n)`.
 
 An out-of-bounds `index` will throw `IndexOutOfRangeError`.
 
 ### iterate()
 
-```
-iterate<T>(tree: ImmutableTree<T>): Generator<T, void, void>;
+```TypeScript
+function iterate<T>(tree: ImmutableTree<T>): Generator<T, void, void>;
 ```
 
 Returns a JS iterator that traverses the values of the tree in order.
 
 ### reverseIterate()
 
-```
-reverseIterate<T>(tree: ImmutableTree<T>): Generator<T, void, void>;
+```TypeScript
+function reverseIterate<T>(tree: ImmutableTree<T>): Generator<T, void, void>;
 ```
 
 Returns a JS iterator that traverses the values of the tree in reverse order.
 
 ### map()
 
-```
-map<T, U>(tree: ImmutableTree<T>, mapper: (T) => U): ImmutableTree<U>;
+```TypeScript
+function map<T, U>(tree: ImmutableTree<T>, mapper: (T) => U): ImmutableTree<U>;
 ```
 
 Returns a new tree with every value passed through `mapper`.
@@ -410,16 +408,16 @@ const stringTree = map<number, string>(
 
 ### minNode()
 
-```
-minNode<T>(tree: ImmutableTree<T>): NonEmptyImmutableTree<T>;
+```TypeScript
+function minNode<T>(tree: ImmutableTree<T>): NonEmptyImmutableTree<T>;
 ```
 
 Returns the "smallest" (left-most) node in `tree`.
 
 ### minValue()
 
-```
-minValue<T>(tree: ImmutableTree<T>): T;
+```TypeScript
+function minValue<T>(tree: ImmutableTree<T>): T;
 ```
 
 Returns the "smallest" (left-most) value in `tree`.
@@ -428,16 +426,16 @@ This is equivalent to `minNode(tree).value`.
 
 ### maxNode()
 
-```
-maxNode<T>(tree: ImmutableTree<T>): NonEmptyImmutableTree<T>;
+```TypeScript
+function maxNode<T>(tree: ImmutableTree<T>): NonEmptyImmutableTree<T>;
 ```
 
 Returns the "largest" (right-most) node in `tree`.
 
 ### maxValue()
 
-```
-maxValue<T>(tree: ImmutableTree<T>): T;
+```TypeScript
+function maxValue<T>(tree: ImmutableTree<T>): T;
 ```
 
 Returns the "largest" (right-most) value in `tree`.
@@ -446,8 +444,8 @@ This is equivalent to `maxNode(tree).value`.
 
 ### toArray()
 
-```
-toArray<T>(
+```TypeScript
+function toArray<T>(
   tree: ImmutableTree<T>,
 ): Array<T>;
 ```
@@ -456,8 +454,8 @@ Flattens `tree` into an array of values.
 
 ### union()
 
-```
-union<T>(
+```TypeScript
+function union<T>(
   t1: ImmutableTree<T>,
   t2: ImmutableTree<T>,
   cmp: (a: T, b: T) => number,
@@ -465,16 +463,16 @@ union<T>(
 ): ImmutableTree<T>;
 ```
 
-Merges two trees together using the comparator `cmp`.  `onConflict` handles
-the case where an equivalent value appears in both trees, and is expected to
-return the final value to use in the union (though it must have the same
-relative sort order as `v1` and `v2`).  If not specified, by default `union`
-will prefer values in `t2` when resolving conflicts.
+Merges two trees together using the comparator `cmp`. `onConflict`
+handles the case where an equivalent value appears in both trees, and is
+expected to return the final value to use in the union (though it must have
+the same relative sort order as `v1` and `v2`). If not specified, by default
+`union` will prefer values in `t2` when resolving conflicts.
 
 ### difference()
 
-```
-difference<T>(
+```TypeScript
+function difference<T>(
   t1: ImmutableTree<T>,
   t2: ImmutableTree<T>,
   cmp: (a: T, b: T) => number,
@@ -486,8 +484,8 @@ comparator `cmp`.
 
 ### zip()
 
-```
-zip<T, U>(
+```TypeScript
+function zip<T, U>(
   t1: ImmutableTree<T>,
   t2: ImmutableTree<U>,
 ): Generator<[T | void, U | void], void, void>;
@@ -495,7 +493,7 @@ zip<T, U>(
 
 Zips two trees together, returning an iterable of tuples: the first tuple
 contains the first values of both trees, the second tuple contains the second
-values of both trees, and so on.  If the trees are of different sizes,
+values of both trees, and so on. If the trees are of different sizes,
 `undefined` is used within a tuple where a corresponding value is missing.
 
 ### withComparator()
@@ -514,8 +512,10 @@ Any function above that accepts a `cmp` argument is available.
 ## Performance
 
 Performance will largely depend on the size of your data and the cost of your
-comparator function.  [test/benchmark.js](test/benchmark.js) tests an ASCII table with
-uniform-length string keys and a simple string comparator function.
+comparator function.
+[test/benchmark.js](https://github.com/mwiencek/weight-balanced-tree/blob/master/test/benchmark.js)
+tests an ASCII table with uniform-length string keys and a simple string
+comparator function.
 
 Comparisons against [Immutable.List](https://immutable-js.com/) and plain
 arrays are included for insertions and removals.
@@ -537,7 +537,7 @@ node --test test/monkey.js
 
 ## Changelog
 
-See [CHANGELOG.md](CHANGELOG.md).
+See [CHANGELOG.md](https://github.com/mwiencek/weight-balanced-tree/blob/master/CHANGELOG.md).
 
 ## References
 
