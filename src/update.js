@@ -23,11 +23,19 @@ export function onConflictThrowError()/*: empty */ {
   throw new ValueExistsError();
 }
 
-export const onConflictKeepTreeValue =
-  /*:: <T, K> */(treeValue/*: T */, givenValue/*: K */)/*: T */ => treeValue;
+export function onConflictKeepTreeValue/*:: <T, K> */(
+  treeValue/*: T */,
+  givenValue/*: K */,
+)/*: T */ {
+  return treeValue;
+}
 
-export const onConflictUseGivenValue =
-  /*:: <T> */(treeValue/*: T */, givenValue/*: T */)/*: T */ => givenValue;
+export function onConflictUseGivenValue/*:: <T> */(
+  treeValue/*: T */,
+  givenValue/*: T */,
+)/*: T */ {
+  return givenValue;
+}
 
 const DO_NOTHING_SYMBOL = Symbol('DO_NOTHING');
 
