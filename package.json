@@ -108,9 +108,9 @@
       "types": "./src/update.d.ts",
       "default": "./src/update.js"
     },
-    "./withComparator": {
-      "types": "./src/withComparator.d.ts",
-      "default": "./src/withComparator.js"
+    "./withKeyComparator": {
+      "types": "./src/withKeyComparator.d.ts",
+      "default": "./src/withKeyComparator.js"
     },
     "./zip": {
       "types": "./src/zip.d.ts",

@@ -5,9 +5,12 @@ import type {
 } from './update';
 import type {ValidateResult} from './validate';
 
-export default function withComparator<T>(
-  cmp: (a: T, b: T) => number,
+export default function withKeyComparator<T, K>(
+  cmpKeys: (a: K, b: K) => number,
+  getKeyFromValue: (value: T) => K,
 ): {
+  cmp(a: T, b: T): number,
+
   difference(
     t1: ImmutableTree<T>,
     t2: ImmutableTree<T>,
@@ -15,25 +18,25 @@ export default function withComparator<T>(
 
   find<D = T>(
     tree: ImmutableTree<T>,
-    value: T,
+    key: K,
     defaultValue: D,
   ): T | D,
 
   findNext<D = T>(
     tree: ImmutableTree<T>,
-    value: T,
+    key: K,
     defaultValue: D,
   ): T | D,
 
   findPrev<D = T>(
     tree: ImmutableTree<T>,
-    value: T,
+    key: K,
     defaultValue: D,
   ): T | D,
 
   indexOf(
     tree: ImmutableTree<T>,
-    value: T,
+    key: K,
   ): number,
 
   insert(
@@ -80,7 +83,7 @@ export default function withComparator<T>(
 
   update(
     tree: ImmutableTree<T>,
-    value: T,
+    key: K,
     onConflict: InsertConflictHandler<T, T>,
     onNotFound: InsertNotFoundHandler<T, T>,
   ): ImmutableTree<T>,

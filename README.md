@@ -43,7 +43,7 @@ Obviously, the comparator should be idempotent and behave consistently for a
 particular tree, otherwise the tree can become invalid.
 
 Having to pass `cmp` to many functions can be repetitive, so an (optional)
-[withComparator()](#withComparator) utility exists to create a wrapper
+[withKeyComparator()](#withKeyComparator) utility exists to create a wrapper
 around many API functions. However, that loses some flexibility in places
 like [update()](#update) and [find()](#find), which would otherwise support
 locating values by a different `key` of type `K`.
@@ -496,15 +496,29 @@ contains the first values of both trees, the second tuple contains the second
 values of both trees, and so on. If the trees are of different sizes,
 `undefined` is used within a tuple where a corresponding value is missing.
 
-### withComparator()
+### withKeyComparator()
 
 Returns an object with methods that have the passed `comparator` pre-bound.
 
+The second argument is invoked on tree values before passing them to the
+comparator.
+
 ```TypeScript
-const integerTree = withComparator(compareIntegers);
+const integerTree = withKeyComparator(
+  compareIntegers,
+  identity,
+);
 
 let node = integerTree.insert(tree.create(1), 2);
 node = integerTree.remove(node, 1);
+
+const map = withKeyComparator(
+  compareIntegers,
+  ([key]) => key,
+);
+
+let node = map.insert(tree.empty, [1, 'A']);
+node = map.find(node, 1);
 ```
 
 Any function above that accepts a `cmp` argument is available.

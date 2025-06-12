@@ -20,14 +20,19 @@ const compareKeys = (a, b) => {
   return a === b ? 0 : (a < b ? -1 : 1);
 };
 
-const compareKeyValuePairs = (a, b) => {
-  return compareKeys(a[0], b[0]);
+const getKeyFromTuple = (keyValuePair) => {
+  return keyValuePair[0];
 };
+
+const treeMap = wbt.withKeyComparator(
+  compareKeys,
+  getKeyFromTuple,
+);
 
 function buildWeightBalancedTree(data) {
   let map = wbt.empty;
   for (const keyValuePair of data) {
-    map = wbt.insert(map, keyValuePair, compareKeyValuePairs);
+    map = treeMap.insert(map, keyValuePair);
   }
   return map;
 }
@@ -52,7 +57,7 @@ const mapDataCopy1 = mapData.slice(0);
 
 const createSuite = new Benchmark.Suite('Map create')
   .add('weight-balanced-tree (fromDistinctAscArray)', function () {
-    mapDataCopy1.sort(compareKeyValuePairs);
+    mapDataCopy1.sort(treeMap.cmp);
     wbt.fromDistinctAscArray(mapDataCopy1);
   })
   .add('Immutable.Map (constructor)', function () {
@@ -80,10 +85,7 @@ const moriHashMap = buildMoriHashMap(mapData);
 const getSuite = new Benchmark.Suite('Map get')
   .add('weight-balanced-tree (findBy)', function () {
     for (const [key] of mapData) {
-      wbt.findBy(
-        weightBalancedTree,
-        (treeValue) => compareKeys(key, treeValue[0]),
-      );
+      treeMap.find(weightBalancedTree, key);
     }
   })
   .add('Immutable.Map (get)', function () {
@@ -126,7 +128,7 @@ const moriHashMapHalf2 = buildMoriHashMap(mapDataHalf2);
 
 const mergeSuite = new Benchmark.Suite('Map merge')
   .add('weight-balanced-tree (union)', function () {
-    wbt.union(weightBalancedTreeHalf1, weightBalancedTreeHalf2, compareKeyValuePairs);
+    treeMap.union(weightBalancedTreeHalf1, weightBalancedTreeHalf2);
   })
   .add('Immutable.Map (merge)', function () {
     immutableJsMapHalf1.merge(immutableJsMapHalf2);

@@ -22,7 +22,7 @@ import {
   onNotFoundThrowError,
   onNotFoundUseGivenValue,
 } from '../src/update.js';
-import withComparator from '../src/withComparator.js';
+import withKeyComparator from '../src/withKeyComparator.js';
 /*::
 import invariant from '../src/invariant.js';
 import type {ImmutableTree} from '../src/types.js';
@@ -980,8 +980,11 @@ test('at', function () {
   }
 });
 
-test('withComparator', function () {
-  const integerTree = withComparator(compareIntegers);
+test('withKeyComparator', function () {
+  const integerTree = withKeyComparator(
+    compareIntegers,
+    (x/*: number */) => x,
+  );
 
   assert.ok(
     tree.equals(

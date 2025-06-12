@@ -52,15 +52,17 @@ import update, {
 import validate, {
   type ValidateResult,
 } from '../src/validate';
-import withComparator from '../src/withComparator';
+import withKeyComparator from '../src/withKeyComparator';
 import type {
   InsertConflictHandler,
   InsertNotFoundHandler,
 } from '../src/update';
 import zip from '../src/zip';
 
+declare type NSTuple = [number, string];
 declare const stringTree: types.ImmutableTree<string>;
 declare const numberTree: types.ImmutableTree<number>;
+declare const numberStringMapTree: types.ImmutableTree<NSTuple>;
 
 declare function areStringsEqual(a: string, b: string): boolean;
 declare function areNumbersEqual(a: number, b: number): boolean;
@@ -69,6 +71,7 @@ declare function cmpStrings(a: string, b: string): number;
 declare function cmpNumbers(a: number, b: number): number;
 declare function cmpNullableNumbers(a: number | null, b: number | null): number;
 declare function cmpNumberAndString(a: number, b: string): number;
+declare function getNumberKeyFromTuple(tuple: NSTuple): number;
 declare function toString(num: number): string;
 
 // Basic usage
@@ -178,28 +181,28 @@ expectAssignable<Error>(new ValueExistsError('a'));
 expectAssignable<Error>(new ValueNotFoundError('a'));
 expectAssignable<Error>(new ValueOrderError('a', 'b'));
 
-// withComparator
-const numberTreeWrapper = withComparator(cmpNumbers);
-expectType<types.ImmutableTree<number>>(numberTreeWrapper.difference(numberTree, empty));
-expectType<number>(numberTreeWrapper.find(numberTree, 0, -1));
-expectType<number | string>(numberTreeWrapper.find<string>(numberTree, 0, ''));
-expectType<number>(numberTreeWrapper.findNext(numberTree, 0, -1));
-expectType<number | string>(numberTreeWrapper.findNext<string>(numberTree, 0, ''));
-expectType<number>(numberTreeWrapper.findPrev(numberTree, 1, -1));
-expectType<number | string>(numberTreeWrapper.findPrev<string>(numberTree, 1, ''));
-expectType<number>(numberTreeWrapper.indexOf(numberTree, 1));
-expectType<types.ImmutableTree<number>>(numberTreeWrapper.insert(numberTree, 1));
-expectType<types.ImmutableTree<number>>(numberTreeWrapper.insert(numberTree, 1, onConflictThrowError));
-expectType<types.ImmutableTree<number>>(numberTreeWrapper.insertIfNotExists(numberTree, 1));
-expectType<types.ImmutableTree<number>>(numberTreeWrapper.insertOrReplaceIfExists(numberTree, 1));
-expectType<types.ImmutableTree<number>>(numberTreeWrapper.insertOrThrowIfExists(numberTree, 1));
-expectType<types.ImmutableTree<number>>(numberTreeWrapper.remove(numberTree, 1));
-expectType<types.ImmutableTree<number>>(numberTreeWrapper.removeIfExists(numberTree, 1));
-expectType<types.ImmutableTree<number>>(numberTreeWrapper.removeOrThrowIfNotExists(numberTree, 1));
-expectType<types.ImmutableTree<number>>(numberTreeWrapper.union(numberTree, numberTree));
-expectType<types.ImmutableTree<number>>(numberTreeWrapper.union(numberTree, numberTree, onConflictThrowError));
-expectType<types.ImmutableTree<number>>(numberTreeWrapper.update(numberTree, 1, onConflictThrowError, onNotFoundUseGivenValue));
-expectType<ValidateResult<number>>(numberTreeWrapper.validate(numberTree));
+// withKeyComparator
+const mapTreeWrapper = withKeyComparator<NSTuple, number>(cmpNumbers, getNumberKeyFromTuple);
+expectType<types.ImmutableTree<NSTuple>>(mapTreeWrapper.difference(numberStringMapTree, empty));
+expectType<NSTuple>(mapTreeWrapper.find(numberStringMapTree, 0, [0, ''] as NSTuple));
+expectType<NSTuple | string>(mapTreeWrapper.find<string>(numberStringMapTree, 0, ''));
+expectType<NSTuple>(mapTreeWrapper.findNext(numberStringMapTree, 0, [0, ''] as NSTuple));
+expectType<NSTuple | string>(mapTreeWrapper.findNext<string>(numberStringMapTree, 0, ''));
+expectType<NSTuple>(mapTreeWrapper.findPrev(numberStringMapTree, 1, [0, ''] as NSTuple));
+expectType<NSTuple | string>(mapTreeWrapper.findPrev<string>(numberStringMapTree, 1, ''));
+expectType<number>(mapTreeWrapper.indexOf(numberStringMapTree, 0));
+expectType<types.ImmutableTree<NSTuple>>(mapTreeWrapper.insert(numberStringMapTree, [0, ''] as NSTuple));
+expectType<types.ImmutableTree<NSTuple>>(mapTreeWrapper.insert(numberStringMapTree, [0, ''] as NSTuple, onConflictThrowError));
+expectType<types.ImmutableTree<NSTuple>>(mapTreeWrapper.insertIfNotExists(numberStringMapTree, [0, ''] as NSTuple));
+expectType<types.ImmutableTree<NSTuple>>(mapTreeWrapper.insertOrReplaceIfExists(numberStringMapTree, [0, ''] as NSTuple));
+expectType<types.ImmutableTree<NSTuple>>(mapTreeWrapper.insertOrThrowIfExists(numberStringMapTree, [0, ''] as NSTuple));
+expectType<types.ImmutableTree<NSTuple>>(mapTreeWrapper.remove(numberStringMapTree, [0, ''] as NSTuple));
+expectType<types.ImmutableTree<NSTuple>>(mapTreeWrapper.removeIfExists(numberStringMapTree, [0, ''] as NSTuple));
+expectType<types.ImmutableTree<NSTuple>>(mapTreeWrapper.removeOrThrowIfNotExists(numberStringMapTree, [0, ''] as NSTuple));
+expectType<types.ImmutableTree<NSTuple>>(mapTreeWrapper.union(numberStringMapTree, numberStringMapTree));
+expectType<types.ImmutableTree<NSTuple>>(mapTreeWrapper.union(numberStringMapTree, numberStringMapTree, onConflictThrowError));
+expectType<types.ImmutableTree<NSTuple>>(mapTreeWrapper.update(numberStringMapTree, 1, onConflictThrowError, onNotFoundUseGivenValue));
+expectType<ValidateResult<NSTuple>>(mapTreeWrapper.validate(numberStringMapTree));
 
 expectType<typeof at>(wbt.at);
 expectType<typeof setBalancingParameters>(wbt.setBalancingParameters);
@@ -229,5 +232,5 @@ expectType<typeof toArray>(wbt.toArray);
 expectType<typeof union>(wbt.union);
 expectType<typeof update>(wbt.update);
 expectType<typeof validate>(wbt.validate);
-expectType<typeof withComparator>(wbt.withComparator);
+expectType<typeof withKeyComparator>(wbt.withKeyComparator);
 expectType<typeof zip>(wbt.zip);

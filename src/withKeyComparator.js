@@ -26,9 +26,12 @@ import type {
 import type {ValidateResult} from './validate.js';
 */
 
-export default function withComparator/*:: <T> */(
-  cmp/*: (a: T, b: T) => number */,
+export default function withKeyComparator/*:: <T, K> */(
+  cmpKeys/*: (a: K, b: K) => number */,
+  getKeyFromValue/*: (value: T) => K */,
 )/*: {
+  cmp(a: T, b: T): number,
+
   difference(
     t1: ImmutableTree<T>,
     t2: ImmutableTree<T>,
@@ -36,25 +39,25 @@ export default function withComparator/*:: <T> */(
 
   find<D = T>(
     tree: ImmutableTree<T>,
-    value: T,
+    key: K,
     defaultValue: D,
   ): T | D,
 
   findNext<D = T>(
     tree: ImmutableTree<T>,
-    value: T,
+    key: K,
     defaultValue: D,
   ): T | D,
 
   findPrev<D = T>(
     tree: ImmutableTree<T>,
-    value: T,
+    key: K,
     defaultValue: D,
   ): T | D,
 
   indexOf(
     tree: ImmutableTree<T>,
-    value: T,
+    key: K,
   ): number,
 
   insert(
@@ -101,30 +104,39 @@ export default function withComparator/*:: <T> */(
 
   update(
     tree: ImmutableTree<T>,
-    value: T,
-    onConflict: InsertConflictHandler<T, T>,
-    onNotFound: InsertNotFoundHandler<T, T>,
+    value: K,
+    onConflict: InsertConflictHandler<T, K>,
+    onNotFound: InsertNotFoundHandler<T, K>,
   ): ImmutableTree<T>,
 
   validate(
     tree: ImmutableTree<T>,
   ): ValidateResult<T>,
 } */ {
+  function cmp(a/*: T */, b/*: T */) {
+    return cmpKeys(getKeyFromValue(a), getKeyFromValue(b));
+  }
+
+  function cmpKeyWithValue(key/*: K */, value/*: T */) {
+    return cmpKeys(key, getKeyFromValue(value));
+  }
+
   return {
+    cmp,
     difference(t1, t2) {
       return difference(t1, t2, cmp);
     },
-    find(tree, value, defaultValue) {
-      return find(tree, value, cmp, defaultValue);
+    find(tree, key, defaultValue) {
+      return find(tree, key, cmpKeyWithValue, defaultValue);
     },
-    findNext(tree, value, defaultValue) {
-      return findNext(tree, value, cmp, defaultValue);
+    findNext(tree, key, defaultValue) {
+      return findNext(tree, key, cmpKeyWithValue, defaultValue);
     },
-    findPrev(tree, value, defaultValue) {
-      return findPrev(tree, value, cmp, defaultValue);
+    findPrev(tree, key, defaultValue) {
+      return findPrev(tree, key, cmpKeyWithValue, defaultValue);
     },
-    indexOf(tree, value) {
-      return indexOf(tree, value, cmp);
+    indexOf(tree, key) {
+      return indexOf(tree, key, cmpKeyWithValue);
     },
     insert(tree, value, onConflict) {
       return insert(tree, value, cmp, onConflict);
@@ -150,8 +162,8 @@ export default function withComparator/*:: <T> */(
     union(tree, value, onConflict) {
       return union(tree, value, cmp, onConflict);
     },
-    update(tree, value, onConflict, onNotFound) {
-      return update(tree, value, cmp, onConflict, onNotFound);
+    update(tree, key, onConflict, onNotFound) {
+      return update(tree, key, cmpKeyWithValue, onConflict, onNotFound);
     },
     validate(tree) {
       return validate(tree, cmp);
