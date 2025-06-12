@@ -23,17 +23,14 @@ export default function equals/*:: <T, U = T> */(
   if (a.size !== b.size) {
     return false;
   }
-  for (
-    const [aValue, bValue] of
-    /*
-     * `zip` yields `[T | void, U | void]` due to the possibility of
-     * `a` and `b` having different sizes, but we've excluded that
-     * case above.
-     */
-    // $FlowIgnore[incompatible-cast]
-    zip(a, b) /*:: as Generator<[T, U], void, void> */
-  ) {
-    if (!isEqual(aValue, bValue)) {
+  const aIter = iterate(a);
+  const bIter = iterate(b);
+  while (true) {
+    const aNext = aIter.next();
+    const bNext = bIter.next();
+    if (aNext.done || bNext.done) {
+      break;
+    } else if (!isEqual(aNext.value, bNext.value)) {
       return false;
     }
   }
