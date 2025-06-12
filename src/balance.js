@@ -9,8 +9,8 @@ import invariant from './invariant.js';
  * DELTA and RATIO are taken from GHC:
  * https://gitlab.haskell.org/ghc/packages/containers/-/blob/f00aa02/containers/src/Data/Map/Internal.hs#L4011-4017
  */
-let DELTA = 3;
-let RATIO = 2;
+export let DELTA/*: number */ = 3;
+export let RATIO/*: number */ = 2;
 
 export function setBalancingParameters(
   delta/*: number */,

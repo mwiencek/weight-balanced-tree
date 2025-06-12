@@ -1,5 +1,6 @@
 // @flow strict
 
+import {DELTA} from '../src/balance.js';
 import validate from '../src/validate.js';
 /*::
 import type {ImmutableTree} from '../src/types.js';
@@ -22,8 +23,8 @@ function checkBalance(
   }
   /* c8 ignore start */
   return (
-    tree.left.size <= (3 * tree.right.size) &&
-    tree.right.size <= (3 * tree.left.size)
+    tree.left.size <= (DELTA * tree.right.size) &&
+    tree.right.size <= (DELTA * tree.left.size)
   );
   /* c8 ignore stop */
 }
