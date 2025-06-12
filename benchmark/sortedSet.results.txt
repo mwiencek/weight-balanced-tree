@@ -1,0 +1,35 @@
+Sorted set create
+	weight-balanced-tree (fromDistinctAscArray) x 1,452 ops/sec ±0.35% (100 runs sampled)
+	Immutable.Set (constructor) x 492 ops/sec ±1.50% (88 runs sampled)
+	mori (sortedSet) x 74.22 ops/sec ±0.20% (78 runs sampled)
+	Fastest is weight-balanced-tree (fromDistinctAscArray)
+Sorted set add
+	weight-balanced-tree (insert) x 148 ops/sec ±0.42% (86 runs sampled)
+	Immutable.Set (add) x 176 ops/sec ±1.17% (84 runs sampled)
+	mori (conj) x 78.13 ops/sec ±0.94% (69 runs sampled)
+	Fastest is Immutable.Set (add)
+Sorted set has
+	weight-balanced-tree (findBy) x 348 ops/sec ±0.80% (92 runs sampled)
+	Immutable.Set (has) x 1,127 ops/sec ±1.77% (98 runs sampled)
+	mori (hasKey) x 215 ops/sec ±5.31% (90 runs sampled)
+	Fastest is Immutable.Set (has)
+Sorted set remove
+	weight-balanced-tree (remove) x 323 ops/sec ±0.58% (94 runs sampled)
+	Immutable.Set (delete) x 170 ops/sec ±0.38% (88 runs sampled)
+	mori (disj) x 63.49 ops/sec ±0.97% (67 runs sampled)
+	Fastest is weight-balanced-tree (remove)
+Sorted set union
+	weight-balanced-tree (union) x 722 ops/sec ±0.17% (98 runs sampled)
+	Immutable.Set (union) x 956 ops/sec ±1.02% (97 runs sampled)
+	mori (into) x 166 ops/sec ±0.44% (87 runs sampled)
+	Fastest is Immutable.Set (union)
+Sorted set equals
+	weight-balanced-tree (equals) x 562 ops/sec ±0.23% (97 runs sampled)
+	Immutable.Set (equals) x 944 ops/sec ±0.03% (100 runs sampled)
+	mori (equals) x 186 ops/sec ±0.09% (88 runs sampled)
+	Fastest is Immutable.Set (equals)
+Sorted set iteration
+	weight-balanced-tree (iterate, Iterator protocol) x 1,602 ops/sec ±0.05% (100 runs sampled)
+	Immutable.Set (toArray, sort, Iterator protocol) x 390 ops/sec ±0.40% (95 runs sampled)
+	mori (Iterator protocol) x 722 ops/sec ±0.07% (97 runs sampled)
+	Fastest is weight-balanced-tree (iterate, Iterator protocol)

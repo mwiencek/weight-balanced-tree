@@ -128,6 +128,7 @@
     "flow-bin": "0.272.2",
     "flow-typed": "4.1.1",
     "immutable": "5.1.2",
+    "mori": "0.3.2",
     "tsd": "0.32.0"
   },
   "packageManager": "yarn@4.9.2"

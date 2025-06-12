@@ -1,0 +1,30 @@
+Map create
+	weight-balanced-tree (fromDistinctAscArray) x 933 ops/sec ±0.23% (98 runs sampled)
+	Immutable.Map (constructor) x 331 ops/sec ±1.97% (90 runs sampled)
+	mori (hashMap) x 477 ops/sec ±0.41% (91 runs sampled)
+	Fastest is weight-balanced-tree (fromDistinctAscArray)
+Map set
+	weight-balanced-tree (insert) x 70.22 ops/sec ±0.16% (74 runs sampled)
+	Immutable.Map (set) x 156 ops/sec ±1.76% (85 runs sampled)
+	mori (assoc) x 63.23 ops/sec ±1.06% (67 runs sampled)
+	Fastest is Immutable.Map (set)
+Map get
+	weight-balanced-tree (findBy) x 102 ops/sec ±0.40% (77 runs sampled)
+	Immutable.Map (get) x 684 ops/sec ±1.07% (95 runs sampled)
+	mori (get) x 181 ops/sec ±1.76% (87 runs sampled)
+	Fastest is Immutable.Map (get)
+Map remove
+	weight-balanced-tree (remove) x 98.24 ops/sec ±0.29% (85 runs sampled)
+	Immutable.Map (delete) x 152 ops/sec ±1.08% (88 runs sampled)
+	mori (dissoc) x 69.36 ops/sec ±0.72% (73 runs sampled)
+	Fastest is Immutable.Map (delete)
+Map merge
+	weight-balanced-tree (union) x 530 ops/sec ±0.18% (98 runs sampled)
+	Immutable.Map (merge) x 799 ops/sec ±1.39% (96 runs sampled)
+	mori (merge) x 105 ops/sec ±0.21% (79 runs sampled)
+	Fastest is Immutable.Map (merge)
+Map equals
+	weight-balanced-tree (equals) x 560 ops/sec ±0.15% (97 runs sampled)
+	Immutable.Map (equals) x 616 ops/sec ±0.26% (99 runs sampled)
+	mori (equals) x 59.25 ops/sec ±0.34% (63 runs sampled)
+	Fastest is Immutable.Map (equals)

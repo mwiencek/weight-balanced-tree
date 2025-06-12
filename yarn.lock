@@ -1763,6 +1763,13 @@ __metadata:
   languageName: node
   linkType: hard
 
+"mori@npm:0.3.2":
+  version: 0.3.2
+  resolution: "mori@npm:0.3.2"
+  checksum: 10c0/71d227400a7a65cec9505cb50e117d3d2916fbf6f5be0b655ab0e8964edc8e7be039e52b43e7220a4fae818ae8d56402fdbf74d12da367a660c450a435cfadc0
+  languageName: node
+  linkType: hard
+
 "ms@npm:^2.1.3":
   version: 2.1.3
   resolution: "ms@npm:2.1.3"
@@ -2620,6 +2627,7 @@ __metadata:
     flow-bin: "npm:0.272.2"
     flow-typed: "npm:4.1.1"
     immutable: "npm:5.1.2"
+    mori: "npm:0.3.2"
     tsd: "npm:0.32.0"
   languageName: unknown
   linkType: soft
