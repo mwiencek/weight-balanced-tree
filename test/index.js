@@ -119,10 +119,10 @@ test('all', function () {
       assert.ok(foundValue === -1, 'removed node is not found');
     }
 
-    assert.ok(node.size === 0, 'tree is empty');
+    assert.equal(node, tree.empty, 'tree is empty');
 
     node = tree.remove(node, 0, compareIntegers);
-    assert.ok(node.size === 0, 'tree is still empty');
+    assert.equal(node, tree.empty, 'tree is still empty');
   }
 });
 
@@ -328,6 +328,8 @@ test('removeIfExists', function () {
     assert.equal(tree.find(node, num, compareIntegers, null), null);
     assert.equal(node.size, --size);
   }
+
+  assert.equal(node, tree.empty, 'tree is empty');
 });
 
 test('removeOrThrowIfNotExists', function () {
@@ -341,7 +343,7 @@ test('removeOrThrowIfNotExists', function () {
   );
   assert.equal(node.size, 1);
   node = tree.removeOrThrowIfNotExists(node, 1, compareIntegers);
-  assert.equal(node, tree.empty);
+  assert.equal(node, tree.empty, 'tree is empty');
 });
 
 test('remove returns the same tree back if there is no value to remove', function () {
@@ -561,15 +563,13 @@ test('difference', function () {
     tree.difference(tree.empty, tree.create(1), compareIntegers),
     tree.empty,
   );
-  assert.ok(
-    tree.equals(
-      tree.difference(
-        tree.fromDistinctAscArray([1, 2, 3]),
-        tree.fromDistinctAscArray([1, 2, 3]),
-        compareIntegers,
-      ),
-      tree.empty,
+  assert.equal(
+    tree.difference(
+      tree.fromDistinctAscArray([1, 2, 3]),
+      tree.fromDistinctAscArray([1, 2, 3]),
+      compareIntegers,
     ),
+    tree.empty,
   );
   assert.ok(
     tree.equals(
@@ -1124,4 +1124,13 @@ test('setBalancingParameters', function () {
   assert.doesNotThrow(function () {
     tree.setBalancingParameters(3, 2);
   });
+});
+
+test('empty', function () {
+  const empty = tree.empty;
+  assert.equal(empty.size, 0, 'empty has size 0');
+  assert.equal(empty.left, empty, 'empty left node is empty');
+  assert.equal(empty.right, empty, 'empty right node is empty');
+  assert.equal(empty.value, undefined, 'empty has undefined value');
+  assert.ok(Object.isFrozen(empty), 'empty is frozen');
 });
