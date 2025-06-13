@@ -44,11 +44,19 @@ class InsertCmd {
       /* copy = */ false,
     );
 
-    real.tree = wbt.insertIfNotExists(
+    const keyExists = wbt.find(real.tree, this.key, compareIntegers);
+
+    const newTree = wbt.insertIfNotExists(
       real.tree,
       this.key,
       compareIntegers,
     );
+
+    if (keyExists) {
+      assert.ok(newTree === real.tree);
+    }
+
+    real.tree = newTree;
 
     assert.ok(checkTreeInvariants(real.tree, compareIntegers));
     compareModelToReal(model, real);
