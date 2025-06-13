@@ -119,6 +119,10 @@
   },
   "author": "Michael Wiencek <mwtuea@gmail.com>",
   "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/mwiencek/weight-balanced-tree.git"
+  },
   "sideEffects": false,
   "type": "module",
   "devDependencies": {
