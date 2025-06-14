@@ -1,5 +1,8 @@
+.flowconfig
+.github/
 .yarn/
 .yarnrc.yml
+benchmark/
 CHANGELOG.md
 coverage/
 flow-typed.config.json
