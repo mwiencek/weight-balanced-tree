@@ -526,15 +526,10 @@ Any function above that accepts a `cmp` argument is available.
 ## Performance
 
 Performance will largely depend on the size of your data and the cost of your
-comparator function.
-[test/benchmark.js](https://github.com/mwiencek/weight-balanced-tree/blob/master/test/benchmark.js)
-tests an ASCII table with uniform-length string keys and a simple string
-comparator function.
-
-Comparisons against [Immutable.List](https://immutable-js.com/) and plain
-arrays are included for insertions and removals.
-
-You can run `node test/benchmark.js` yourself.
+comparator function. See the
+[benchmark/](https://github.com/mwiencek/weight-balanced-tree/blob/master/benchmarks/benchmark)
+folder for comparisons against [Immutable.List](https://immutable-js.com/)
+and [mori](https://swannodette.github.io/mori/).
 
 ## Tests
 
