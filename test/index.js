@@ -140,12 +140,12 @@ test('find/findBy with different value type', function () {
   node = tree.insert(node, xb, compareStringX);
 
   let foundValue = tree.find(node, 'b', compareX2, null);
-  assert.ok(foundValue?.x === 'b')
+  assert.ok(foundValue?.x === 'b');
   foundValue = tree.find(node, 'c', compareX2, {x: 'c'});
   assert.ok(foundValue.x === 'c');
 
   foundValue = tree.findBy(node, (x) => compareX2('b', x), null);
-  assert.ok(foundValue?.x === 'b')
+  assert.ok(foundValue?.x === 'b');
   foundValue = tree.findBy(node, (x) => compareX2('c', x), {x: 'c'});
   assert.ok(foundValue.x === 'c');
 });
