@@ -44,9 +44,7 @@ particular tree, otherwise the tree can become invalid.
 
 Having to pass `cmp` to many functions can be repetitive, so an (optional)
 [withKeyComparator()](#withKeyComparator) utility exists to create a wrapper
-around many API functions. However, that loses some flexibility in places
-like [update()](#update) and [find()](#find), which would otherwise support
-locating values by a different `key` of type `K`.
+around many API functions.
 
 ### empty
 
