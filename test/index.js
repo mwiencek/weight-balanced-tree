@@ -110,7 +110,10 @@ test('all', function () {
 
     for (const num of numbers) {
       let foundValue = tree.find(node, num, compareIntegers, null);
-      assert.ok(foundValue === num, 'existing node is found');
+      assert.ok(foundValue === num, 'existing node is found with find');
+
+      foundValue = tree.findBy(node, x => compareIntegers(num, x), null);
+      assert.ok(foundValue === num, 'existing node is found with findBy');
 
       node = tree.remove(node, num, compareIntegers);
       assert.ok(checkTreeInvariants(node, compareIntegers), 'tree is valid and balanced');
