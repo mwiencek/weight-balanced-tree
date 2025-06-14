@@ -526,7 +526,7 @@ Any function above that accepts a `cmp` argument is available.
 Performance will largely depend on the size of your data and the cost of your
 comparator function. See the
 [benchmark/](https://github.com/mwiencek/weight-balanced-tree/tree/master/benchmark)
-folder for comparisons against [Immutable.List](https://immutable-js.com/)
+folder for comparisons against [Immutable.js](https://immutable-js.com/)
 and [mori](https://swannodette.github.io/mori/).
 
 ## Tests
