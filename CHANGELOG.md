@@ -1,6 +1,6 @@
 # Changelog
 
-## v0.8.0 (unreleased)
+## v0.8.0 (2025-06-13)
 
   * Empty trees are now represented by `empty` (a tree of size 0) rather
     than `null`. Many function type signatures were updated to reflect this.
