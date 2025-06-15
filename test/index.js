@@ -48,6 +48,8 @@ for (let i = 1; i <= 31; i++) {
   oneToThirtyOne.push(i);
 }
 
+const oneToThirtyOneTree = tree.fromDistinctAscArray(oneToThirtyOne);
+
 test('all', function () {
   const thirtyOneToOne = oneToThirtyOne.slice(0).reverse();
 
@@ -321,7 +323,7 @@ test('removeIfExists', function () {
   const node7 = tree.remove(tree.empty, 1, compareIntegers);
   assert.equal(node7, tree.empty);
 
-  node = tree.fromDistinctAscArray(oneToThirtyOne);
+  node = oneToThirtyOneTree;
 
   let size = 31;
   for (const num of oneToThirtyOne) {
@@ -628,7 +630,7 @@ test('difference', function () {
   assert.ok(
     tree.equals(
       tree.difference(
-        tree.fromDistinctAscArray(oneToThirtyOne),
+        oneToThirtyOneTree,
         oneToThirtyOneOdds,
         compareIntegers,
       ),
@@ -638,7 +640,7 @@ test('difference', function () {
   assert.ok(
     tree.equals(
       tree.difference(
-        tree.fromDistinctAscArray(oneToThirtyOne),
+        oneToThirtyOneTree,
         oneToThirtyOneEvens,
         compareIntegers,
       ),
@@ -745,7 +747,7 @@ test('equals', function () {
 });
 
 test('fromDistinctAscArray', function () {
-  const node = tree.fromDistinctAscArray(oneToThirtyOne);
+  const node = oneToThirtyOneTree;
   assert.ok(checkTreeInvariants(node, compareIntegers), 'tree is valid and balanced');
 });
 
@@ -754,10 +756,7 @@ test('map', function () {
 
   assert.equal(tree.map(tree.empty, toString), tree.empty);
   assert.deepEqual(
-    tree.map(
-      tree.fromDistinctAscArray(oneToThirtyOne),
-      toString,
-    ),
+    tree.map(oneToThirtyOneTree, toString),
     tree.fromDistinctAscArray(oneToThirtyOne.map(toString)),
   );
 });
@@ -841,7 +840,7 @@ test('union', function () {
         tree.fromDistinctAscArray(oneToThirtyOne),
         compareIntegers,
       ),
-      tree.fromDistinctAscArray(oneToThirtyOne),
+      oneToThirtyOneTree,
     ),
   );
 
@@ -952,7 +951,7 @@ test('intersection', function () {
         tree.fromDistinctAscArray(oneToThirtyOne),
         compareIntegers,
       ),
-      tree.fromDistinctAscArray(oneToThirtyOne),
+      oneToThirtyOneTree,
     ),
   );
 
@@ -1070,7 +1069,7 @@ test('GHC issue #4242', function () {
 });
 
 test('indexOf', function () {
-  let node = tree.fromDistinctAscArray(oneToThirtyOne);
+  let node = oneToThirtyOneTree;
   assert.equal(tree.indexOf(tree.empty, 1, compareIntegers), -1);
   assert.equal(tree.indexOf(node, 0, compareIntegers), -1);
   assert.equal(tree.indexOf(node, 32, compareIntegers), -1);
@@ -1102,7 +1101,7 @@ test('indexOf', function () {
 });
 
 test('at', function () {
-  const node = tree.fromDistinctAscArray(oneToThirtyOne);
+  const node = oneToThirtyOneTree;
   /*:: invariant(node.size !== 0); */
   assert.throws(
     function () {
@@ -1140,7 +1139,7 @@ test('withKeyComparator', function () {
     ),
   );
 
-  let node = tree.fromDistinctAscArray(oneToThirtyOne);
+  let node = oneToThirtyOneTree;
   assert.equal(integerTree.find(node, 0), undefined);
   assert.equal(integerTree.find(node, 0, null), null);
   assert.equal(integerTree.find(node, 1), 1);
