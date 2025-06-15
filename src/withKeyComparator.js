@@ -182,8 +182,8 @@ export default function withKeyComparator/*:: <T, K> */(
     split(tree, key) {
       return split(tree, key, cmpKeyWithValue);
     },
-    union(tree, value, onConflict) {
-      return union(tree, value, cmp, onConflict);
+    union(t1, t2, onConflict) {
+      return union(t1, t2, cmp, onConflict);
     },
     update(tree, key, onConflict, onNotFound) {
       return update(tree, key, cmpKeyWithValue, onConflict, onNotFound);
