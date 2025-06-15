@@ -9,10 +9,6 @@ tree for JavaScript.
  * Works in Node.js and the browser
  * Flow and TypeScript definitions included
 
-All API functions are pure and side‑effect free; the tree structure is
-treated as immutable and a structurally‑shared copy is returned when
-modifications are required.
-
 ## Installation
 
 This software is released under the
@@ -35,6 +31,10 @@ import insert from 'weight-balanced-tree/insert';
 ```
 
 ## API
+
+All API functions are pure and side‑effect free; the tree structure is
+treated as immutable and a structurally‑shared copy is returned when
+modifications are required.
 
 Many functions of this library require a comparator `cmp`, which
 defines the ordering of the tree. It works in the
