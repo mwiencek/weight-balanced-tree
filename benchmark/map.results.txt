@@ -19,9 +19,9 @@ Map remove
 	mori (dissoc) x 69.36 ops/sec ±0.72% (73 runs sampled)
 	Fastest is Immutable.Map (delete)
 Map merge
-	weight-balanced-tree (union) x 530 ops/sec ±0.18% (98 runs sampled)
-	Immutable.Map (merge) x 799 ops/sec ±1.39% (96 runs sampled)
-	mori (merge) x 105 ops/sec ±0.21% (79 runs sampled)
+	weight-balanced-tree (union) x 536 ops/sec ±1.05% (96 runs sampled)
+	Immutable.Map (merge) x 801 ops/sec ±1.51% (92 runs sampled)
+	mori (merge) x 124 ops/sec ±0.86% (81 runs sampled)
 	Fastest is Immutable.Map (merge)
 Map equals
 	weight-balanced-tree (equals) x 869 ops/sec ±0.19% (97 runs sampled)

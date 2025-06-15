@@ -5,6 +5,8 @@
   * Added `split`, which splits a tree into two: one containing values
     smaller than `key`, and one containing values large than `key`,
     according to `cmp`.
+  * `union` is now implemented using a join-based algorithm with
+    a complexity of `O(m * log(n / m + 1))`.
 
 ## v0.8.0 (2025-06-13)
 

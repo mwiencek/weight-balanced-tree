@@ -1,8 +1,8 @@
 // @flow strict
 
 import {ValueOrderError} from './errors.js';
-import fromDistinctAscArray from './fromDistinctAscArray.js';
-import iterate from './iterate.js';
+import join from './join.js';
+import split from './split.js';
 /*::
 import invariant from './invariant.js';
 import type {ImmutableTree} from './types.js';
@@ -21,51 +21,29 @@ export default function union/*:: <T> */(
   cmp/*: (a: T, b: T) => number */,
   onConflict/*:: ?: (v1: T, v2: T) => T */ = onConflictUseSecondValue,
 )/*: ImmutableTree<T> */ {
-  const arrayUnion/*: Array<T> */ = [],
-        iter1 = iterate(t1),
-        iter2 = iterate(t2);
-  let r1 = null, r2 = null;
+  if (t1.size === 0) {
+    return t2;
+  }
+  if (t2.size === 0) {
+    return t1;
+  }
+  const [small, equal, large] = split(t2, t1.value, cmp);
 
-  while (true) {
-    if (!r1) {
-      r1 = iter1.next();
-    }
-    if (!r2) {
-      r2 = iter2.next();
-    }
-
-    if (r1.done && r2.done) {
-      break;
-    } else if (r1.done) {
-      /*:: invariant(!r2.done); */
-      arrayUnion.push(r2.value);
-      r2 = null;
-    } else if (r2.done) {
-      arrayUnion.push(r1.value);
-      r1 = null;
-    } else {
-      const order = cmp(r1.value, r2.value);
-      if (order < 0) {
-        arrayUnion.push(r1.value);
-        r1 = null;
-      } else if (order > 0) {
-        arrayUnion.push(r2.value);
-        r2 = null;
-      } else {
-        const unionValue = onConflict(r1.value, r2.value);
-        if (
-          !Object.is(unionValue, r1.value) &&
-          !Object.is(unionValue, r2.value) &&
-          cmp(r1.value, unionValue) !== 0
-        ) {
-          throw new ValueOrderError(r1.value, unionValue);
-        }
-        arrayUnion.push(unionValue);
-        r1 = null;
-        r2 = null;
-      }
+  let unionValue = t1.value;
+  if (equal.size) {
+    unionValue = onConflict(t1.value, equal.value);
+    if (
+      !Object.is(unionValue, t1.value) &&
+      !Object.is(unionValue, equal.value) &&
+      cmp(t1.value, unionValue) !== 0
+    ) {
+      throw new ValueOrderError(t1.value, unionValue);
     }
   }
 
-  return fromDistinctAscArray(arrayUnion);
+  return join(
+    union(t1.left, small, cmp, onConflict),
+    unionValue,
+    union(t1.right, large, cmp, onConflict),
+  );
 }
