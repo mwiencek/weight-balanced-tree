@@ -92,6 +92,10 @@
       "types": "./src/reverseIterate.d.ts",
       "default": "./src/reverseIterate.js"
     },
+    "./split": {
+      "types": "./src/split.d.ts",
+      "default": "./src/split.js"
+    },
     "./toArray": {
       "types": "./src/toArray.d.ts",
       "default": "./src/toArray.js"

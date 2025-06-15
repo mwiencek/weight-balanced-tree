@@ -75,6 +75,15 @@ export default function withKeyComparator<T, K>(
     value: T,
   ): ImmutableTree<T>,
 
+  split(
+    tree: ImmutableTree<T>,
+    key: K,
+  ): [
+    small: ImmutableTree<T>,
+    equal: ImmutableTree<T>,
+    large: ImmutableTree<T>,
+  ],
+
   union(
     t1: ImmutableTree<T>,
     t2: ImmutableTree<T>,

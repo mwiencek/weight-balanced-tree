@@ -1053,6 +1053,14 @@ test('withKeyComparator', function () {
   assert.equal(integerTree.find(node, 33), undefined);
   assert.equal(integerTree.find(node, 34), undefined);
 
+  const [smallSplit, equalSplit, largeSplit] = integerTree.split(
+    tree.fromDistinctAscArray([1, 2, 3]),
+    2,
+  );
+  assert.ok(tree.equals(smallSplit, tree.create(1)));
+  assert.ok(equalSplit.size === 3 && equalSplit.value === 2);
+  assert.ok(tree.equals(largeSplit, tree.create(3)));
+
   assert.ok(
     tree.equals(
       integerTree.union(
@@ -1136,4 +1144,32 @@ test('empty', function () {
   assert.equal(empty.right, empty, 'empty right node is empty');
   assert.equal(empty.value, undefined, 'empty has undefined value');
   assert.ok(Object.isFrozen(empty), 'empty is frozen');
+});
+
+test('split', function () {
+  // test/monkey.js contains a more thorough test.
+  let small, equal, large;
+
+  [small, equal, large] = tree.split(tree.empty, 0, compareIntegers);
+  assert.equal(small, tree.empty);
+  assert.equal(equal, tree.empty);
+  assert.equal(large, tree.empty);
+
+  [small, equal, large] = tree.split(
+    tree.fromDistinctAscArray([1, 2, 3]),
+    2,
+    compareIntegers,
+  );
+  assert.ok(tree.equals(small, tree.create(1)));
+  assert.ok(equal.size === 3 && equal.value === 2);
+  assert.ok(tree.equals(large, tree.create(3)));
+
+  [small, equal, large] = tree.split(
+    tree.fromDistinctAscArray([1, 3]),
+    2,
+    compareIntegers,
+  );
+  assert.ok(tree.equals(small, tree.create(1)));
+  assert.ok(equal.size === 0);
+  assert.ok(tree.equals(large, tree.create(3)));
 });

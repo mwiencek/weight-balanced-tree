@@ -4,7 +4,7 @@ function getInArray(array, index) {
   return array[index];
 }
 
-function getSortedArrayIndex(array, size, value, cmp) {
+export function getSortedArrayIndex(array, size, value, cmp) {
   return getSortedIndex(array, size, value, getInArray, cmp);
 }
 

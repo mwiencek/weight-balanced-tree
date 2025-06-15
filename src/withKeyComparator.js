@@ -14,6 +14,7 @@ import remove, {
   removeIfExists,
   removeOrThrowIfNotExists,
 } from './remove.js';
+import split from './split.js';
 import union from './union.js';
 import update from './update.js';
 import validate from './validate.js';
@@ -96,6 +97,15 @@ export default function withKeyComparator/*:: <T, K> */(
     value: T,
   ): ImmutableTree<T>,
 
+  split(
+    tree: ImmutableTree<T>,
+    key: K,
+  ): [
+    small: ImmutableTree<T>,
+    equal: ImmutableTree<T>,
+    large: ImmutableTree<T>,
+  ],
+
   union(
     t1: ImmutableTree<T>,
     t2: ImmutableTree<T>,
@@ -158,6 +168,9 @@ export default function withKeyComparator/*:: <T, K> */(
     },
     removeOrThrowIfNotExists(tree, value) {
       return removeOrThrowIfNotExists(tree, value, cmp);
+    },
+    split(tree, key) {
+      return split(tree, key, cmpKeyWithValue);
     },
     union(tree, value, onConflict) {
       return union(tree, value, cmp, onConflict);

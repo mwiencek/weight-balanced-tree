@@ -440,6 +440,26 @@ Returns the "largest" (right-most) value in `tree`.
 
 This is equivalent to `maxNode(tree).value`.
 
+### split()
+
+```TypeScript
+function split<T, K = T>(
+  tree: ImmutableTree<T>,
+  key: K,
+  cmp: (a: K, b: T) => number,
+): [
+  small: ImmutableTree<T>,
+  equal: ImmutableTree<T>,
+  large: ImmutableTree<T>,
+];
+```
+
+Splits a tree into two: one containing values smaller than `key`, and one
+containing values large than `key`, according to `cmp`.
+
+If `key` exists in the tree, `equal` will reference the node in `tree`
+containing `key`; otherwise it will equal the `empty` tree.
+
 ### toArray()
 
 ```TypeScript

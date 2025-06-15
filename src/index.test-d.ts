@@ -37,6 +37,7 @@ import remove, {
   removeOrThrowIfNotExists,
 } from '../src/remove';
 import reverseIterate from '../src/reverseIterate';
+import split from '../src/split';
 import toArray from '../src/toArray';
 import union, {
   onConflictUseSecondValue,
@@ -103,6 +104,7 @@ expectType<types.ImmutableTree<string>>(map<number, string>(numberTree, toString
 expectType<types.ImmutableTree<string>>(remove<string>(stringTree, '', cmpStrings));
 expectType<types.ImmutableTree<string>>(removeIfExists<string>(stringTree, '', cmpStrings));
 expectType<types.ImmutableTree<string>>(removeOrThrowIfNotExists<string>(stringTree, '', cmpStrings));
+expectType<[types.ImmutableTree<number>, types.ImmutableTree<number>, types.ImmutableTree<number>]>(split(numberTree, 0, cmpNumbers));
 expectType<Array<string>>(toArray(stringTree));
 expectType<types.ImmutableTree<string>>(union(stringTree, stringTree, cmpStrings));
 expectType<types.ImmutableTree<string>>(union(stringTree, stringTree, cmpStrings, onConflictUseSecondValue));
@@ -117,6 +119,7 @@ expectType<string | null>(findBy<string, null>(stringTree, (treeValue: string) =
 expectType<string | null>(findNext<string, number, null>(stringTree, 0, cmpNumberAndString, null));
 expectType<string | null>(findPrev<string, number, null>(stringTree, 0, cmpNumberAndString, null));
 expectType<number>(indexOf<string, number>(stringTree, 1, cmpNumberAndString));
+expectType<[types.ImmutableTree<string>, types.ImmutableTree<string>, types.ImmutableTree<string>]>(split<string, number>(stringTree, 1, cmpNumberAndString));
 
 // Wrong tree type
 expectError<types.ImmutableTree<number>>(create<number>(''));
@@ -136,6 +139,7 @@ expectError<number>(minValue<number>(stringTree));
 expectError<types.ImmutableTree<number>>(remove<number>(stringTree, '', cmpNumbers));
 expectError<types.ImmutableTree<number>>(removeIfExists<number>(stringTree, '', cmpNumbers));
 expectError<types.ImmutableTree<number>>(removeOrThrowIfNotExists<number>(stringTree, '', cmpNumbers));
+expectError<[types.ImmutableTree<number>, types.ImmutableTree<number>, types.ImmutableTree<number>]>(split<number>(stringTree, 1, cmpNumbers));
 expectError<ReadonlyArray<string>>(toArray<string>(numberTree));
 expectError<types.ImmutableTree<number>>(union<number>(stringTree, stringTree, cmpNumbers));
 expectError<types.ImmutableTree<number>>(difference<number>(stringTree, stringTree, cmpNumbers));
@@ -150,6 +154,7 @@ expectError<types.ImmutableTree<string>>(insert<string>(stringTree, '', cmpNumbe
 expectError<types.ImmutableTree<string>>(remove<string>(stringTree, '', cmpNumbers));
 expectError<types.ImmutableTree<string>>(removeIfExists<string>(stringTree, '', cmpNumbers));
 expectError<types.ImmutableTree<string>>(removeOrThrowIfNotExists<string>(stringTree, '', cmpNumbers));
+expectError<[types.ImmutableTree<string>, types.ImmutableTree<string>, types.ImmutableTree<string>]>(split<string>(stringTree, '', cmpNumbers));
 expectError<types.ImmutableTree<string>>(union<string>(stringTree, stringTree, cmpNumbers));
 expectError<types.ImmutableTree<string>>(difference<string>(stringTree, stringTree, cmpNumbers));
 
@@ -199,6 +204,7 @@ expectType<types.ImmutableTree<NSTuple>>(mapTreeWrapper.insertOrThrowIfExists(nu
 expectType<types.ImmutableTree<NSTuple>>(mapTreeWrapper.remove(numberStringMapTree, [0, ''] as NSTuple));
 expectType<types.ImmutableTree<NSTuple>>(mapTreeWrapper.removeIfExists(numberStringMapTree, [0, ''] as NSTuple));
 expectType<types.ImmutableTree<NSTuple>>(mapTreeWrapper.removeOrThrowIfNotExists(numberStringMapTree, [0, ''] as NSTuple));
+expectType<[types.ImmutableTree<NSTuple>, types.ImmutableTree<NSTuple>, types.ImmutableTree<NSTuple>]>(mapTreeWrapper.split(numberStringMapTree, 0));
 expectType<types.ImmutableTree<NSTuple>>(mapTreeWrapper.union(numberStringMapTree, numberStringMapTree));
 expectType<types.ImmutableTree<NSTuple>>(mapTreeWrapper.union(numberStringMapTree, numberStringMapTree, onConflictThrowError));
 expectType<types.ImmutableTree<NSTuple>>(mapTreeWrapper.update(numberStringMapTree, 1, onConflictThrowError, onNotFoundUseGivenValue));
@@ -228,6 +234,7 @@ expectType<typeof minValue>(wbt.minValue);
 expectType<typeof remove>(wbt.remove);
 expectType<typeof removeIfExists>(wbt.removeIfExists);
 expectType<typeof removeOrThrowIfNotExists>(wbt.removeOrThrowIfNotExists);
+expectType<typeof split>(wbt.split);
 expectType<typeof toArray>(wbt.toArray);
 expectType<typeof union>(wbt.union);
 expectType<typeof update>(wbt.update);

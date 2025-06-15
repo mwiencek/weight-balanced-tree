@@ -1,7 +1,7 @@
 // @flow strict
 
 /*::
-import type {MutableTree} from './types.js';
+import type {ImmutableTree, MutableTree} from './types.js';
 import invariant from './invariant.js';
 */
 
@@ -102,7 +102,9 @@ export function rotateRightLeft/*:: <T> */(tree/*: MutableTree<T> */)/*: void */
   tree.value = b.value;
 }
 
-export function balanceLeft/*:: <T> */(tree/*: MutableTree<T> */)/*: void */ {
+export function balanceLeft/*:: <T> */(
+  tree/*: MutableTree<T> */,
+)/*: ImmutableTree<T> */ {
   if (
     (tree.left.size + tree.right.size) >= 2 &&
     tree.left.size > (DELTA * tree.right.size)
@@ -113,9 +115,12 @@ export function balanceLeft/*:: <T> */(tree/*: MutableTree<T> */)/*: void */ {
       rotateLeftRight(tree);
     }
   }
+  return tree;
 }
 
-export function balanceRight/*:: <T> */(tree/*: MutableTree<T> */)/*: void */ {
+export function balanceRight/*:: <T> */(
+  tree/*: MutableTree<T> */,
+)/*: ImmutableTree<T> */ {
   if (
     (tree.left.size + tree.right.size) >= 2 &&
     tree.right.size > (DELTA * tree.left.size)
@@ -126,4 +131,5 @@ export function balanceRight/*:: <T> */(tree/*: MutableTree<T> */)/*: void */ {
       rotateRightLeft(tree);
     }
   }
+  return tree;
 }

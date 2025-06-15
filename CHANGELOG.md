@@ -1,5 +1,11 @@
 # Changelog
 
+## v0.9.0 (unreleased)
+
+  * Added `split`, which splits a tree into two: one containing values
+    smaller than `key`, and one containing values large than `key`,
+    according to `cmp`.
+
 ## v0.8.0 (2025-06-13)
 
   * Empty trees are now represented by `empty` (a tree of size 0) rather

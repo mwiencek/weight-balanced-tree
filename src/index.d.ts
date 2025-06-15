@@ -26,6 +26,7 @@ export {
   removeOrThrowIfNotExists,
 } from './remove';
 export {default as reverseIterate} from './reverseIterate';
+export {default as split} from './split';
 export {default as toArray} from './toArray';
 export {default as union} from './union';
 export {default as update} from './update';

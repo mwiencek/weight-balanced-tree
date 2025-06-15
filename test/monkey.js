@@ -8,6 +8,7 @@ import * as wbt from '../src/index.js';
 import checkTreeInvariants from './checkTreeInvariants.js';
 import compareIntegers from './compareIntegers.js';
 import {
+  getSortedArrayIndex,
   sortedArrayFindOrInsert,
   sortedArrayRemove,
 } from './sortedArray.js';
@@ -154,11 +155,48 @@ class DifferenceCmd {
   }
 }
 
+class SplitCmd {
+  constructor(key) {
+    this.key = key;
+  }
+  toString() {
+    return `split(${this.key})`;
+  }
+  check() {
+    return true;
+  }
+  run(model, real) {
+    const [modelIndex, keyExistsInModel] = getSortedArrayIndex(
+      model,
+      model.length,
+      this.key,
+      compareIntegers,
+    );
+    const smallModel = model.slice(0, modelIndex);
+    const largeModel = model.slice(
+      keyExistsInModel ? (modelIndex + 1) : modelIndex,
+    );
+
+    const [smallTree, equalTree, largeTree] = wbt.split(
+      real.tree,
+      this.key,
+      compareIntegers,
+    );
+
+    assert.equal(keyExistsInModel, equalTree.size !== 0);
+    assert.ok(checkTreeInvariants(smallTree, compareIntegers));
+    assert.ok(checkTreeInvariants(largeTree, compareIntegers));
+    compareModelToReal(smallModel, {tree: smallTree});
+    compareModelToReal(largeModel, {tree: largeTree});
+  }
+}
+
 const keyArb = fc.integer({min: -10_000, max: 10_000});
 
 const commandArb = [
   keyArb.map(key => new InsertCmd(key)),
   keyArb.map(key => new RemoveCmd(key)),
+  keyArb.map(key => new SplitCmd(key)),
   fc.array(keyArb, {maxLength: 50}).map(keys => new UnionCmd(keys)),
   fc.array(keyArb, {maxLength: 50}).map(keys => new DifferenceCmd(keys)),
 ];
