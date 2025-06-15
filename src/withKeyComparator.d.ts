@@ -60,6 +60,12 @@ export default function withKeyComparator<T, K>(
     value: T,
   ): ImmutableTree<T>,
 
+  intersection(
+    t1: ImmutableTree<T>,
+    t2: ImmutableTree<T>,
+    combiner?: (v1: T, v2: T) => T,
+  ): ImmutableTree<T>,
+
   remove(
     tree: ImmutableTree<T>,
     value: T,

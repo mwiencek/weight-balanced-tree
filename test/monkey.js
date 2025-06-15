@@ -155,6 +155,29 @@ class DifferenceCmd {
   }
 }
 
+class IntersectionCmd {
+  constructor(keys) {
+    this.keys = uniqueIntegers(keys).sort(compareIntegers);
+  }
+  toString() {
+    return `intersection(${this.keys})`;
+  }
+  check() {
+    return true;
+  }
+  run(model, real) {
+    const keySet = new Set(this.keys);
+    const modelIntersection = model.filter(keySet.has.bind(keySet));
+    const realIntersection = wbt.intersection(
+      real.tree,
+      wbt.fromDistinctAscArray(this.keys),
+      compareIntegers,
+    );
+    assert.ok(checkTreeInvariants(realIntersection, compareIntegers));
+    compareModelToReal(modelIntersection, {tree: realIntersection});
+  }
+}
+
 class SplitCmd {
   constructor(key) {
     this.key = key;
@@ -199,6 +222,7 @@ const commandArb = [
   keyArb.map(key => new SplitCmd(key)),
   fc.array(keyArb, {maxLength: 50}).map(keys => new UnionCmd(keys)),
   fc.array(keyArb, {maxLength: 50}).map(keys => new DifferenceCmd(keys)),
+  fc.array(keyArb, {maxLength: 50}).map(keys => new IntersectionCmd(keys)),
 ];
 
 test('weight-balanced-tree', () => {

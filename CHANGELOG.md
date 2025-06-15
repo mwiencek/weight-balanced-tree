@@ -12,6 +12,7 @@
   * Relaxed the situations in which `ValueOrderError` is thrown for `union`
     `onConflict` values. The returned value no longer has to have an
     identical sort order, as long as the final tree is valid.
+  * Added `intersection`.
 
 ## v0.8.0 (2025-06-13)
 

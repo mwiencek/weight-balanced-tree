@@ -64,6 +64,10 @@
       "types": "./indexOf.d.ts",
       "default": "./indexOf.js"
     },
+    "./intersection": {
+      "types": "./src/intersection.d.ts",
+      "default": "./src/intersection.js"
+    },
     "./iterate": {
       "types": "./src/iterate.d.ts",
       "default": "./src/iterate.js"

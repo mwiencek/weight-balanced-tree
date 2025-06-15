@@ -28,6 +28,7 @@ import insert, {
   insertOrReplaceIfExists,
   insertOrThrowIfExists,
 } from '../src/insert';
+import intersection from '../src/intersection';
 import iterate from '../src/iterate';
 import map from '../src/map';
 import maxValue from '../src/maxValue';
@@ -109,6 +110,7 @@ expectType<Array<string>>(toArray(stringTree));
 expectType<types.ImmutableTree<string>>(union(stringTree, stringTree, cmpStrings));
 expectType<types.ImmutableTree<string>>(union(stringTree, stringTree, cmpStrings, onConflictUseSecondValue));
 expectType<types.ImmutableTree<string>>(difference(stringTree, stringTree, cmpStrings));
+expectType<types.ImmutableTree<string>>(intersection(stringTree, stringTree, cmpStrings));
 expectType<Generator<[string | undefined, number | undefined], undefined, undefined>>(zip(stringTree, numberTree));
 expectType<ValidateResult<string>>(validate(stringTree, cmpStrings));
 expectType<undefined>(setBalancingParameters(3, 2));
@@ -143,6 +145,7 @@ expectError<[types.ImmutableTree<number>, types.ImmutableTree<number>, types.Imm
 expectError<ReadonlyArray<string>>(toArray<string>(numberTree));
 expectError<types.ImmutableTree<number>>(union<number>(stringTree, stringTree, cmpNumbers));
 expectError<types.ImmutableTree<number>>(difference<number>(stringTree, stringTree, cmpNumbers));
+expectError<types.ImmutableTree<number>>(intersection<number>(stringTree, stringTree, cmpNumbers));
 expectError<Generator<[string | undefined, number | undefined], undefined, undefined>>(zip(numberTree, stringTree));
 
 // Wrong comparator function type
@@ -157,6 +160,7 @@ expectError<types.ImmutableTree<string>>(removeOrThrowIfNotExists<string>(string
 expectError<[types.ImmutableTree<string>, types.ImmutableTree<string>, types.ImmutableTree<string>]>(split<string>(stringTree, '', cmpNumbers));
 expectError<types.ImmutableTree<string>>(union<string>(stringTree, stringTree, cmpNumbers));
 expectError<types.ImmutableTree<string>>(difference<string>(stringTree, stringTree, cmpNumbers));
+expectError<types.ImmutableTree<string>>(intersection<number>(stringTree, stringTree, cmpNumbers));
 
 // Wrong 'mapper' function type.
 expectError<types.ImmutableTree<string>>(map<number, string>(numberTree, (x: string) => parseInt(x, 10)));
@@ -201,6 +205,7 @@ expectType<types.ImmutableTree<NSTuple>>(mapTreeWrapper.insert(numberStringMapTr
 expectType<types.ImmutableTree<NSTuple>>(mapTreeWrapper.insertIfNotExists(numberStringMapTree, [0, ''] as NSTuple));
 expectType<types.ImmutableTree<NSTuple>>(mapTreeWrapper.insertOrReplaceIfExists(numberStringMapTree, [0, ''] as NSTuple));
 expectType<types.ImmutableTree<NSTuple>>(mapTreeWrapper.insertOrThrowIfExists(numberStringMapTree, [0, ''] as NSTuple));
+expectType<types.ImmutableTree<NSTuple>>(mapTreeWrapper.intersection(numberStringMapTree, empty));
 expectType<types.ImmutableTree<NSTuple>>(mapTreeWrapper.remove(numberStringMapTree, [0, ''] as NSTuple));
 expectType<types.ImmutableTree<NSTuple>>(mapTreeWrapper.removeIfExists(numberStringMapTree, [0, ''] as NSTuple));
 expectType<types.ImmutableTree<NSTuple>>(mapTreeWrapper.removeOrThrowIfNotExists(numberStringMapTree, [0, ''] as NSTuple));
@@ -226,6 +231,7 @@ expectType<typeof insert>(wbt.insert);
 expectType<typeof insertIfNotExists>(wbt.insertIfNotExists);
 expectType<typeof insertOrReplaceIfExists>(wbt.insertOrReplaceIfExists);
 expectType<typeof insertOrThrowIfExists>(wbt.insertOrThrowIfExists);
+expectType<typeof intersection>(wbt.intersection);
 expectType<typeof iterate>(wbt.iterate);
 expectType<typeof reverseIterate>(wbt.reverseIterate);
 expectType<typeof map>(wbt.map);

@@ -924,6 +924,110 @@ test('union', function () {
   );
 });
 
+test('intersection', function () {
+  assert.equal(
+    tree.intersection(tree.empty, tree.empty, compareIntegers),
+    tree.empty,
+  );
+  assert.ok(
+    tree.equals(
+      tree.intersection(tree.create(1), tree.empty, compareIntegers),
+      tree.empty,
+    ),
+  );
+  assert.ok(
+    tree.equals(
+      tree.intersection(
+        tree.fromDistinctAscArray([1, 2, 3, 4, 5]),
+        tree.fromDistinctAscArray([3, 4, 5, 6, 7]),
+        compareIntegers,
+      ),
+      tree.fromDistinctAscArray([3, 4, 5]),
+    ),
+  );
+  assert.ok(
+    tree.equals(
+      tree.intersection(
+        tree.fromDistinctAscArray(oneToThirtyOne),
+        tree.fromDistinctAscArray(oneToThirtyOne),
+        compareIntegers,
+      ),
+      tree.fromDistinctAscArray(oneToThirtyOne),
+    ),
+  );
+
+  const v3a = {v: 3};
+  const v3b = {v: 3};
+
+  const compareValues = (
+    a/*: {+v: number} */,
+    b/*: {+v: number} */,
+  )/*: number */ => compareIntegers(a.v, b.v);
+
+  const intersectionWithDefaultCombiner = tree.intersection(
+    tree.fromDistinctAscArray([v3a]),
+    tree.fromDistinctAscArray([v3b]),
+    compareValues,
+  );
+  assert.equal(
+    intersectionWithDefaultCombiner.value,
+    v3b,
+  );
+
+  const intersectionWithCustomCombiner = tree.intersection(
+    tree.fromDistinctAscArray([v3a]),
+    tree.fromDistinctAscArray([v3b]),
+    compareValues,
+    (v1, v2) => v1,
+  );
+  assert.equal(
+    intersectionWithCustomCombiner.value,
+    v3a,
+  );
+
+  assert.ok(
+    tree.equals(
+      tree.intersection(
+        tree.fromDistinctAscArray(oneToThirtyOne),
+        tree.fromDistinctAscArray(oneToThirtyOne),
+        compareIntegers,
+        (v1, v2) => v1 + v2,
+      ),
+      tree.fromDistinctAscArray(oneToThirtyOne.map(x => x * 2)),
+    ),
+  );
+
+  assert.throws(
+    function () {
+      tree.intersection(
+        tree.fromDistinctAscArray([1, 2, 3]),
+        tree.fromDistinctAscArray([1, 2, 3]),
+        compareIntegers,
+        (v1, v2) => -v1,
+      );
+    },
+    {
+      name: 'ValueOrderError',
+      message: 'The relative order of values has changed: expected -2 to be greater than -1',
+    },
+  );
+
+  assert.throws(
+    function () {
+      tree.intersection(
+        tree.fromDistinctAscArray([1, 2, 3]),
+        tree.fromDistinctAscArray([1, 2, 3]),
+        compareIntegers,
+        (v1, v2) => v1 === 2 ? 4 : v1,
+      );
+    },
+    {
+      name: 'ValueOrderError',
+      message: 'The relative order of values has changed: expected 4 to be less than 3',
+    },
+  );
+});
+
 test('zip', function () {
   assert.deepEqual(Array.from(tree.zip/*:: <mixed, mixed> */(tree.empty, tree.empty)), []);
   assert.deepEqual(Array.from(tree.zip/*:: <number, number> */(tree.create(1), tree.empty)), [[1, undefined]]);
@@ -1075,6 +1179,17 @@ test('withKeyComparator', function () {
   assert.equal(integerTree.find(node, 32), 32);
   assert.equal(integerTree.find(node, 33), 33);
   assert.equal(integerTree.find(node, 34), 34);
+
+  assert.ok(
+    tree.equals(
+      integerTree.intersection(
+        tree.fromDistinctAscArray([1, 2, 3]),
+        tree.fromDistinctAscArray([3, 4, 5]),
+        (v1, v2) => v1,
+      ),
+      tree.create(3),
+    ),
+  );
 
   node = integerTree.remove(node, 34);
   node = integerTree.removeIfExists(node, 33);

@@ -10,6 +10,7 @@ import insert, {
   insertOrReplaceIfExists,
   insertOrThrowIfExists,
 } from './insert.js';
+import intersection from './intersection.js';
 import remove, {
   removeIfExists,
   removeOrThrowIfNotExists,
@@ -80,6 +81,12 @@ export default function withKeyComparator/*:: <T, K> */(
   insertOrThrowIfExists(
     tree: ImmutableTree<T>,
     value: T,
+  ): ImmutableTree<T>,
+
+  intersection(
+    t1: ImmutableTree<T>,
+    t2: ImmutableTree<T>,
+    combiner?: (v1: T, v2: T) => T,
   ): ImmutableTree<T>,
 
   remove(
@@ -159,6 +166,9 @@ export default function withKeyComparator/*:: <T, K> */(
     },
     insertOrThrowIfExists(tree, value) {
       return insertOrThrowIfExists(tree, value, cmp);
+    },
+    intersection(t1, t2, combiner) {
+      return intersection(t1, t2, cmp, combiner);
     },
     remove(tree, value) {
       return remove(tree, value, cmp);

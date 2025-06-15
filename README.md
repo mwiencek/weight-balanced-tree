@@ -502,6 +502,24 @@ function difference<T>(
 Returns a new tree with values in `t1` that aren't in `t2`, using the
 comparator `cmp`.
 
+### intersection()
+
+```TypeScript
+function intersection<T>(
+  t1: ImmutableTree<T>,
+  t2: ImmutableTree<T>,
+  cmp: (a: T, b: T) => number,
+  combiner?: (v1: T, v2: T) => T,
+): ImmutableTree<T>;
+```
+
+Returns a new tree with values common to both `t1` and `t2`, using the
+comparator `cmp`.
+
+`combiner` determines which value is chosen; by default it returns the value
+from the second tree, `t2`. If you return a different value, then the
+relative sort order must be preserved; otherwise `ValueOrderError` is thrown.
+
 ### zip()
 
 ```TypeScript

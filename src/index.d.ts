@@ -16,6 +16,7 @@ export {
   insertOrReplaceIfExists,
   insertOrThrowIfExists,
 } from './insert';
+export {default as intersection} from './intersection';
 export {default as iterate} from './iterate';
 export {default as map} from './map';
 export {default as maxValue} from './maxValue';
