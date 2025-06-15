@@ -1,6 +1,6 @@
 // @flow strict
 
-import checkOrder from './checkOrder.js';
+import {ValueOrderError} from './errors.js';
 import fromDistinctAscArray from './fromDistinctAscArray.js';
 import iterate from './iterate.js';
 /*::
@@ -55,13 +55,10 @@ export default function union/*:: <T> */(
         const unionValue = onConflict(r1.value, r2.value);
         if (
           !Object.is(unionValue, r1.value) &&
-          !Object.is(unionValue, r2.value)
+          !Object.is(unionValue, r2.value) &&
+          cmp(r1.value, unionValue) !== 0
         ) {
-          checkOrder(
-            /* expected = */ r1.value,
-            /* got = */ unionValue,
-            cmp,
-          );
+          throw new ValueOrderError(r1.value, unionValue);
         }
         arrayUnion.push(unionValue);
         r1 = null;

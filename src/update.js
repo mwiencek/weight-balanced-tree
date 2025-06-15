@@ -1,11 +1,11 @@
 // @flow strict
 
 import {balanceLeft, balanceRight} from './balance.js';
-import checkOrder from './checkOrder.js';
 import empty from './empty.js';
 import {
   ValueExistsError,
   ValueNotFoundError,
+  ValueOrderError,
 } from './errors.js';
 /*::
 import invariant from './invariant.js';
@@ -73,12 +73,8 @@ export default function update/*:: <T, K> */(
       }
       throw error;
     }
-    if (!Object.is(valueToInsert, key)) {
-      checkOrder(
-        /* expected = */ key,
-        /* got = */ valueToInsert,
-        cmp,
-      );
+    if (!Object.is(valueToInsert, key) && cmp(key, valueToInsert) !== 0) {
+      throw new ValueOrderError(key, valueToInsert);
     }
     return {
       left: empty,
@@ -94,12 +90,8 @@ export default function update/*:: <T, K> */(
     const valueToInsert = onConflict(tree.value, key);
     if (Object.is(valueToInsert, tree.value)) {
       return tree;
-    } else {
-      checkOrder(
-        /* expected = */ key,
-        /* got = */ valueToInsert,
-        cmp,
-      );
+    } else if (cmp(key, valueToInsert) !== 0) {
+      throw new ValueOrderError(key, valueToInsert);
     }
     return {
       left: tree.left,
