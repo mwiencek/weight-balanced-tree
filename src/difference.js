@@ -1,7 +1,9 @@
 // @flow strict
 
-import fromDistinctAscArray from './fromDistinctAscArray.js';
-import iterate from './iterate.js';
+import empty from './empty.js';
+import join from './join.js';
+import join2 from './join2.js';
+import split from './split.js';
 /*::
 import type {ImmutableTree} from './types.js';
 */
@@ -11,37 +13,18 @@ export default function difference/*:: <T> */(
   t2/*: ImmutableTree<T> */,
   cmp/*: (a: T, b: T) => number */,
 )/*: ImmutableTree<T> */ {
-  const arrayDifference/*: Array<T> */ = [],
-        iter1 = iterate(t1),
-        iter2 = iterate(t2);
-  let r1 = null, r2 = null;
-
-  while (true) {
-    if (!r1) {
-      r1 = iter1.next();
-    }
-    if (!r2) {
-      r2 = iter2.next();
-    }
-    if (r1.done) {
-      break;
-    }
-    if (r2.done) {
-      arrayDifference.push(r1.value);
-      r1 = null;
-    } else {
-      const order = cmp(r1.value, r2.value);
-      if (order < 0) {
-        arrayDifference.push(r1.value);
-        r1 = null;
-      } else if (order > 0) {
-        r2 = null;
-      } else {
-        r1 = null;
-        r2 = null;
-      }
-    }
+  if (t1.size === 0) {
+    return empty;
   }
-
-  return fromDistinctAscArray(arrayDifference);
+  if (t2.size === 0) {
+    return t1;
+  }
+  const [small, equal, large] = split(t2, t1.value, cmp);
+  const leftDifference = difference(t1.left, small, cmp);
+  const rightDifference = difference(t1.right, large, cmp);
+  if (equal.size) {
+    return join2(leftDifference, rightDifference);
+  } else {
+    return join(leftDifference, t1.value, rightDifference);
+  }
 }
