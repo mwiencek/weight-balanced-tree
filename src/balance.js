@@ -21,9 +21,9 @@ export function setBalancingParameters(
 }
 
 export function rotateLeft/*:: <T> */(a/*: MutableTree<T> */)/*: void */ {
-   const b = a.right;
+  const b = a.right;
   /*:: invariant(b.size !== 0); */
-   const c = b.right;
+  const c = b.right;
   /*:: invariant(c.size !== 0); */
   const left = {
     left: a.left,
@@ -38,9 +38,9 @@ export function rotateLeft/*:: <T> */(a/*: MutableTree<T> */)/*: void */ {
 }
 
 export function rotateRight/*:: <T> */(c/*: MutableTree<T> */)/*: void */ {
-   const b = c.left;
+  const b = c.left;
   /*:: invariant(b.size !== 0); */
-   const a = b.left;
+  const a = b.left;
   /*:: invariant(a.size !== 0); */
   const right = {
     left: b.right,
@@ -55,11 +55,11 @@ export function rotateRight/*:: <T> */(c/*: MutableTree<T> */)/*: void */ {
 }
 
 export function rotateLeftRight/*:: <T> */(tree/*: MutableTree<T> */)/*: void */ {
-   const a = tree.left;
+  const a = tree.left;
   /*:: invariant(a.size !== 0); */
-   const b = a.right;
+  const b = a.right;
   /*:: invariant(b.size !== 0); */
-   const c = b.right;
+  const c = b.right;
   /*:: invariant(c.size !== 0); */
   const left = {
     left: a.left,
@@ -80,11 +80,11 @@ export function rotateLeftRight/*:: <T> */(tree/*: MutableTree<T> */)/*: void */
 }
 
 export function rotateRightLeft/*:: <T> */(tree/*: MutableTree<T> */)/*: void */ {
-   const c = tree.right;
+  const c = tree.right;
   /*:: invariant(c.size !== 0); */
-   const b = c.left;
+  const b = c.left;
   /*:: invariant(b.size !== 0); */
-   const a = b.left;
+  const a = b.left;
   /*:: invariant(a.size !== 0); */
   const right = {
     left: b.right,
