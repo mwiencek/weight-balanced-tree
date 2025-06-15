@@ -29,10 +29,19 @@ import type {ImmutableTree} from '../src/types.js';
 
 import shuffle from './shuffle.js';
 
-const compareStringX = (
-  a/*: {+x: string} */,
-  b/*: {+x: string} */,
-)/*: number */ => a.x.localeCompare(b.x);
+/*::
+type KeyedObject = {+key: number, ...};
+*/
+
+const compareObjectKeys = (
+  a/*: KeyedObject */,
+  b/*: KeyedObject */,
+)/*: number */ => compareIntegers(a.key, b.key);
+
+const compareNumberWithObjectKey = (
+  num/*: number */,
+  numValueObj/*: KeyedObject */,
+)/*: number */ => compareIntegers(num, numValueObj.key);
 
 const compareIntegersReverse = (
   a/*: number */,
@@ -131,27 +140,22 @@ test('all', function () {
 });
 
 test('find/findBy with different value type', function () {
-  const compareX2 = (
-    x/*: string */,
-    value/*: {+x: string} */,
-  )/*: number */ => x.localeCompare(value.x);
+  const x1 = {key: 1};
+  const x2 = {key: 2};
 
-  const xa = {x: 'a'};
-  const xb = {x: 'b'};
+  let node/*: ImmutableTree<KeyedObject> */ = tree.empty;
+  node = tree.insert(node, x1, compareObjectKeys);
+  node = tree.insert(node, x2, compareObjectKeys);
 
-  let node/*: ImmutableTree<{+x: string}> */ = tree.empty;
-  node = tree.insert(node, xa, compareStringX);
-  node = tree.insert(node, xb, compareStringX);
+  let foundValue = tree.find(node, 2, compareNumberWithObjectKey, null);
+  assert.ok(foundValue?.key === 2);
+  foundValue = tree.find(node, 3, compareNumberWithObjectKey, {key: 3});
+  assert.ok(foundValue.key === 3);
 
-  let foundValue = tree.find(node, 'b', compareX2, null);
-  assert.ok(foundValue?.x === 'b');
-  foundValue = tree.find(node, 'c', compareX2, {x: 'c'});
-  assert.ok(foundValue.x === 'c');
-
-  foundValue = tree.findBy(node, (x) => compareX2('b', x), null);
-  assert.ok(foundValue?.x === 'b');
-  foundValue = tree.findBy(node, (x) => compareX2('c', x), {x: 'c'});
-  assert.ok(foundValue.x === 'c');
+  foundValue = tree.findBy(node, (x) => compareNumberWithObjectKey(2, x), null);
+  assert.ok(foundValue?.key === 2);
+  foundValue = tree.findBy(node, (x) => compareNumberWithObjectKey(3, x), {key: 3});
+  assert.ok(foundValue.key === 3);
 });
 
 test('findNext/findPrev with non-existent values', function () {
@@ -186,26 +190,21 @@ test('findNext/findPrev with non-existent values', function () {
 });
 
 test('insertIfNotExists', function () {
-  const cmp = (
-    a/*: {+value: number} */,
-    b/*: {+value: number} */,
-  )/*: number */ => compareIntegers(a.value, b.value);
-
-  let node/*: ImmutableTree<{+value: number}> */ = tree.empty;
+  let node/*: ImmutableTree<KeyedObject> */ = tree.empty;
   for (const num of oneToThirtyOne) {
-    node = tree.insert(node, {value: num}, cmp, onConflictKeepTreeValue);
+    node = tree.insert(node, {key: num}, compareObjectKeys, onConflictKeepTreeValue);
 
-    const sameNode1 = tree.insert(node, {value: num}, cmp, onConflictKeepTreeValue);
+    const sameNode1 = tree.insert(node, {key: num}, compareObjectKeys, onConflictKeepTreeValue);
     assert.equal(node, sameNode1);
 
-    const sameNode2 = tree.insertIfNotExists(node, {value: num}, cmp);
+    const sameNode2 = tree.insertIfNotExists(node, {key: num}, compareObjectKeys);
     assert.equal(node, sameNode2);
   }
 
   const finalNode = node;
   for (const num of oneToThirtyOne) {
-    node = tree.insert(node, {value: num}, cmp, onConflictKeepTreeValue);
-    node = tree.insertIfNotExists(node, {value: num}, cmp);
+    node = tree.insert(node, {key: num}, compareObjectKeys, onConflictKeepTreeValue);
+    node = tree.insertIfNotExists(node, {key: num}, compareObjectKeys);
   }
   assert.equal(node, finalNode);
 
@@ -213,62 +212,52 @@ test('insertIfNotExists', function () {
 });
 
 test('insertOrReplaceIfExists', function () {
-  const cmp = (
-    a/*: {+value: number} */,
-    b/*: {+value: number} */,
-  )/*: number */ => compareIntegers(a.value, b.value);
-
-  let node/*: ImmutableTree<{+value: number}> */ = tree.empty;
+  let node/*: ImmutableTree<KeyedObject> */ = tree.empty;
   for (const num of oneToThirtyOne) {
-    node = tree.insert(node, {value: num}, cmp, onConflictUseGivenValue);
-    checkTreeInvariants(node, cmp);
+    node = tree.insert(node, {key: num}, compareObjectKeys, onConflictUseGivenValue);
+    checkTreeInvariants(node, compareObjectKeys);
   }
 
   for (const num of oneToThirtyOne) {
-    const newValue1 = {value: num};
-    const newNode1 = tree.insert(node, newValue1, cmp, onConflictUseGivenValue);
-    checkTreeInvariants(newNode1, cmp);
+    const newValue1 = {key: num};
+    const newNode1 = tree.insert(node, newValue1, compareObjectKeys, onConflictUseGivenValue);
+    checkTreeInvariants(newNode1, compareObjectKeys);
     assert.notEqual(node, newNode1);
-    assert.equal(tree.find(newNode1, {value: num}, cmp, null), newValue1);
+    assert.equal(tree.find(newNode1, {key: num}, compareObjectKeys, null), newValue1);
   }
 
   for (const num of oneToThirtyOne) {
-    const newValue2 = {value: num};
-    const newNode2 = tree.insertOrReplaceIfExists(node, newValue2, cmp);
-    checkTreeInvariants(newNode2, cmp);
+    const newValue2 = {key: num};
+    const newNode2 = tree.insertOrReplaceIfExists(node, newValue2, compareObjectKeys);
+    checkTreeInvariants(newNode2, compareObjectKeys);
     assert.notEqual(node, newNode2);
-    assert.equal(tree.find(newNode2, {value: num}, cmp, null), newValue2);
+    assert.equal(tree.find(newNode2, {key: num}, compareObjectKeys, null), newValue2);
   }
 
   assert.equal(node.size, 31);
 });
 
 test('insertOrThrowIfExists', function () {
-  const cmp = (
-    a/*: {+value: number} */,
-    b/*: {+value: number} */,
-  )/*: number */ => compareIntegers(a.value, b.value);
-
-  let node/*: ImmutableTree<{+value: number}> */ = tree.empty;
+  let node/*: ImmutableTree<KeyedObject> */ = tree.empty;
   for (const num of oneToThirtyOne) {
-    node = tree.insert(node, {value: num}, cmp);
+    node = tree.insert(node, {key: num}, compareObjectKeys);
     assert.throws(
       function () {
-        node = tree.insertOrThrowIfExists(node, {value: num}, cmp);
+        node = tree.insertOrThrowIfExists(node, {key: num}, compareObjectKeys);
       },
       ValueExistsError,
       'exception is thrown with insertOrThrowIfExists',
     );
     assert.throws(
       function () {
-        node = tree.insert(node, {value: num}, cmp, onConflictThrowError);
+        node = tree.insert(node, {key: num}, compareObjectKeys, onConflictThrowError);
       },
       ValueExistsError,
       'exception is thrown with insert plus onConflictThrowError',
     );
     assert.throws(
       function () {
-        node = tree.insert(node, {value: num}, cmp);
+        node = tree.insert(node, {key: num}, compareObjectKeys);
       },
       ValueExistsError,
       'exception is thrown with insert by default',
@@ -287,13 +276,13 @@ test('replacing a node preserves the existing node size', function () {
           left: tree.empty,
           right: tree.empty,
           size: 1,
-          value: {value: 2},
+          value: {key: 2},
         },
         size: 2,
-        value: {value: 1},
+        value: {key: 1},
       },
-      {value: 1},
-      (a, b) => compareIntegers(a.value, b.value),
+      {key: 1},
+      compareObjectKeys,
     ).size,
     2,
   );
@@ -380,18 +369,13 @@ test('create', function () {
 });
 
 test('insert with onConflict', function () {
-  /*:: type Item = {+key: number, +value: number}; */
-
-  const cmp = (a/*: Item */, b/*: Item */) => compareIntegers(a.key, b.key);
-  const cmpKeyWithItem = (key/*: number */, item/*: Item */) => compareIntegers(key, item.key);
-
   let v1 = {key: 1, value: 10};
   let node = tree.create(v1);
 
   node = tree.insert(
     node,
     {key: 1, value: 100},
-    cmp,
+    compareObjectKeys,
     (treeValue, newValue) => {
       assert.equal(treeValue, v1);
       assert.deepEqual(newValue, {key: 1, value: 100});
@@ -399,7 +383,7 @@ test('insert with onConflict', function () {
       return v1;
     },
   );
-  assert.equal(tree.find(node, 1, cmpKeyWithItem, null), v1);
+  assert.equal(tree.find(node, 1, compareNumberWithObjectKey, null), v1);
   assert.deepEqual(v1, {key: 1, value: 1000});
 
   assert.throws(
@@ -407,7 +391,7 @@ test('insert with onConflict', function () {
       node = tree.insert(
         node,
         v1,
-        cmp,
+        compareObjectKeys,
         () => {
           return {key: 2, value: 20};
         },
@@ -422,51 +406,46 @@ test('insert with onConflict', function () {
 });
 
 test('update', function () {
-  /*:: type Item = {+key: number, +value: number}; */
-
-  const cmp = (a/*: Item */, b/*: Item */) => compareIntegers(a.key, b.key);
-  const cmpKeyWithItem = (key/*: number */, item/*: Item */) => compareIntegers(key, item.key);
-
   const v1 = {key: 1, value: 10};
   const v2 = {key: 2, value: 20};
 
-  let node/*: ImmutableTree<Item> */ = tree.create(v1);
+  let node/*: ImmutableTree<KeyedObject> */ = tree.create(v1);
 
   node = tree.update(
     node,
     v2,
-    cmp,
+    compareObjectKeys,
     onConflictThrowError,
     (newItem) => {
       assert.equal(newItem, v2);
       return v2;
     },
   );
-  assert.equal(tree.find(node, v2, cmp, null), v2);
+  assert.equal(tree.find(node, v2, compareObjectKeys, null), v2);
 
   node = tree.update(
     node,
     3,
-    cmpKeyWithItem,
+    compareNumberWithObjectKey,
     onConflictThrowError,
     (newKey) => {
       return {key: newKey, value: newKey * 10};
     },
   );
-  let v3 = tree.find(node, 3, cmpKeyWithItem, null);
+  let v3 = tree.find(node, 3, compareNumberWithObjectKey, null);
   assert.deepEqual(v3, {key: 3, value: 30});
 
   node = tree.update(
     node,
     3,
-    cmpKeyWithItem,
+    compareNumberWithObjectKey,
     onConflictKeepTreeValue,
     (newKey) => {
       return {key: newKey, value: newKey * 10};
     },
   );
   assert.deepEqual(
-    tree.find(node, 3, cmpKeyWithItem, null),
+    tree.find(node, 3, compareNumberWithObjectKey, null),
     v3,
     'existing tree value it kept',
   );
@@ -474,7 +453,7 @@ test('update', function () {
   node = tree.update(
     node,
     3,
-    cmpKeyWithItem,
+    compareNumberWithObjectKey,
     (treeValue, key) => {
       v3 = {key, value: key * 10};
       return v3;
@@ -484,7 +463,7 @@ test('update', function () {
     },
   );
   assert.deepEqual(
-    tree.find(node, 3, cmpKeyWithItem, null),
+    tree.find(node, 3, compareNumberWithObjectKey, null),
     v3,
     'new tree value is used',
   );
@@ -494,7 +473,7 @@ test('update', function () {
       node = tree.update(
         node,
         {key: 4, value: 40},
-        cmp,
+        compareObjectKeys,
         onConflictKeepTreeValue,
         (newValue) => {
           return {key: 5, value: 50};
@@ -515,7 +494,7 @@ test('update', function () {
       node = tree.update(
         node,
         5,
-        cmpKeyWithItem,
+        compareNumberWithObjectKey,
         (treeValue, key) => treeValue,
         () => {
           throw new CustomNotFoundError();
@@ -769,11 +748,6 @@ test('toArray', function () {
 });
 
 test('union', function () {
-  const compareValues = (
-    a/*: {+v: number} */,
-    b/*: {+v: number} */,
-  )/*: number */ => compareIntegers(a.v, b.v);
-
   assert.equal(tree.union(tree.empty, tree.empty, compareIntegers), tree.empty);
   assert.deepEqual(
     tree.union(tree.create(1), tree.empty, compareIntegers),
@@ -844,40 +818,40 @@ test('union', function () {
     ),
   );
 
-  const v3a = {v: 3};
-  const v3b = {v: 3};
+  const k3a = {key: 3};
+  const k3b = {key: 3};
 
   const unionWithDefaultConflictHandler = tree.union(
-    tree.fromDistinctAscArray([{v: 1}, {v: 2}, v3a]),
-    tree.fromDistinctAscArray([v3b, {v: 4}, {v: 5}]),
-    compareValues,
+    tree.fromDistinctAscArray([{key: 1}, {key: 2}, k3a]),
+    tree.fromDistinctAscArray([k3b, {key: 4}, {key: 5}]),
+    compareObjectKeys,
   );
   assert.deepEqual(
     tree.toArray(
       unionWithDefaultConflictHandler,
     ),
-    [{v: 1}, {v: 2}, {v: 3}, {v: 4}, {v: 5}],
+    [{key: 1}, {key: 2}, {key: 3}, {key: 4}, {key: 5}],
   );
   assert.equal(
-    tree.find(unionWithDefaultConflictHandler, {v: 3}, compareValues, null),
-    v3b,
+    tree.find(unionWithDefaultConflictHandler, {key: 3}, compareObjectKeys, null),
+    k3b,
   );
 
   const unionWithCustomConflictHandler = tree.union(
-    tree.fromDistinctAscArray([{v: 1}, {v: 2}, v3a]),
-    tree.fromDistinctAscArray([v3b, {v: 4}, {v: 5}]),
-    compareValues,
+    tree.fromDistinctAscArray([{key: 1}, {key: 2}, k3a]),
+    tree.fromDistinctAscArray([k3b, {key: 4}, {key: 5}]),
+    compareObjectKeys,
     (v1, v2) => v1,
   );
   assert.deepEqual(
     tree.toArray(
       unionWithCustomConflictHandler,
     ),
-    [{v: 1}, {v: 2}, {v: 3}, {v: 4}, {v: 5}],
+    [{key: 1}, {key: 2}, {key: 3}, {key: 4}, {key: 5}],
   );
   assert.equal(
-    tree.find(unionWithCustomConflictHandler, {v: 3}, compareValues, null),
-    v3a,
+    tree.find(unionWithCustomConflictHandler, {key: 3}, compareObjectKeys, null),
+    k3a,
   );
 
   assert.ok(
@@ -955,33 +929,28 @@ test('intersection', function () {
     ),
   );
 
-  const v3a = {v: 3};
-  const v3b = {v: 3};
-
-  const compareValues = (
-    a/*: {+v: number} */,
-    b/*: {+v: number} */,
-  )/*: number */ => compareIntegers(a.v, b.v);
+  const k3a = {key: 3};
+  const k3b = {key: 3};
 
   const intersectionWithDefaultCombiner = tree.intersection(
-    tree.fromDistinctAscArray([v3a]),
-    tree.fromDistinctAscArray([v3b]),
-    compareValues,
+    tree.fromDistinctAscArray([k3a]),
+    tree.fromDistinctAscArray([k3b]),
+    compareObjectKeys,
   );
   assert.equal(
     intersectionWithDefaultCombiner.value,
-    v3b,
+    k3b,
   );
 
   const intersectionWithCustomCombiner = tree.intersection(
-    tree.fromDistinctAscArray([v3a]),
-    tree.fromDistinctAscArray([v3b]),
-    compareValues,
+    tree.fromDistinctAscArray([k3a]),
+    tree.fromDistinctAscArray([k3b]),
+    compareObjectKeys,
     (v1, v2) => v1,
   );
   assert.equal(
     intersectionWithCustomCombiner.value,
-    v3a,
+    k3a,
   );
 
   assert.ok(
