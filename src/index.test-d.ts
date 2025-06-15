@@ -184,7 +184,7 @@ expectError<types.ImmutableTree<string>>(update<string, number>(stringTree, 0, c
 // Error classes
 expectAssignable<Error>(new ValueExistsError('a'));
 expectAssignable<Error>(new ValueNotFoundError('a'));
-expectAssignable<Error>(new ValueOrderError('a', 'b'));
+expectAssignable<Error>(new ValueOrderError('a', 'b', 'less than'));
 
 // withKeyComparator
 const mapTreeWrapper = withKeyComparator<NSTuple, number>(cmpNumbers, getNumberKeyFromTuple);

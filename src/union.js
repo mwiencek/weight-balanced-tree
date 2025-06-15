@@ -28,22 +28,28 @@ export default function union/*:: <T> */(
     return t1;
   }
   const [small, equal, large] = split(t2, t1.value, cmp);
-
+  const leftUnion = union(t1.left, small, cmp, onConflict);
+  const rightUnion = union(t1.right, large, cmp, onConflict);
   let unionValue = t1.value;
   if (equal.size) {
     unionValue = onConflict(t1.value, equal.value);
     if (
       !Object.is(unionValue, t1.value) &&
-      !Object.is(unionValue, equal.value) &&
-      cmp(t1.value, unionValue) !== 0
+      !Object.is(unionValue, equal.value)
     ) {
-      throw new ValueOrderError(t1.value, unionValue);
+      if (
+        leftUnion.size !== 0 &&
+        cmp(unionValue, leftUnion.value) <= 0
+      ) {
+        throw new ValueOrderError(unionValue, leftUnion.value, 'greater than');
+      }
+      if (
+        rightUnion.size !== 0 &&
+        cmp(unionValue, rightUnion.value) >= 0
+      ) {
+        throw new ValueOrderError(unionValue, rightUnion.value, 'less than');
+      }
     }
   }
-
-  return join(
-    union(t1.left, small, cmp, onConflict),
-    unionValue,
-    union(t1.right, large, cmp, onConflict),
-  );
+  return join(leftUnion, unionValue, rightUnion);
 }

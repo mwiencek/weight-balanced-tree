@@ -11,7 +11,6 @@ import {
   IndexOutOfRangeError,
   ValueExistsError,
   ValueNotFoundError,
-  ValueOrderError,
 } from '../src/errors.js';
 import * as tree from '../src/index.js';
 import {
@@ -412,7 +411,11 @@ test('insert with onConflict', function () {
         },
       );
     },
-    ValueOrderError,
+    {
+      name: 'ValueOrderError',
+      message: 'The relative order of values has changed: ' +
+        'expected [object Object] to be equal to [object Object]',
+    },
   );
 });
 
@@ -496,7 +499,11 @@ test('update', function () {
         },
       );
     },
-    ValueOrderError,
+    {
+      name: 'ValueOrderError',
+      message: 'The relative order of values has changed: ' +
+        'expected [object Object] to be equal to [object Object]',
+    }
   );
 
   class CustomNotFoundError extends Error {}
@@ -874,16 +881,46 @@ test('union', function () {
     v3a,
   );
 
+  assert.ok(
+    tree.equals(
+      tree.union(
+        tree.fromDistinctAscArray(oneToThirtyOne),
+        tree.fromDistinctAscArray(oneToThirtyOne),
+        compareIntegers,
+        (v1, v2) => v1 + v2,
+      ),
+      tree.fromDistinctAscArray(oneToThirtyOne.map(x => x * 2)),
+    ),
+  );
+
   assert.throws(
     function () {
       tree.union(
-        tree.fromDistinctAscArray([1]),
-        tree.fromDistinctAscArray([1]),
+        tree.fromDistinctAscArray([1, 2, 3]),
+        tree.fromDistinctAscArray([1, 2, 3]),
         compareIntegers,
-        (v1, v2) => 2,
+        (v1, v2) => -v1,
       );
     },
-    ValueOrderError,
+    {
+      name: 'ValueOrderError',
+      message: 'The relative order of values has changed: expected -2 to be greater than -1',
+    },
+  );
+
+  assert.throws(
+    function () {
+      tree.union(
+        tree.fromDistinctAscArray([1, 2, 3]),
+        tree.fromDistinctAscArray([1, 2, 3]),
+        compareIntegers,
+        (v1, v2) => v1 === 2 ? 4 : v1,
+      );
+    },
+    {
+      name: 'ValueOrderError',
+      message: 'The relative order of values has changed: expected 4 to be less than 3',
+    },
   );
 });
 

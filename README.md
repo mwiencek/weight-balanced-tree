@@ -481,11 +481,13 @@ function union<T>(
 ): ImmutableTree<T>;
 ```
 
-Merges two trees together using the comparator `cmp`. `onConflict`
-handles the case where an equivalent value appears in both trees, and is
-expected to return the final value to use in the union (though it must have
-the same relative sort order as `v1` and `v2`). If not specified, by default
-`union` will prefer values in `t2` when resolving conflicts.
+Merges two trees together using the comparator `cmp`.
+
+`onConflict` handles the case where an equivalent value appears in both
+trees, and is expected to return the final value to use in the union. If not
+specified, by `union` will prefer values in `t2`. If you return a different
+value, then the relative sort order must be preserved; otherwise
+`ValueOrderError` is thrown.
 
 ### difference()
 

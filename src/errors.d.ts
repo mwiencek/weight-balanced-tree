@@ -6,8 +6,17 @@ declare class ValueNotFoundError extends Error {
   constructor(value: unknown);
 }
 
+export type ExpectedValueOrder =
+  | 'less than'
+  | 'greater than'
+  | 'equal to';
+
 declare class ValueOrderError extends Error {
-  constructor(expected: unknown, got: unknown);
+  constructor(
+    v1: unknown,
+    v2: unknown,
+    expectedOrder: ExpectedValueOrder,
+  );
 }
 
 export {

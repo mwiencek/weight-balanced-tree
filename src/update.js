@@ -74,7 +74,7 @@ export default function update/*:: <T, K> */(
       throw error;
     }
     if (!Object.is(valueToInsert, key) && cmp(key, valueToInsert) !== 0) {
-      throw new ValueOrderError(key, valueToInsert);
+      throw new ValueOrderError(key, valueToInsert, 'equal to');
     }
     return {
       left: empty,
@@ -91,7 +91,7 @@ export default function update/*:: <T, K> */(
     if (Object.is(valueToInsert, tree.value)) {
       return tree;
     } else if (cmp(key, valueToInsert) !== 0) {
-      throw new ValueOrderError(key, valueToInsert);
+      throw new ValueOrderError(key, valueToInsert, 'equal to');
     }
     return {
       left: tree.left,

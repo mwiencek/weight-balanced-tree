@@ -7,6 +7,11 @@
     according to `cmp`.
   * `union` and `difference` are now implemented using join-based algorithms
     with a complexity of `O(m * log(n / m + 1))`.
+  * `ValueOrderError` now indicates whether parameters `v1` and `v2` should
+    have been less than, greater than, or equal to each other.
+  * Relaxed the situations in which `ValueOrderError` is thrown for `union`
+    `onConflict` values. The returned value no longer has to have an
+    identical sort order, as long as the final tree is valid.
 
 ## v0.8.0 (2025-06-13)
 
