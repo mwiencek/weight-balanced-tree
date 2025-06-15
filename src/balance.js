@@ -60,7 +60,6 @@ export function rotateLeftRight/*:: <T> */(tree/*: MutableTree<T> */)/*: void */
   const b = a.right;
   /*:: invariant(b.size !== 0); */
   const c = b.right;
-  /*:: invariant(c.size !== 0); */
   const left = {
     left: a.left,
     right: b.left,
@@ -85,7 +84,6 @@ export function rotateRightLeft/*:: <T> */(tree/*: MutableTree<T> */)/*: void */
   const b = c.left;
   /*:: invariant(b.size !== 0); */
   const a = b.left;
-  /*:: invariant(a.size !== 0); */
   const right = {
     left: b.right,
     right: c.right,
