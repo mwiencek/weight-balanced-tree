@@ -16,8 +16,14 @@ export type InsertConflictHandler<T, K> =
   (existingTreeValue: T, key: K) => T;
 
 export type InsertNotFoundHandler<T, K> =
-  (key: K) => T;
+  (key: K) => T | DoNothing;
 */
+
+class DoNothing {}
+Object.freeze(DoNothing);
+Object.freeze(DoNothing.prototype);
+
+export const DO_NOTHING/*: DoNothing */ = Object.freeze(new DoNothing());
 
 export function onConflictThrowError()/*: empty */ {
   // If this is expected, provide your own `onConflict` handler.
@@ -38,12 +44,10 @@ export function onConflictUseGivenValue/*:: <T> */(
   return givenValue;
 }
 
-const DO_NOTHING_SYMBOL = Symbol('DO_NOTHING');
-
 export function onNotFoundDoNothing(
   givenValue/*: mixed */,
-)/*: empty */ {
-  throw DO_NOTHING_SYMBOL;
+)/*: DoNothing */ {
+  return DO_NOTHING;
 }
 
 export function onNotFoundThrowError()/*: empty */ {
@@ -64,16 +68,12 @@ export default function update/*:: <T, K> */(
   onNotFound/*: InsertNotFoundHandler<T, K> */,
 )/*: ImmutableTree<T> */ {
   if (tree.size === 0) {
-    let valueToInsert;
-    try {
-      valueToInsert = onNotFound(key);
-    } catch (error) {
-      if (error === DO_NOTHING_SYMBOL) {
-        // This is the only case where `update` can return `empty`.
-        return empty;
-      }
-      throw error;
+    const valueToInsert = onNotFound(key);
+    if (valueToInsert === DO_NOTHING) {
+      // This is the only case where `update` can return `empty`.
+      return empty;
     }
+    /*:: invariant(!(valueToInsert instanceof DoNothing)); */
     if (!Object.is(valueToInsert, key) && cmp(key, valueToInsert) !== 0) {
       throw new ValueOrderError(key, valueToInsert, 'equal to');
     }

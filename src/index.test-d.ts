@@ -179,7 +179,7 @@ expectAssignable<InsertConflictHandler<unknown, unknown>>(onConflictThrowError);
 expectAssignable<InsertConflictHandler<unknown, unknown>>(onConflictUseGivenValue);
 
 // InsertNotFoundHandler
-expectType<InsertNotFoundHandler<string, number>>((a: number) => String(a));
+expectAssignable<InsertNotFoundHandler<string, number>>((a: number) => String(a));
 expectAssignable<InsertNotFoundHandler<unknown, unknown>>(onNotFoundDoNothing);
 expectAssignable<InsertNotFoundHandler<unknown, unknown>>(onNotFoundThrowError);
 expectAssignable<InsertNotFoundHandler<unknown, unknown>>(onNotFoundUseGivenValue);
