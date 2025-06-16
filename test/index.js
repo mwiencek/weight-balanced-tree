@@ -253,6 +253,26 @@ test('insertOrReplaceIfExists', function () {
   }
 
   assert.equal(node.size, 31);
+
+  assert.equal(
+    tree.insertOrReplaceIfExists(
+      {
+        left: tree.empty,
+        right: {
+          left: tree.empty,
+          right: tree.empty,
+          size: 1,
+          value: {key: 2},
+        },
+        size: 2,
+        value: {key: 1},
+      },
+      {key: 1},
+      compareObjectKeys,
+    ).size,
+    2,
+    'replacing a node preserves the existing node size',
+  );
 });
 
 test('insertOrThrowIfExists', function () {
@@ -283,27 +303,6 @@ test('insertOrThrowIfExists', function () {
   }
 
   assert.equal(node.size, 31);
-});
-
-test('replacing a node preserves the existing node size', function () {
-  assert.equal(
-    tree.insertOrReplaceIfExists(
-      {
-        left: tree.empty,
-        right: {
-          left: tree.empty,
-          right: tree.empty,
-          size: 1,
-          value: {key: 2},
-        },
-        size: 2,
-        value: {key: 1},
-      },
-      {key: 1},
-      compareObjectKeys,
-    ).size,
-    2,
-  );
 });
 
 test('removeIfExists', function () {
