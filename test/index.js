@@ -410,7 +410,45 @@ test('insert', function (t) {
   });
 });
 
-test('update', function () {
+test('update', function (t) {
+  t.test('onNotFoundDoNothing', function () {
+    const node = tree.create(1);
+    const newNode = tree.update(
+      node,
+      2,
+      compareIntegers,
+      onConflictThrowError,
+      onNotFoundDoNothing,
+    );
+    assert.equal(newNode, node, 'tree was not updated with onNotFoundDoNothing');
+  });
+
+  t.test('onNotFoundThrowError', function () {
+    assert.throws(
+      () => {
+        const node = tree.update/*:: <number, number> */(
+          tree.empty,
+          1,
+          compareIntegers,
+          onConflictKeepTreeValue,
+          onNotFoundThrowError,
+        );
+      },
+      ValueNotFoundError,
+    );
+  });
+
+  t.test('onNotFoundUseGivenValue', function () {
+    const node = tree.update/*:: <number, number> */(
+      tree.empty,
+      1,
+      compareIntegers,
+      onConflictKeepTreeValue,
+      onNotFoundUseGivenValue,
+    );
+    assert.equal(node.value, 1);
+  });
+
   const v1 = {key: 1, value: 10};
   const v2 = {key: 2, value: 20};
 
@@ -508,45 +546,6 @@ test('update', function () {
     },
     CustomNotFoundError,
   );
-});
-
-test('onNotFoundDoNothing', function () {
-  let node = tree.create(1);
-
-  const newNode = tree.update(
-    node,
-    2,
-    compareIntegers,
-    onConflictThrowError,
-    onNotFoundDoNothing,
-  );
-  assert.equal(newNode, node, 'tree was not updated with onNotFoundDoNothing');
-});
-
-test('onNotFoundThrowError', function () {
-  assert.throws(
-    () => {
-      const node = tree.update/*:: <number, number> */(
-        tree.empty,
-        1,
-        compareIntegers,
-        onConflictKeepTreeValue,
-        onNotFoundThrowError,
-      );
-    },
-    ValueNotFoundError,
-  );
-});
-
-test('onNotFoundUseGivenValue', function () {
-  const node = tree.update/*:: <number, number> */(
-    tree.empty,
-    1,
-    compareIntegers,
-    onConflictKeepTreeValue,
-    onNotFoundUseGivenValue,
-  );
-  assert.equal(node.value, 1);
 });
 
 test('difference', function () {
