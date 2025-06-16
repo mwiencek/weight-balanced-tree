@@ -173,7 +173,7 @@ expectError<string>(findNext<string, number>(stringTree, 0, cmpStrings, ''));
 expectError<string>(findPrev<string, number>(stringTree, 0, cmpStrings, ''));
 
 // InsertConflictHandler
-expectType<InsertConflictHandler<string, number>>((a: string, b: number) => a + String(b));
+expectAssignable<InsertConflictHandler<string, number>>((a: string, b: number) => a + String(b));
 expectAssignable<InsertConflictHandler<unknown, unknown>>(onConflictKeepTreeValue);
 expectAssignable<InsertConflictHandler<unknown, unknown>>(onConflictThrowError);
 expectAssignable<InsertConflictHandler<unknown, unknown>>(onConflictUseGivenValue);

@@ -96,7 +96,8 @@ function update<T, K>(
 ): ImmutableTree<T>;
 ```
 
-A flexible primitive that can both insert and replace values in `tree`.
+A flexible primitive that can insert, replace, and even remove values in
+`tree`.
 
 `key` is located using the comparator `cmp`, which receives the same `key`
 as its first argument, and a value of type `T` from `tree` as its second
@@ -121,6 +122,8 @@ argument.
     * `onConflictKeepTreeValue`, which returns the existing tree value.
     * `onConflictUseGivenValue`, which returns `key`. (This is only usable
       in cases where `K` is a subtype of `T`.)
+    * `onConflictRemoveValue`, which causes `update` to remove the value
+      stored at `key` from `tree`.
 
  * If `key` doesn't exist, `onNotFound` is invoked to lazily create or
    reject the missing value. It only receives one argument: the `key` passed

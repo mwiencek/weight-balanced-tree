@@ -5,10 +5,15 @@ declare class DoNothing {
   private is_typescript_sound: never;
 }
 
+declare class RemoveValue {
+  private why_do_i_exist: unknown;
+}
+
 export const DO_NOTHING: DoNothing;
+export const REMOVE_VALUE: DoNothing;
 
 export type InsertConflictHandler<T, K> =
-  (existingTreeValue: T, key: K) => T;
+  (existingTreeValue: T, key: K) => T | RemoveValue;
 
 export type InsertNotFoundHandler<T, K> =
   (key: K) => T | DoNothing;
@@ -20,6 +25,8 @@ export const onConflictKeepTreeValue:
 
 export const onConflictUseGivenValue:
   <T>(treeValue: T, givenValue: T) => T;
+
+export function onConflictRemoveValue(): RemoveValue;
 
 export function onNotFoundDoNothing(): DoNothing;
 

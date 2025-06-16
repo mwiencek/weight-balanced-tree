@@ -8,12 +8,13 @@ import {
   ValueOrderError,
 } from './errors.js';
 import join from './join.js';
+import join2 from './join2.js';
 /*::
 import invariant from './invariant.js';
 import type {ImmutableTree} from './types.js';
 
 export type InsertConflictHandler<T, K> =
-  (existingTreeValue: T, key: K) => T;
+  (existingTreeValue: T, key: K) => T | RemoveValue;
 
 export type InsertNotFoundHandler<T, K> =
   (key: K) => T | DoNothing;
@@ -23,7 +24,12 @@ class DoNothing {}
 Object.freeze(DoNothing);
 Object.freeze(DoNothing.prototype);
 
+class RemoveValue {}
+Object.freeze(RemoveValue);
+Object.freeze(RemoveValue.prototype);
+
 export const DO_NOTHING/*: DoNothing */ = Object.freeze(new DoNothing());
+export const REMOVE_VALUE/*: RemoveValue */ = Object.freeze(new RemoveValue());
 
 export function onConflictThrowError()/*: empty */ {
   // If this is expected, provide your own `onConflict` handler.
@@ -42,6 +48,10 @@ export function onConflictUseGivenValue/*:: <T> */(
   givenValue/*: T */,
 )/*: T */ {
   return givenValue;
+}
+
+export function onConflictRemoveValue()/*: RemoveValue */ {
+  return REMOVE_VALUE;
 }
 
 export function onNotFoundDoNothing(
@@ -84,6 +94,10 @@ export default function update/*:: <T, K> */(
 
   if (order === 0) {
     const valueToInsert = onConflict(tree.value, key);
+    if (valueToInsert === REMOVE_VALUE) {
+      return join2(tree.left, tree.right);
+    }
+    /*:: invariant(!(valueToInsert instanceof RemoveValue)); */
     if (Object.is(valueToInsert, tree.value)) {
       return tree;
     } else if (cmp(key, valueToInsert) !== 0) {

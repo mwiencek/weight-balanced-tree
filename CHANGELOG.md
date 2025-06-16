@@ -16,6 +16,8 @@
     identical sort order, as long as the final tree is valid.
   * Added `intersection`.
   * Added `filter`.
+  * Added `onConflictRemoveValue`, which causes `update` to remove the value
+    stored at `key` from `tree`.
   * Refactoring and code cleanup.
 
 ## v0.8.0 (2025-06-13)

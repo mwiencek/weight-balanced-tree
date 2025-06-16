@@ -22,6 +22,7 @@ import {
   onConflictKeepTreeValue,
   onConflictThrowError,
   onConflictUseGivenValue,
+  onConflictRemoveValue,
   onNotFoundDoNothing,
   onNotFoundThrowError,
   onNotFoundUseGivenValue,
@@ -478,6 +479,18 @@ test('insert', function (t) {
     );
     assert.equal(node, origNode);
     assert.equal(tree.find(node, 1, compareNumberWithObjectKey), v1);
+  });
+
+  t.test('onConflictRemoveValue', function () {
+    let node/*: ImmutableTree<KeyedObject> */ = origNode;
+    node = tree.insert(
+      node,
+      v1,
+      compareObjectKeys,
+      onConflictRemoveValue,
+    );
+    assert.equal(node, tree.empty);
+    assert.equal(tree.find(node, 1, compareNumberWithObjectKey), undefined);
   });
 
   t.test('custom onConflict return value', function () {
