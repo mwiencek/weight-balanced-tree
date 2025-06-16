@@ -3,7 +3,7 @@
 import {
   balanceLeft,
   balanceRight,
-  DELTA,
+  heavy,
 } from './balance.js';
 import {node} from './create.js';
 /*::
@@ -17,7 +17,7 @@ export default function join/*:: <T> */(
   right/*: ImmutableTree<T> */,
 )/*: ImmutableTree<T> */ {
   if ((left.size + right.size) >= 2) {
-    if (left.size > (DELTA * right.size)) {
+    if (heavy(left.size, right.size)) {
       /*:: invariant(left.size !== 0); */
       return balanceRight(node(
         left.left,
@@ -25,7 +25,7 @@ export default function join/*:: <T> */(
         join(left.right, value, right),
       ));
     }
-    if (right.size > (DELTA * left.size)) {
+    if (heavy(right.size, left.size)) {
       /*:: invariant(right.size !== 0); */
       return balanceLeft(node(
         join(left, value, right.left),

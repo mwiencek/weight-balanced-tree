@@ -7,7 +7,7 @@ import {
 import * as types from '../src/types';
 import * as wbt from '../src/index';
 import at from '../src/at';
-import {setBalancingParameters} from '../src/balance';
+import {setDelta} from '../src/balance';
 import create from '../src/create';
 import difference from '../src/difference';
 import empty from '../src/empty';
@@ -115,7 +115,7 @@ expectType<types.ImmutableTree<string>>(difference(stringTree, stringTree, cmpSt
 expectType<types.ImmutableTree<string>>(intersection(stringTree, stringTree, cmpStrings));
 expectType<Generator<[string | undefined, number | undefined], undefined, undefined>>(zip(stringTree, numberTree));
 expectType<ValidateResult<string>>(validate(stringTree, cmpStrings));
-expectType<undefined>(setBalancingParameters(3, 2));
+expectType<undefined>(setDelta(3));
 
 // Value type override
 expectType<string | null>(find<string, number, null>(stringTree, 0, cmpNumberAndString, null));
@@ -218,7 +218,7 @@ expectType<types.ImmutableTree<NSTuple>>(mapTreeWrapper.update(numberStringMapTr
 expectType<ValidateResult<NSTuple>>(mapTreeWrapper.validate(numberStringMapTree));
 
 expectType<typeof at>(wbt.at);
-expectType<typeof setBalancingParameters>(wbt.setBalancingParameters);
+expectType<typeof setDelta>(wbt.setDelta);
 expectType<typeof create>(wbt.create);
 expectType<typeof difference>(wbt.difference);
 expectType<typeof empty>(wbt.empty);

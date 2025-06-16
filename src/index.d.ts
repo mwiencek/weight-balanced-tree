@@ -1,5 +1,5 @@
 export {default as at} from './at';
-export {setBalancingParameters} from './balance';
+export {setDelta} from './balance';
 export {default as create} from './create';
 export {default as difference} from './difference';
 export {default as empty} from './empty';

@@ -1,4 +1,1 @@
-export function setBalancingParameters(
-  delta: number,
-  ratio: number,
-): undefined;
+export function setDelta(delta: number): undefined;

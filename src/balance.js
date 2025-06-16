@@ -6,19 +6,10 @@ import type {ImmutableTree, MutableTree} from './types.js';
 import invariant from './invariant.js';
 */
 
-/*
- * DELTA and RATIO are taken from GHC:
- * https://gitlab.haskell.org/ghc/packages/containers/-/blob/f00aa02/containers/src/Data/Map/Internal.hs#L4011-4017
- */
-export let DELTA/*: number */ = 3;
-export let RATIO/*: number */ = 2;
+let DELTA/*: number */ = 3;
 
-export function setBalancingParameters(
-  delta/*: number */,
-  ratio/*: number */,
-)/*: void */ {
+export function setDelta(delta/*: number */)/*: void */ {
   DELTA = delta;
-  RATIO = ratio;
 }
 
 export function rotateLeft/*:: <T> */(tree/*: MutableTree<T> */)/*: void */ {
@@ -67,15 +58,24 @@ export function rotateRightLeft/*:: <T> */(tree/*: MutableTree<T> */)/*: void */
   tree.value = rightLeft.value;
 }
 
+export function heavy(w1/*: number */, w2/*: number */)/*: boolean */ {
+  return w1 > (DELTA * w2);
+}
+
 export function balanceLeft/*:: <T> */(
   tree/*: MutableTree<T> */,
 )/*: ImmutableTree<T> */ {
-  /*:: invariant((tree.left.size + tree.right.size) >= 2); */
-  if (tree.left.size > (DELTA * tree.right.size)) {
-    if (tree.left.right.size < (RATIO * tree.left.left.size)) {
-      rotateRight(tree);
-    } else {
+  const left = tree.left;
+  const right = tree.right;
+  /*:: invariant((left.size + right.size) >= 2); */
+  if (heavy(left.size, right.size)) {
+    if (
+      heavy(left.right.size, right.size) ||
+      heavy(left.right.size + right.size + 1, left.left.size)
+    ) {
       rotateLeftRight(tree);
+    } else {
+      rotateRight(tree);
     }
   }
   return tree;
@@ -84,12 +84,17 @@ export function balanceLeft/*:: <T> */(
 export function balanceRight/*:: <T> */(
   tree/*: MutableTree<T> */,
 )/*: ImmutableTree<T> */ {
-  /*:: invariant((tree.left.size + tree.right.size) >= 2); */
-  if (tree.right.size > (DELTA * tree.left.size)) {
-    if (tree.right.left.size < (RATIO * tree.right.right.size)) {
-      rotateLeft(tree);
-    } else {
+  const left = tree.left;
+  const right = tree.right;
+  /*:: invariant((left.size + right.size) >= 2); */
+  if (heavy(right.size, left.size)) {
+    if (
+      heavy(right.left.size, left.size) ||
+      heavy(right.left.size + left.size + 1, right.right.size)
+    ) {
       rotateRightLeft(tree);
+    } else {
+      rotateLeft(tree);
     }
   }
   return tree;

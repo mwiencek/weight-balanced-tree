@@ -764,9 +764,9 @@ test('reverseIterate', function () {
   );
 });
 
-test('setBalancingParameters', function () {
+test('setDelta', function () {
   assert.doesNotThrow(function () {
-    tree.setBalancingParameters(3, 2);
+    tree.setDelta(3);
   });
 });
 
