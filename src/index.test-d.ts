@@ -218,7 +218,6 @@ expectType<types.ImmutableTree<NSTuple>>(mapTreeWrapper.update(numberStringMapTr
 expectType<ValidateResult<NSTuple>>(mapTreeWrapper.validate(numberStringMapTree));
 
 expectType<typeof at>(wbt.at);
-expectType<typeof setDelta>(wbt.setDelta);
 expectType<typeof create>(wbt.create);
 expectType<typeof difference>(wbt.difference);
 expectType<typeof empty>(wbt.empty);
@@ -236,13 +235,14 @@ expectType<typeof insertOrReplaceIfExists>(wbt.insertOrReplaceIfExists);
 expectType<typeof insertOrThrowIfExists>(wbt.insertOrThrowIfExists);
 expectType<typeof intersection>(wbt.intersection);
 expectType<typeof iterate>(wbt.iterate);
-expectType<typeof reverseIterate>(wbt.reverseIterate);
 expectType<typeof map>(wbt.map);
 expectType<typeof maxValue>(wbt.maxValue);
 expectType<typeof minValue>(wbt.minValue);
 expectType<typeof remove>(wbt.remove);
 expectType<typeof removeIfExists>(wbt.removeIfExists);
 expectType<typeof removeOrThrowIfNotExists>(wbt.removeOrThrowIfNotExists);
+expectType<typeof reverseIterate>(wbt.reverseIterate);
+expectType<typeof setDelta>(wbt.setDelta);
 expectType<typeof split>(wbt.split);
 expectType<typeof toArray>(wbt.toArray);
 expectType<typeof union>(wbt.union);
