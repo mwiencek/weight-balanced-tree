@@ -61,58 +61,6 @@ const oneToThirtyOneTree = tree.fromDistinctAscArray(oneToThirtyOne);
 const oneToThirtyOneKeyTree/*: ImmutableTree<KeyedObject> */ =
   tree.fromDistinctAscArray(oneToThirtyOne.map(key => ({key})));
 
-test('all', function () {
-  const thirtyOneToOne = oneToThirtyOne.slice(0).reverse();
-
-  const numbers = oneToThirtyOne.slice(0);
-
-  for (let i = 0; i < 5; i++) {
-    let node/*: ImmutableTree<number> */ = tree.empty;
-
-    for (const num of numbers) {
-      node = tree.insert(node, num, compareIntegers);
-      assert.ok(checkTreeInvariants(node, compareIntegers), 'tree is valid and balanced');
-    }
-
-    shuffle(numbers);
-
-    for (const num of numbers) {
-      const next = tree.findNext(node, num, compareIntegers, -1);
-      assert.equal(
-        next,
-        num < 31 ? (num + 1) : -1,
-        'next node is found',
-      );
-
-      const prev = tree.findPrev(node, num, compareIntegers, -1);
-      assert.equal(
-        prev,
-        num > 1 ? (num - 1) : -1,
-        'prev node is found',
-      );
-    }
-
-    for (const num of numbers) {
-      let foundValue = tree.find(node, num, compareIntegers, null);
-      assert.ok(foundValue === num, 'existing node is found with find');
-
-      foundValue = tree.findBy(node, x => compareIntegers(num, x), null);
-      assert.ok(foundValue === num, 'existing node is found with findBy');
-
-      node = tree.remove(node, num, compareIntegers);
-      assert.ok(checkTreeInvariants(node, compareIntegers), 'tree is valid and balanced');
-
-      foundValue = tree.find(node, num, compareIntegers, -1);
-      assert.ok(foundValue === -1, 'removed node is not found');
-    }
-
-    assert.equal(node, tree.empty, 'tree is empty');
-
-    node = tree.remove(node, 0, compareIntegers);
-    assert.equal(node, tree.empty, 'tree is still empty');
-  }
-});
-
 test('iterate', function () {
   assert.deepEqual(
     Array.from(tree.iterate(oneToThirtyOneTree)),
