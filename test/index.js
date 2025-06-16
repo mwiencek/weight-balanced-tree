@@ -305,41 +305,29 @@ test('insertOrThrowIfExists', function () {
   assert.equal(node.size, 31);
 });
 
-test('removeIfExists', function () {
-  let node/*: ImmutableTree<number> */ = tree.create(1);
-  node = tree.insert(node, 2, compareIntegers);
+test('remove', function () {
+  assert.equal(
+    tree.remove(tree.empty, 1, compareIntegers),
+    tree.empty,
+    'tree is empty',
+  );
 
-  const origNode = node;
-  node = tree.removeIfExists(node, 3, compareIntegers);
-  assert.equal(node, origNode);
-  node = tree.remove(node, 3, compareIntegers);
-  assert.equal(node, origNode);
-  const node2 = tree.removeIfExists(node, 2, compareIntegers);
-  assert.equal(node2.size, 1);
-  assert.equal(node2.value, 1);
-  const node3 = tree.remove(node, 2, compareIntegers);
-  assert.equal(node3.size, 1);
-  assert.equal(node3.value, 1);
-  const node4 = tree.removeIfExists(node2, 1, compareIntegers);
-  assert.equal(node4, tree.empty);
-  const node5 = tree.remove(node3, 1, compareIntegers);
-  assert.equal(node5, tree.empty);
-  const node6 = tree.removeIfExists(tree.empty, 1, compareIntegers);
-  assert.equal(node6, tree.empty);
-  const node7 = tree.remove(tree.empty, 1, compareIntegers);
-  assert.equal(node7, tree.empty);
-
-  node = oneToThirtyOneTree;
+  let node/*: ImmutableTree<number> */ = oneToThirtyOneTree;
+  node = tree.remove(node, 0, compareIntegers);
+  assert.equal(node, oneToThirtyOneTree);
 
   let size = 31;
   for (const num of oneToThirtyOne) {
-    node = tree.removeIfExists(node, num, compareIntegers);
-    checkTreeInvariants(node, compareIntegers);
+    node = tree.remove(node, num, compareIntegers);
     assert.equal(tree.find(node, num, compareIntegers, null), null);
     assert.equal(node.size, --size);
   }
 
   assert.equal(node, tree.empty, 'tree is empty');
+});
+
+test('removeIfExists', function () {
+  assert.equal(tree.remove, tree.removeIfExists);
 });
 
 test('removeOrThrowIfNotExists', function () {
@@ -354,25 +342,6 @@ test('removeOrThrowIfNotExists', function () {
   assert.equal(node.size, 1);
   node = tree.removeOrThrowIfNotExists(node, 1, compareIntegers);
   assert.equal(node, tree.empty, 'tree is empty');
-});
-
-test('remove returns the same tree back if there is no value to remove', function () {
-  let node/*: ImmutableTree<number> */ = tree.empty;
-  for (const num of oneToThirtyOne) {
-    node = tree.insert(node, num, compareIntegers);
-  }
-
-  const origNode = node;
-  for (const num of oneToThirtyOne) {
-    node = tree.remove(node, num + 31, compareIntegers);
-    checkTreeInvariants(node, compareIntegers);
-    assert.equal(node, origNode);
-  }
-  for (const num of oneToThirtyOne) {
-    node = tree.remove(node, num - 31, compareIntegers);
-    checkTreeInvariants(node, compareIntegers);
-    assert.equal(node, origNode);
-  }
 });
 
 test('create', function () {
