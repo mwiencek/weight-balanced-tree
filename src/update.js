@@ -104,9 +104,7 @@ export default function update/*:: <T, K> */(
       throw new ValueOrderError(key, valueToInsert, 'equal to');
     }
     return node(tree.left, valueToInsert, tree.right);
-  }
-
-  if (order < 0) {
+  } else if (order < 0) {
     const newLeftBranch = update(tree.left, key, cmp, onConflict, onNotFound);
     if (newLeftBranch === tree.left) {
       return tree;
