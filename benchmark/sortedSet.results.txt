@@ -14,9 +14,9 @@ Sorted set has
 	mori (hasKey) x 215 ops/sec ±5.31% (90 runs sampled)
 	Fastest is Immutable.Set (has)
 Sorted set remove
-	weight-balanced-tree (remove) x 323 ops/sec ±0.58% (94 runs sampled)
-	Immutable.Set (delete) x 170 ops/sec ±0.38% (88 runs sampled)
-	mori (disj) x 63.49 ops/sec ±0.97% (67 runs sampled)
+	weight-balanced-tree (remove) x 268 ops/sec ±0.67% (93 runs sampled)
+	Immutable.Set (delete) x 172 ops/sec ±0.67% (85 runs sampled)
+	mori (disj) x 66.33 ops/sec ±0.53% (70 runs sampled)
 	Fastest is weight-balanced-tree (remove)
 Sorted set union
 	weight-balanced-tree (union) x 789 ops/sec ±0.50% (97 runs sampled)
