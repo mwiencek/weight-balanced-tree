@@ -608,3 +608,5 @@ See [CHANGELOG.md](https://github.com/mwiencek/weight-balanced-tree/blob/master/
     Accessed at http://groups.csail.mit.edu/mac/users/adams/BB/92-10.ps
 
  2. [GHC's Data.Map.Internal](https://gitlab.haskell.org/ghc/packages/containers/-/blob/f00aa02/containers/src/Data/Map/Internal.hs).
+
+ 3. [Join-based tree algorithms](https://en.wikipedia.org/wiki/Join-based_tree_algorithms)
