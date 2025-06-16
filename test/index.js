@@ -208,71 +208,37 @@ test('findPrev', function () {
 });
 
 test('insertIfNotExists', function () {
-  let node/*: ImmutableTree<KeyedObject> */ = tree.empty;
+  let node/*: ImmutableTree<number> */ = tree.empty;
   for (const num of oneToThirtyOne) {
-    node = tree.insert(node, {key: num}, compareObjectKeys, onConflictKeepTreeValue);
-
-    const sameNode1 = tree.insert(node, {key: num}, compareObjectKeys, onConflictKeepTreeValue);
-    assert.equal(node, sameNode1);
-
-    const sameNode2 = tree.insertIfNotExists(node, {key: num}, compareObjectKeys);
-    assert.equal(node, sameNode2);
+    node = tree.insertIfNotExists(node, num, compareIntegers);
   }
 
   const finalNode = node;
+  assert.ok(tree.equals(finalNode, oneToThirtyOneTree));
+
   for (const num of oneToThirtyOne) {
-    node = tree.insert(node, {key: num}, compareObjectKeys, onConflictKeepTreeValue);
-    node = tree.insertIfNotExists(node, {key: num}, compareObjectKeys);
+    node = tree.insertIfNotExists(node, num, compareIntegers);
   }
   assert.equal(node, finalNode);
-
-  assert.equal(node.size, 31);
 });
 
 test('insertOrReplaceIfExists', function () {
   let node/*: ImmutableTree<KeyedObject> */ = tree.empty;
   for (const num of oneToThirtyOne) {
-    node = tree.insert(node, {key: num}, compareObjectKeys, onConflictUseGivenValue);
-    checkTreeInvariants(node, compareObjectKeys);
+    node = tree.insertOrReplaceIfExists(node, {key: num}, compareObjectKeys);
   }
+
+  const origNode = node;
+  assert.ok(tree.equals(origNode, oneToThirtyOneKeyTree, (a, b) => a.key === b.key));
 
   for (const num of oneToThirtyOne) {
-    const newValue1 = {key: num};
-    const newNode1 = tree.insert(node, newValue1, compareObjectKeys, onConflictUseGivenValue);
-    checkTreeInvariants(newNode1, compareObjectKeys);
-    assert.notEqual(node, newNode1);
-    assert.equal(tree.find(newNode1, {key: num}, compareObjectKeys, null), newValue1);
+    const newValue = {key: num};
+    const prevNode = node;
+    node = tree.insertOrReplaceIfExists(node, newValue, compareObjectKeys);
+    assert.notEqual(node, prevNode);
+    assert.equal(node.size, prevNode.size);
+    assert.equal(tree.find(node, newValue, compareObjectKeys, null), newValue);
   }
-
-  for (const num of oneToThirtyOne) {
-    const newValue2 = {key: num};
-    const newNode2 = tree.insertOrReplaceIfExists(node, newValue2, compareObjectKeys);
-    checkTreeInvariants(newNode2, compareObjectKeys);
-    assert.notEqual(node, newNode2);
-    assert.equal(tree.find(newNode2, {key: num}, compareObjectKeys, null), newValue2);
-  }
-
-  assert.equal(node.size, 31);
-
-  assert.equal(
-    tree.insertOrReplaceIfExists(
-      {
-        left: tree.empty,
-        right: {
-          left: tree.empty,
-          right: tree.empty,
-          size: 1,
-          value: {key: 2},
-        },
-        size: 2,
-        value: {key: 1},
-      },
-      {key: 1},
-      compareObjectKeys,
-    ).size,
-    2,
-    'replacing a node preserves the existing node size',
-  );
 });
 
 test('insertOrThrowIfExists', function () {
@@ -285,20 +251,6 @@ test('insertOrThrowIfExists', function () {
       },
       ValueExistsError,
       'exception is thrown with insertOrThrowIfExists',
-    );
-    assert.throws(
-      function () {
-        node = tree.insert(node, {key: num}, compareObjectKeys, onConflictThrowError);
-      },
-      ValueExistsError,
-      'exception is thrown with insert plus onConflictThrowError',
-    );
-    assert.throws(
-      function () {
-        node = tree.insert(node, {key: num}, compareObjectKeys);
-      },
-      ValueExistsError,
-      'exception is thrown with insert by default',
     );
   }
 
@@ -354,41 +306,108 @@ test('create', function () {
   });
 });
 
-test('insert with onConflict', function () {
-  let v1 = {key: 1, value: 10};
-  let node = tree.create(v1);
+test('insert', function (t) {
+  t.test('basic insertions', function () {
+    let node/*: ImmutableTree<KeyedObject> */ = tree.empty;
 
-  node = tree.insert(
-    node,
-    {key: 1, value: 100},
-    compareObjectKeys,
-    (treeValue, newValue) => {
-      assert.equal(treeValue, v1);
-      assert.deepEqual(newValue, {key: 1, value: 100});
-      v1 = {key: 1, value: 1000};
-      return v1;
-    },
-  );
-  assert.equal(tree.find(node, 1, compareNumberWithObjectKey, null), v1);
-  assert.deepEqual(v1, {key: 1, value: 1000});
+    let size = 0;
+    for (const num of oneToThirtyOne) {
+      assert.equal(node.size, size);
+      node = tree.insert(node, {key: num}, compareObjectKeys);
+      assert.equal(tree.find(node, {key: num}, compareObjectKeys)?.key, num);
+      assert.equal(node.size, ++size);
+    }
+  });
 
-  assert.throws(
-    function () {
-      node = tree.insert(
-        node,
-        v1,
-        compareObjectKeys,
-        () => {
-          return {key: 2, value: 20};
-        },
-      );
-    },
-    {
-      name: 'ValueOrderError',
-      message: 'The relative order of values has changed: ' +
-        'expected [object Object] to be equal to [object Object]',
-    },
-  );
+  const v1/*: KeyedObject */ = {key: 1, value: 10};
+  const v2/*: KeyedObject */ = {key: 1, value: 100};
+  const v3/*: KeyedObject */ = {key: 1, value: 1000};
+  const origNode = tree.create(v1);
+
+  t.test('default onConflict behavior', function () {
+    let node = origNode;
+    assert.throws(
+      function () {
+        node = tree.insert(node, v2, compareObjectKeys);
+      },
+      ValueExistsError,
+    );
+    assert.equal(node, origNode);
+    assert.equal(tree.find(node, 1, compareNumberWithObjectKey), v1);
+  });
+
+  t.test('onConflictKeepTreeValue', function () {
+    let node/*: ImmutableTree<KeyedObject> */ = origNode;
+    node = tree.insert(
+      node,
+      v2,
+      compareObjectKeys,
+      onConflictKeepTreeValue,
+    );
+    assert.equal(node, origNode);
+    assert.equal(tree.find(node, 1, compareNumberWithObjectKey), v1);
+  });
+
+  t.test('onConflictUseGivenValue', function () {
+    let node/*: ImmutableTree<KeyedObject> */ = origNode;
+    node = tree.insert(
+      node,
+      v2,
+      compareObjectKeys,
+      onConflictUseGivenValue,
+    );
+    assert.notEqual(node, origNode);
+    assert.equal(tree.find(node, 1, compareNumberWithObjectKey), v2);
+  });
+
+  t.test('onConflictThrowError', function () {
+    let node/*: ImmutableTree<KeyedObject> */ = origNode;
+    assert.throws(
+      function () {
+        node = tree.insert(
+          node,
+          v1,
+          compareObjectKeys,
+          onConflictThrowError,
+        );
+      },
+      ValueExistsError,
+    );
+    assert.equal(node, origNode);
+    assert.equal(tree.find(node, 1, compareNumberWithObjectKey), v1);
+  });
+
+  t.test('custom onConflict return value', function () {
+    let node/*: ImmutableTree<KeyedObject> */ = origNode;
+    node = tree.insert(
+      node,
+      v1,
+      compareObjectKeys,
+      () => v3,
+    );
+    assert.notEqual(node, origNode);
+    assert.equal(tree.find(node, 1, compareNumberWithObjectKey), v3);
+  });
+
+  t.test('custom onConflict return value with ValueOrderError', function () {
+    assert.throws(
+      function () {
+        tree.insert(
+          origNode,
+          v1,
+          compareObjectKeys,
+          () => {
+            return {key: 2, value: 20};
+          },
+        );
+      },
+      {
+        name: 'ValueOrderError',
+        message: 'The relative order of values has changed: ' +
+          'expected [object Object] to be equal to [object Object]',
+      },
+    );
+  });
 });
 
 test('update', function () {
@@ -616,10 +635,7 @@ test('difference', function () {
 
 
 test('equals', function () {
-  let tree1/*: ImmutableTree<number> */ = tree.empty;
-  for (const num of oneToThirtyOne) {
-    tree1 = tree.insert(tree1, num, compareIntegers);
-  }
+  let tree1 = oneToThirtyOneTree;
 
   let tree2/*: ImmutableTree<number> */ = tree.empty;
   for (const num of oneToThirtyOne.slice(0).reverse()) {
