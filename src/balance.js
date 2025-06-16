@@ -70,10 +70,8 @@ export function rotateRightLeft/*:: <T> */(tree/*: MutableTree<T> */)/*: void */
 export function balanceLeft/*:: <T> */(
   tree/*: MutableTree<T> */,
 )/*: ImmutableTree<T> */ {
-  if (
-    (tree.left.size + tree.right.size) >= 2 &&
-    tree.left.size > (DELTA * tree.right.size)
-  ) {
+  /*:: invariant((tree.left.size + tree.right.size) >= 2); */
+  if (tree.left.size > (DELTA * tree.right.size)) {
     if (tree.left.right.size < (RATIO * tree.left.left.size)) {
       rotateRight(tree);
     } else {
@@ -86,10 +84,8 @@ export function balanceLeft/*:: <T> */(
 export function balanceRight/*:: <T> */(
   tree/*: MutableTree<T> */,
 )/*: ImmutableTree<T> */ {
-  if (
-    (tree.left.size + tree.right.size) >= 2 &&
-    tree.right.size > (DELTA * tree.left.size)
-  ) {
+  /*:: invariant((tree.left.size + tree.right.size) >= 2); */
+  if (tree.right.size > (DELTA * tree.left.size)) {
     if (tree.right.left.size < (RATIO * tree.right.right.size)) {
       rotateLeft(tree);
     } else {

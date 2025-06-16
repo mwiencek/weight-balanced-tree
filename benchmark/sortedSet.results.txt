@@ -4,9 +4,9 @@ Sorted set create
 	mori (sortedSet) x 74.22 ops/sec ±0.20% (78 runs sampled)
 	Fastest is weight-balanced-tree (fromDistinctAscArray)
 Sorted set add
-	weight-balanced-tree (insert) x 148 ops/sec ±0.42% (86 runs sampled)
-	Immutable.Set (add) x 176 ops/sec ±1.17% (84 runs sampled)
-	mori (conj) x 78.13 ops/sec ±0.94% (69 runs sampled)
+	weight-balanced-tree (insert) x 139 ops/sec ±0.76% (81 runs sampled)
+	Immutable.Set (add) x 179 ops/sec ±1.50% (85 runs sampled)
+	mori (conj) x 78.09 ops/sec ±0.22% (82 runs sampled)
 	Fastest is Immutable.Set (add)
 Sorted set has
 	weight-balanced-tree (findBy) x 348 ops/sec ±0.80% (92 runs sampled)

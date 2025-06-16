@@ -1,12 +1,13 @@
 // @flow strict
 
-import {balanceLeft, balanceRight} from './balance.js';
+import create from './create.js';
 import empty from './empty.js';
 import {
   ValueExistsError,
   ValueNotFoundError,
   ValueOrderError,
 } from './errors.js';
+import join from './join.js';
 /*::
 import invariant from './invariant.js';
 import type {ImmutableTree} from './types.js';
@@ -76,12 +77,7 @@ export default function update/*:: <T, K> */(
     if (!Object.is(valueToInsert, key) && cmp(key, valueToInsert) !== 0) {
       throw new ValueOrderError(key, valueToInsert, 'equal to');
     }
-    return {
-      left: empty,
-      right: empty,
-      size: 1,
-      value: valueToInsert,
-    };
+    return create(valueToInsert);
   }
 
   const order = cmp(key, tree.value);
@@ -101,38 +97,17 @@ export default function update/*:: <T, K> */(
     };
   }
 
-  const left = tree.left;
-  const right = tree.right;
-
   if (order < 0) {
-    const newLeftBranch = update(left, key, cmp, onConflict, onNotFound);
-    if (newLeftBranch.size === 0 || newLeftBranch === left) {
+    const newLeftBranch = update(tree.left, key, cmp, onConflict, onNotFound);
+    if (newLeftBranch.size === 0 || newLeftBranch === tree.left) {
       return tree;
     }
-    const newTree = {
-      left: newLeftBranch,
-      right,
-      size: newLeftBranch.size + right.size + 1,
-      value: tree.value,
-    };
-    if (newTree.size !== tree.size) {
-      balanceLeft(newTree);
-    }
-    return newTree;
+    return join(newLeftBranch, tree.value, tree.right);
   } else {
-    const newRightBranch = update(right, key, cmp, onConflict, onNotFound);
-    if (newRightBranch.size === 0 || newRightBranch === right) {
+    const newRightBranch = update(tree.right, key, cmp, onConflict, onNotFound);
+    if (newRightBranch.size === 0 || newRightBranch === tree.right) {
       return tree;
     }
-    const newTree = {
-      left,
-      right: newRightBranch,
-      size: left.size + newRightBranch.size + 1,
-      value: tree.value,
-    };
-    if (newTree.size !== tree.size) {
-      balanceRight(newTree);
-    }
-    return newTree;
+    return join(tree.left, tree.value, newRightBranch);
   }
 }
