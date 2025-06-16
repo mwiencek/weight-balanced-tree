@@ -20,11 +20,15 @@ export type InsertNotFoundHandler<T, K> =
 
 export function onConflictThrowError(): never;
 
-export const onConflictKeepTreeValue:
-  <T, K>(treeValue: T, givenValue: K) => T;
+export function onConflictKeepTreeValue<T, K>(
+  treeValue: T,
+  givenValue: K,
+): T;
 
-export const onConflictUseGivenValue:
-  <T>(treeValue: T, givenValue: T) => T;
+export function onConflictUseGivenValue<T>(
+  treeValue: T,
+  givenValue: T,
+): T;
 
 export function onConflictRemoveValue(): RemoveValue;
 
