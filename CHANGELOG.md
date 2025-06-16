@@ -18,6 +18,7 @@
   * Added `filter`.
   * Added `onConflictRemoveValue`, which causes `update` to remove the value
     stored at `key` from `tree`.
+  * Reimplemented `remove` using `update` and `onConflictRemoveValue`.
   * Refactoring and code cleanup.
 
 ## v0.8.0 (2025-06-13)
