@@ -7,6 +7,11 @@ import test from 'node:test';
 import checkTreeInvariants from './checkTreeInvariants.js';
 import compareIntegers from './compareIntegers.js';
 import {
+  balanceLeft,
+  balanceRight,
+} from '../src/balance.js';
+import {node as newNode} from '../src/create.js';
+import {
   EmptyTreeError,
   IndexOutOfRangeError,
   ValueExistsError,
@@ -82,6 +87,72 @@ test('at', function () {
     assert.equal(tree.at(node, num - 1), num);
     assert.equal(tree.at(node, -num), oneToThirtyOne.length - (num - 1));
   }
+});
+
+test('balanceLeft', function () {
+  const node = newNode(
+    newNode(
+      newNode(
+        newNode(tree.empty, 1599, tree.create(1605)),
+        1656,
+        newNode(tree.create(1688), 1706, tree.create(1713)),
+      ),
+      1760,
+      newNode(tree.create(1761), 1766, tree.create(1796)),
+    ),
+    1824,
+    newNode(tree.create(1892), 1904, tree.create(1914)),
+  );
+
+  balanceLeft(node);
+  assert.ok(checkTreeInvariants(node, compareIntegers));
+
+  assert.deepEqual(node, newNode(
+    newNode(
+      newNode(tree.empty, 1599, tree.create(1605)),
+      1656,
+      newNode(tree.create(1688), 1706, tree.create(1713)),
+    ),
+    1760,
+    newNode(
+      newNode(tree.create(1761), 1766, tree.create(1796)),
+      1824,
+      newNode(tree.create(1892), 1904, tree.create(1914)),
+    ),
+  ));
+});
+
+test('balanceRight', function () {
+  const node = newNode(
+    newNode(tree.create(-1235), -1206, tree.create(-1179)),
+    -1162,
+    newNode(
+      newNode(tree.create(-1153), -1142, tree.create(-1139)),
+      -1133,
+      newNode(
+        newNode(tree.empty, -1125, tree.create(-977)),
+        -963,
+        newNode(tree.create(-893), -878, tree.create(-870)),
+      ),
+    ),
+  );
+
+  balanceRight(node);
+  assert.ok(checkTreeInvariants(node, compareIntegers));
+
+  assert.deepEqual(node, newNode(
+    newNode(
+      newNode(tree.create(-1235), -1206, tree.create(-1179)),
+      -1162,
+      newNode(tree.create(-1153), -1142, tree.create(-1139)),
+    ),
+    -1133,
+    newNode(
+      newNode(tree.empty, -1125, tree.create(-977)),
+      -963,
+      newNode(tree.create(-893), -878, tree.create(-870)),
+    ),
+  ));
 });
 
 test('create', function () {
