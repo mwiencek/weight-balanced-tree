@@ -74,22 +74,6 @@ test('all', function () {
       assert.ok(checkTreeInvariants(node, compareIntegers), 'tree is valid and balanced');
     }
 
-    assert.throws(
-      () => { tree.minNode/*:: <number> */(tree.empty); },
-      EmptyTreeError,
-      'minNode throws EmptyTreeError',
-    );
-    assert.throws(
-      () => { tree.maxNode/*:: <number> */(tree.empty); },
-      EmptyTreeError,
-      'maxNode throws EmptyTreeError',
-    );
-
-    assert.equal(tree.minNode(node).value, 1, 'min node value is 1');
-    assert.equal(tree.maxNode(node).value, 31, 'max node value is 31');
-    assert.equal(tree.minValue(node), 1, 'min value is 1');
-    assert.equal(tree.maxValue(node), 31, 'max value is 31');
-
     shuffle(numbers);
 
     for (const num of numbers) {
@@ -141,6 +125,32 @@ test('reverseIterate', function () {
     Array.from(tree.reverseIterate(oneToThirtyOneTree)),
     oneToThirtyOne.slice(0).reverse(),
   );
+});
+
+test('minNode', function () {
+  assert.throws(
+    () => { tree.minNode/*:: <number> */(tree.empty); },
+    EmptyTreeError,
+    'minNode throws EmptyTreeError',
+  );
+  assert.equal(tree.minNode(oneToThirtyOneTree).value, 1, 'min node value is 1');
+});
+
+test('maxNode', function () {
+  assert.throws(
+    () => { tree.maxNode/*:: <number> */(tree.empty); },
+    EmptyTreeError,
+    'maxNode throws EmptyTreeError',
+  );
+  assert.equal(tree.maxNode(oneToThirtyOneTree).value, 31, 'max node value is 31');
+});
+
+test('minValue', function () {
+  assert.equal(tree.minValue(oneToThirtyOneTree), 1, 'min value is 1');
+});
+
+test('maxValue', function () {
+  assert.equal(tree.maxValue(oneToThirtyOneTree), 31, 'max value is 31');
 });
 
 test('find', function () {
