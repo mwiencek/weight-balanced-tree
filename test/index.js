@@ -289,64 +289,14 @@ test('equals', function () {
   assert.ok(!tree.equals(tree.empty, tree1));
 
   assert.ok(tree.equals(
-    {
-      left: {
-        left: tree.empty,
-        right: tree.empty,
-        size: 1,
-        value: {num: 1},
-      },
-      right: tree.empty,
-      size: 2,
-      value: {num: 2},
-    },
-    {
-      left: tree.empty,
-      right: {
-        left: tree.empty,
-        right: tree.empty,
-        size: 1,
-        value: {num: 2},
-      },
-      size: 2,
-      value: {num: 1},
-    },
+    newNode(tree.create({num: 1}), {num: 2}, tree.empty),
+    newNode(tree.empty, {num: 1}, tree.create({num: 2})),
     (a, b) => objectIs(a.num, b.num),
   ));
 
   assert.ok(!tree.equals(
-    {
-      left: {
-        left: tree.empty,
-        right: tree.empty,
-        size: 1,
-        value: {num: 1},
-      },
-      right: {
-        left: tree.empty,
-        right: tree.empty,
-        size: 1,
-        value: {num: 3},
-      },
-      size: 2,
-      value: {num: 2},
-    },
-    {
-      left: {
-        left: tree.empty,
-        right: tree.empty,
-        size: 1,
-        value: {num: 0},
-      },
-      right: {
-        left: tree.empty,
-        right: tree.empty,
-        size: 1,
-        value: {num: 2},
-      },
-      size: 2,
-      value: {num: 1},
-    },
+    newNode(tree.create({num: 1}), {num: 2}, tree.create({num: 3})),
+    newNode(tree.create({num: 0}), {num: 1}, tree.create({num: 2})),
     (a, b) => objectIs(a.num, b.num),
   ));
 });
@@ -444,17 +394,7 @@ test('indexOf', function () {
   assert.equal(tree.indexOf(node, 32, compareIntegers), -1);
   assert.equal(
     tree.indexOf(
-      {
-        left: tree.empty,
-        right: {
-          left: tree.empty,
-          right: tree.empty,
-          value: 2,
-          size: 1,
-        },
-        value: 1,
-        size: 2,
-      },
+      newNode(tree.empty, 1, tree.create(2)),
       2,
       compareIntegers,
     ),
@@ -1144,33 +1084,13 @@ test('validate', function () {
   assert.ok(tree.validate(tree.empty, compareIntegers).valid, 'null tree is valid');
   assert.ok(tree.validate(tree.create(1), compareIntegers).valid, 'tree of size 1 is valid');
 
-  let node/*: ImmutableTree<number> */ = {
-    left: {
-      left: tree.empty,
-      right: tree.empty,
-      value: 2,
-      size: 1,
-    },
-    right: tree.empty,
-    value: 1,
-    size: 2,
-  };
+  let node/*: ImmutableTree<number> */ = newNode(tree.create(2), 1, tree.empty);
   let result = tree.validate(node, compareIntegers);
   assert.ok(!result.valid, 'tree is invalid');
   assert.equal(result.subtree, 'left');
   assert.equal(result.tree, node);
 
-  node = {
-    left: tree.empty,
-    right: {
-      left: tree.empty,
-      right: tree.empty,
-      value: 0,
-      size: 1,
-    },
-    value: 1,
-    size: 2,
-  };
+  node = newNode(tree.empty, 1, tree.create(0));
   result = tree.validate(node, compareIntegers);
   assert.ok(!result.valid, 'tree is invalid');
   assert.equal(result.subtree, 'right');
