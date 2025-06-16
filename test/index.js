@@ -61,44 +61,223 @@ const oneToThirtyOneTree = tree.fromDistinctAscArray(oneToThirtyOne);
 const oneToThirtyOneKeyTree/*: ImmutableTree<KeyedObject> */ =
   tree.fromDistinctAscArray(oneToThirtyOne.map(key => ({key})));
 
-test('iterate', function () {
-  assert.deepEqual(
-    Array.from(tree.iterate(oneToThirtyOneTree)),
-    oneToThirtyOne,
-  );
-});
-
-test('reverseIterate', function () {
-  assert.deepEqual(
-    Array.from(tree.reverseIterate(oneToThirtyOneTree)),
-    oneToThirtyOne.slice(0).reverse(),
-  );
-});
-
-test('minNode', function () {
+test('at', function () {
+  const node = oneToThirtyOneTree;
+  /*:: invariant(node.size !== 0); */
   assert.throws(
-    () => { tree.minNode/*:: <number> */(tree.empty); },
-    EmptyTreeError,
-    'minNode throws EmptyTreeError',
+    function () {
+      tree.at(tree.create(1), 1);
+    },
+    IndexOutOfRangeError,
+    'IndexOutOfRangeError exception is thrown for index 1 of size 1 tree',
   );
-  assert.equal(tree.minNode(oneToThirtyOneTree).value, 1, 'min node value is 1');
-});
-
-test('maxNode', function () {
   assert.throws(
-    () => { tree.maxNode/*:: <number> */(tree.empty); },
-    EmptyTreeError,
-    'maxNode throws EmptyTreeError',
+    function () {
+      tree.at(tree.create(1), -2);
+    },
+    IndexOutOfRangeError,
+    'IndexOutOfRangeError exception is thrown for index -2 of size 1 tree',
   );
-  assert.equal(tree.maxNode(oneToThirtyOneTree).value, 31, 'max node value is 31');
+  for (const num of oneToThirtyOne) {
+    assert.equal(tree.at(node, num - 1), num);
+    assert.equal(tree.at(node, -num), oneToThirtyOne.length - (num - 1));
+  }
 });
 
-test('minValue', function () {
-  assert.equal(tree.minValue(oneToThirtyOneTree), 1, 'min value is 1');
+test('create', function () {
+  const node = tree.create(1);
+  assert.deepEqual(node, {
+    left: tree.empty,
+    right: tree.empty,
+    size: 1,
+    value: 1,
+  });
 });
 
-test('maxValue', function () {
-  assert.equal(tree.maxValue(oneToThirtyOneTree), 31, 'max value is 31');
+test('difference', function () {
+  assert.equal(tree.difference(tree.empty, tree.empty, compareIntegers), tree.empty);
+  assert.deepEqual(
+    tree.difference(tree.create(1), tree.empty, compareIntegers),
+    tree.create(1),
+  );
+  assert.deepEqual(
+    tree.difference(tree.empty, tree.create(1), compareIntegers),
+    tree.empty,
+  );
+  assert.equal(
+    tree.difference(
+      tree.fromDistinctAscArray([1, 2, 3]),
+      tree.fromDistinctAscArray([1, 2, 3]),
+      compareIntegers,
+    ),
+    tree.empty,
+  );
+  assert.ok(
+    tree.equals(
+      tree.difference(
+        tree.fromDistinctAscArray([1, 2, 3, 4]),
+        tree.fromDistinctAscArray([2, 3, 4, 5]),
+        compareIntegers,
+      ),
+      tree.create(1),
+    ),
+  );
+  assert.ok(
+    tree.equals(
+      tree.difference(
+        tree.fromDistinctAscArray([2, 3, 4, 5]),
+        tree.fromDistinctAscArray([1, 2, 3, 4]),
+        compareIntegers,
+      ),
+      tree.create(5),
+    ),
+  );
+  assert.ok(
+    tree.equals(
+      tree.difference(
+        tree.fromDistinctAscArray([1, 4]),
+        tree.fromDistinctAscArray([1, 2, 3]),
+        compareIntegers,
+      ),
+      tree.create(4),
+    ),
+  );
+  assert.ok(
+    tree.equals(
+      tree.difference(
+        tree.fromDistinctAscArray([1, 2, 3]),
+        tree.fromDistinctAscArray([1, 4]),
+        compareIntegers,
+      ),
+      tree.fromDistinctAscArray([2, 3]),
+    ),
+  );
+  const oneToThirtyOneOdds =
+    tree.fromDistinctAscArray(oneToThirtyOne.filter(x => x % 2));
+  const oneToThirtyOneEvens =
+    tree.fromDistinctAscArray(oneToThirtyOne.filter(x => !(x % 2)));
+  assert.ok(
+    tree.equals(
+      tree.difference(
+        oneToThirtyOneTree,
+        oneToThirtyOneOdds,
+        compareIntegers,
+      ),
+      oneToThirtyOneEvens,
+    ),
+  );
+  assert.ok(
+    tree.equals(
+      tree.difference(
+        oneToThirtyOneTree,
+        oneToThirtyOneEvens,
+        compareIntegers,
+      ),
+      oneToThirtyOneOdds,
+    ),
+  );
+});
+
+test('empty', function () {
+  const empty = tree.empty;
+  assert.equal(empty.size, 0, 'empty has size 0');
+  assert.equal(empty.left, empty, 'empty left node is empty');
+  assert.equal(empty.right, empty, 'empty right node is empty');
+  assert.equal(empty.value, undefined, 'empty has undefined value');
+  assert.ok(Object.isFrozen(empty), 'empty is frozen');
+});
+
+test('equals', function () {
+  let tree1 = oneToThirtyOneTree;
+
+  let tree2/*: ImmutableTree<number> */ = tree.empty;
+  for (const num of oneToThirtyOne.slice(0).reverse()) {
+    tree2 = tree.insert(tree2, num, compareIntegers);
+  }
+
+  let stringTree/*: ImmutableTree<string> */ = tree.empty;
+  for (const num of oneToThirtyOne) {
+    stringTree = tree.insert(
+      stringTree,
+      String(num),
+      (a, b) => parseInt(a, 10) - parseInt(b, 10),
+    );
+  }
+
+  assert.ok(tree.equals(tree1, tree2));
+  assert.ok(tree.equals/*:: <number, string> */(tree1, stringTree, (a, b) => a === parseInt(b, 10)));
+
+  tree1 = tree.remove(tree1, 1, compareIntegers);
+  assert.ok(!tree.equals(tree1, tree2));
+
+  tree2 = tree.remove(tree2, 1, compareIntegers);
+  assert.ok(tree.equals(tree1, tree2));
+
+  assert.ok(tree.equals(tree.empty, tree.empty));
+  assert.ok(!tree.equals(tree1, tree.empty));
+  assert.ok(!tree.equals(tree.empty, tree1));
+
+  assert.ok(tree.equals(
+    {
+      left: {
+        left: tree.empty,
+        right: tree.empty,
+        size: 1,
+        value: {num: 1},
+      },
+      right: tree.empty,
+      size: 2,
+      value: {num: 2},
+    },
+    {
+      left: tree.empty,
+      right: {
+        left: tree.empty,
+        right: tree.empty,
+        size: 1,
+        value: {num: 2},
+      },
+      size: 2,
+      value: {num: 1},
+    },
+    (a, b) => objectIs(a.num, b.num),
+  ));
+
+  assert.ok(!tree.equals(
+    {
+      left: {
+        left: tree.empty,
+        right: tree.empty,
+        size: 1,
+        value: {num: 1},
+      },
+      right: {
+        left: tree.empty,
+        right: tree.empty,
+        size: 1,
+        value: {num: 3},
+      },
+      size: 2,
+      value: {num: 2},
+    },
+    {
+      left: {
+        left: tree.empty,
+        right: tree.empty,
+        size: 1,
+        value: {num: 0},
+      },
+      right: {
+        left: tree.empty,
+        right: tree.empty,
+        size: 1,
+        value: {num: 2},
+      },
+      size: 2,
+      value: {num: 1},
+    },
+    (a, b) => objectIs(a.num, b.num),
+  ));
 });
 
 test('find', function () {
@@ -167,103 +346,41 @@ test('findPrev', function () {
   }
 });
 
-test('insertIfNotExists', function () {
-  let node/*: ImmutableTree<number> */ = tree.empty;
-  for (const num of oneToThirtyOne) {
-    node = tree.insertIfNotExists(node, num, compareIntegers);
-  }
-
-  const finalNode = node;
-  assert.ok(tree.equals(finalNode, oneToThirtyOneTree));
-
-  for (const num of oneToThirtyOne) {
-    node = tree.insertIfNotExists(node, num, compareIntegers);
-  }
-  assert.equal(node, finalNode);
+test('fromDistinctAscArray', function () {
+  const node = oneToThirtyOneTree;
+  assert.ok(checkTreeInvariants(node, compareIntegers), 'tree is valid and balanced');
 });
 
-test('insertOrReplaceIfExists', function () {
-  let node/*: ImmutableTree<KeyedObject> */ = tree.empty;
-  for (const num of oneToThirtyOne) {
-    node = tree.insertOrReplaceIfExists(node, {key: num}, compareObjectKeys);
-  }
-
-  const origNode = node;
-  assert.ok(tree.equals(origNode, oneToThirtyOneKeyTree, (a, b) => a.key === b.key));
-
-  for (const num of oneToThirtyOne) {
-    const newValue = {key: num};
-    const prevNode = node;
-    node = tree.insertOrReplaceIfExists(node, newValue, compareObjectKeys);
-    assert.notEqual(node, prevNode);
-    assert.equal(node.size, prevNode.size);
-    assert.equal(tree.find(node, newValue, compareObjectKeys, null), newValue);
-  }
-});
-
-test('insertOrThrowIfExists', function () {
-  let node/*: ImmutableTree<KeyedObject> */ = tree.empty;
-  for (const num of oneToThirtyOne) {
-    node = tree.insert(node, {key: num}, compareObjectKeys);
-    assert.throws(
-      function () {
-        node = tree.insertOrThrowIfExists(node, {key: num}, compareObjectKeys);
-      },
-      ValueExistsError,
-      'exception is thrown with insertOrThrowIfExists',
-    );
-  }
-
-  assert.equal(node.size, 31);
-});
-
-test('remove', function () {
+test('indexOf', function () {
+  let node = oneToThirtyOneTree;
+  assert.equal(tree.indexOf(tree.empty, 1, compareIntegers), -1);
+  assert.equal(tree.indexOf(node, 0, compareIntegers), -1);
+  assert.equal(tree.indexOf(node, 32, compareIntegers), -1);
   assert.equal(
-    tree.remove(tree.empty, 1, compareIntegers),
-    tree.empty,
-    'tree is empty',
+    tree.indexOf(
+      {
+        left: tree.empty,
+        right: {
+          left: tree.empty,
+          right: tree.empty,
+          value: 2,
+          size: 1,
+        },
+        value: 1,
+        size: 2,
+      },
+      2,
+      compareIntegers,
+    ),
+    1,
   );
-
-  let node/*: ImmutableTree<number> */ = oneToThirtyOneTree;
-  node = tree.remove(node, 0, compareIntegers);
-  assert.equal(node, oneToThirtyOneTree);
-
-  let size = 31;
   for (const num of oneToThirtyOne) {
-    node = tree.remove(node, num, compareIntegers);
-    assert.equal(tree.find(node, num, compareIntegers, null), null);
-    assert.equal(node.size, --size);
+    assert.equal(tree.indexOf(node, num, compareIntegers), num - 1);
   }
-
-  assert.equal(node, tree.empty, 'tree is empty');
-});
-
-test('removeIfExists', function () {
-  assert.equal(tree.remove, tree.removeIfExists);
-});
-
-test('removeOrThrowIfNotExists', function () {
-  let node/*: ImmutableTree<number> */ = tree.create(1);
-  assert.throws(
-    function () {
-      node = tree.removeOrThrowIfNotExists(node, 2, compareIntegers);
-    },
-    ValueNotFoundError,
-    'exception is thrown with removeOrThrowIfNotExists',
-  );
-  assert.equal(node.size, 1);
-  node = tree.removeOrThrowIfNotExists(node, 1, compareIntegers);
-  assert.equal(node, tree.empty, 'tree is empty');
-});
-
-test('create', function () {
-  const node = tree.create(1);
-  assert.deepEqual(node, {
-    left: tree.empty,
-    right: tree.empty,
-    size: 1,
-    value: 1,
-  });
+  node = tree.fromDistinctAscArray(oneToThirtyOne.slice(0).reverse());
+  for (const num of oneToThirtyOne) {
+    assert.equal(tree.indexOf(node, num, compareIntegersReverse), 31 - num);
+  }
 });
 
 test('insert', function (t) {
@@ -370,325 +487,160 @@ test('insert', function (t) {
   });
 });
 
-test('update', function (t) {
-  t.test('onNotFoundDoNothing', function () {
-    const node = tree.create(1);
-    const newNode = tree.update(
-      node,
-      2,
-      compareIntegers,
-      onConflictThrowError,
-      onNotFoundDoNothing,
-    );
-    assert.equal(newNode, node, 'tree was not updated with onNotFoundDoNothing');
-  });
+test('insertIfNotExists', function () {
+  let node/*: ImmutableTree<number> */ = tree.empty;
+  for (const num of oneToThirtyOne) {
+    node = tree.insertIfNotExists(node, num, compareIntegers);
+  }
 
-  t.test('onNotFoundThrowError', function () {
+  const finalNode = node;
+  assert.ok(tree.equals(finalNode, oneToThirtyOneTree));
+
+  for (const num of oneToThirtyOne) {
+    node = tree.insertIfNotExists(node, num, compareIntegers);
+  }
+  assert.equal(node, finalNode);
+});
+
+test('insertOrReplaceIfExists', function () {
+  let node/*: ImmutableTree<KeyedObject> */ = tree.empty;
+  for (const num of oneToThirtyOne) {
+    node = tree.insertOrReplaceIfExists(node, {key: num}, compareObjectKeys);
+  }
+
+  const origNode = node;
+  assert.ok(tree.equals(origNode, oneToThirtyOneKeyTree, (a, b) => a.key === b.key));
+
+  for (const num of oneToThirtyOne) {
+    const newValue = {key: num};
+    const prevNode = node;
+    node = tree.insertOrReplaceIfExists(node, newValue, compareObjectKeys);
+    assert.notEqual(node, prevNode);
+    assert.equal(node.size, prevNode.size);
+    assert.equal(tree.find(node, newValue, compareObjectKeys, null), newValue);
+  }
+});
+
+test('insertOrThrowIfExists', function () {
+  let node/*: ImmutableTree<KeyedObject> */ = tree.empty;
+  for (const num of oneToThirtyOne) {
+    node = tree.insert(node, {key: num}, compareObjectKeys);
     assert.throws(
-      () => {
-        const node = tree.update/*:: <number, number> */(
-          tree.empty,
-          1,
-          compareIntegers,
-          onConflictKeepTreeValue,
-          onNotFoundThrowError,
-        );
+      function () {
+        node = tree.insertOrThrowIfExists(node, {key: num}, compareObjectKeys);
       },
-      ValueNotFoundError,
+      ValueExistsError,
+      'exception is thrown with insertOrThrowIfExists',
     );
-  });
+  }
 
-  t.test('onNotFoundUseGivenValue', function () {
-    const node = tree.update/*:: <number, number> */(
+  assert.equal(node.size, 31);
+});
+
+test('intersection', function () {
+  assert.equal(
+    tree.intersection(tree.empty, tree.empty, compareIntegers),
+    tree.empty,
+  );
+  assert.ok(
+    tree.equals(
+      tree.intersection(tree.create(1), tree.empty, compareIntegers),
       tree.empty,
-      1,
-      compareIntegers,
-      onConflictKeepTreeValue,
-      onNotFoundUseGivenValue,
-    );
-    assert.equal(node.value, 1);
-  });
+    ),
+  );
+  assert.ok(
+    tree.equals(
+      tree.intersection(
+        tree.fromDistinctAscArray([1, 2, 3, 4, 5]),
+        tree.fromDistinctAscArray([3, 4, 5, 6, 7]),
+        compareIntegers,
+      ),
+      tree.fromDistinctAscArray([3, 4, 5]),
+    ),
+  );
+  assert.ok(
+    tree.equals(
+      tree.intersection(
+        tree.fromDistinctAscArray(oneToThirtyOne),
+        tree.fromDistinctAscArray(oneToThirtyOne),
+        compareIntegers,
+      ),
+      oneToThirtyOneTree,
+    ),
+  );
 
-  const v1 = {key: 1, value: 10};
-  const v2 = {key: 2, value: 20};
+  const k3a = {key: 3};
+  const k3b = {key: 3};
 
-  let node/*: ImmutableTree<KeyedObject> */ = tree.create(v1);
-
-  node = tree.update(
-    node,
-    v2,
+  const intersectionWithDefaultCombiner = tree.intersection(
+    tree.fromDistinctAscArray([k3a]),
+    tree.fromDistinctAscArray([k3b]),
     compareObjectKeys,
-    onConflictThrowError,
-    (newItem) => {
-      assert.equal(newItem, v2);
-      return v2;
-    },
   );
-  assert.equal(tree.find(node, v2, compareObjectKeys, null), v2);
-
-  node = tree.update(
-    node,
-    3,
-    compareNumberWithObjectKey,
-    onConflictThrowError,
-    (newKey) => {
-      return {key: newKey, value: newKey * 10};
-    },
-  );
-  let v3 = tree.find(node, 3, compareNumberWithObjectKey, null);
-  assert.deepEqual(v3, {key: 3, value: 30});
-
-  node = tree.update(
-    node,
-    3,
-    compareNumberWithObjectKey,
-    onConflictKeepTreeValue,
-    (newKey) => {
-      return {key: newKey, value: newKey * 10};
-    },
-  );
-  assert.deepEqual(
-    tree.find(node, 3, compareNumberWithObjectKey, null),
-    v3,
-    'existing tree value it kept',
+  assert.equal(
+    intersectionWithDefaultCombiner.value,
+    k3b,
   );
 
-  node = tree.update(
-    node,
-    3,
-    compareNumberWithObjectKey,
-    (treeValue, key) => {
-      v3 = {key, value: key * 10};
-      return v3;
-    },
-    () => {
-      throw new Error('unexpected');
-    },
+  const intersectionWithCustomCombiner = tree.intersection(
+    tree.fromDistinctAscArray([k3a]),
+    tree.fromDistinctAscArray([k3b]),
+    compareObjectKeys,
+    (v1, v2) => v1,
   );
-  assert.deepEqual(
-    tree.find(node, 3, compareNumberWithObjectKey, null),
-    v3,
-    'new tree value is used',
+  assert.equal(
+    intersectionWithCustomCombiner.value,
+    k3a,
+  );
+
+  assert.ok(
+    tree.equals(
+      tree.intersection(
+        tree.fromDistinctAscArray(oneToThirtyOne),
+        tree.fromDistinctAscArray(oneToThirtyOne),
+        compareIntegers,
+        (v1, v2) => v1 + v2,
+      ),
+      tree.fromDistinctAscArray(oneToThirtyOne.map(x => x * 2)),
+    ),
   );
 
   assert.throws(
     function () {
-      node = tree.update(
-        node,
-        {key: 4, value: 40},
-        compareObjectKeys,
-        onConflictKeepTreeValue,
-        (newValue) => {
-          return {key: 5, value: 50};
-        },
+      tree.intersection(
+        tree.fromDistinctAscArray([1, 2, 3]),
+        tree.fromDistinctAscArray([1, 2, 3]),
+        compareIntegers,
+        (v1, v2) => -v1,
       );
     },
     {
       name: 'ValueOrderError',
-      message: 'The relative order of values has changed: ' +
-        'expected [object Object] to be equal to [object Object]',
-    }
+      message: 'The relative order of values has changed: expected -2 to be greater than -1',
+    },
   );
-
-  class CustomNotFoundError extends Error {}
 
   assert.throws(
     function () {
-      node = tree.update(
-        node,
-        5,
-        compareNumberWithObjectKey,
-        (treeValue, key) => treeValue,
-        () => {
-          throw new CustomNotFoundError();
-        },
+      tree.intersection(
+        tree.fromDistinctAscArray([1, 2, 3]),
+        tree.fromDistinctAscArray([1, 2, 3]),
+        compareIntegers,
+        (v1, v2) => v1 === 2 ? 4 : v1,
       );
     },
-    CustomNotFoundError,
+    {
+      name: 'ValueOrderError',
+      message: 'The relative order of values has changed: expected 4 to be less than 3',
+    },
   );
 });
 
-test('difference', function () {
-  assert.equal(tree.difference(tree.empty, tree.empty, compareIntegers), tree.empty);
+test('iterate', function () {
   assert.deepEqual(
-    tree.difference(tree.create(1), tree.empty, compareIntegers),
-    tree.create(1),
+    Array.from(tree.iterate(oneToThirtyOneTree)),
+    oneToThirtyOne,
   );
-  assert.deepEqual(
-    tree.difference(tree.empty, tree.create(1), compareIntegers),
-    tree.empty,
-  );
-  assert.equal(
-    tree.difference(
-      tree.fromDistinctAscArray([1, 2, 3]),
-      tree.fromDistinctAscArray([1, 2, 3]),
-      compareIntegers,
-    ),
-    tree.empty,
-  );
-  assert.ok(
-    tree.equals(
-      tree.difference(
-        tree.fromDistinctAscArray([1, 2, 3, 4]),
-        tree.fromDistinctAscArray([2, 3, 4, 5]),
-        compareIntegers,
-      ),
-      tree.create(1),
-    ),
-  );
-  assert.ok(
-    tree.equals(
-      tree.difference(
-        tree.fromDistinctAscArray([2, 3, 4, 5]),
-        tree.fromDistinctAscArray([1, 2, 3, 4]),
-        compareIntegers,
-      ),
-      tree.create(5),
-    ),
-  );
-  assert.ok(
-    tree.equals(
-      tree.difference(
-        tree.fromDistinctAscArray([1, 4]),
-        tree.fromDistinctAscArray([1, 2, 3]),
-        compareIntegers,
-      ),
-      tree.create(4),
-    ),
-  );
-  assert.ok(
-    tree.equals(
-      tree.difference(
-        tree.fromDistinctAscArray([1, 2, 3]),
-        tree.fromDistinctAscArray([1, 4]),
-        compareIntegers,
-      ),
-      tree.fromDistinctAscArray([2, 3]),
-    ),
-  );
-  const oneToThirtyOneOdds =
-    tree.fromDistinctAscArray(oneToThirtyOne.filter(x => x % 2));
-  const oneToThirtyOneEvens =
-    tree.fromDistinctAscArray(oneToThirtyOne.filter(x => !(x % 2)));
-  assert.ok(
-    tree.equals(
-      tree.difference(
-        oneToThirtyOneTree,
-        oneToThirtyOneOdds,
-        compareIntegers,
-      ),
-      oneToThirtyOneEvens,
-    ),
-  );
-  assert.ok(
-    tree.equals(
-      tree.difference(
-        oneToThirtyOneTree,
-        oneToThirtyOneEvens,
-        compareIntegers,
-      ),
-      oneToThirtyOneOdds,
-    ),
-  );
-});
-
-
-test('equals', function () {
-  let tree1 = oneToThirtyOneTree;
-
-  let tree2/*: ImmutableTree<number> */ = tree.empty;
-  for (const num of oneToThirtyOne.slice(0).reverse()) {
-    tree2 = tree.insert(tree2, num, compareIntegers);
-  }
-
-  let stringTree/*: ImmutableTree<string> */ = tree.empty;
-  for (const num of oneToThirtyOne) {
-    stringTree = tree.insert(
-      stringTree,
-      String(num),
-      (a, b) => parseInt(a, 10) - parseInt(b, 10),
-    );
-  }
-
-  assert.ok(tree.equals(tree1, tree2));
-  assert.ok(tree.equals/*:: <number, string> */(tree1, stringTree, (a, b) => a === parseInt(b, 10)));
-
-  tree1 = tree.remove(tree1, 1, compareIntegers);
-  assert.ok(!tree.equals(tree1, tree2));
-
-  tree2 = tree.remove(tree2, 1, compareIntegers);
-  assert.ok(tree.equals(tree1, tree2));
-
-  assert.ok(tree.equals(tree.empty, tree.empty));
-  assert.ok(!tree.equals(tree1, tree.empty));
-  assert.ok(!tree.equals(tree.empty, tree1));
-
-  assert.ok(tree.equals(
-    {
-      left: {
-        left: tree.empty,
-        right: tree.empty,
-        size: 1,
-        value: {num: 1},
-      },
-      right: tree.empty,
-      size: 2,
-      value: {num: 2},
-    },
-    {
-      left: tree.empty,
-      right: {
-        left: tree.empty,
-        right: tree.empty,
-        size: 1,
-        value: {num: 2},
-      },
-      size: 2,
-      value: {num: 1},
-    },
-    (a, b) => objectIs(a.num, b.num),
-  ));
-
-  assert.ok(!tree.equals(
-    {
-      left: {
-        left: tree.empty,
-        right: tree.empty,
-        size: 1,
-        value: {num: 1},
-      },
-      right: {
-        left: tree.empty,
-        right: tree.empty,
-        size: 1,
-        value: {num: 3},
-      },
-      size: 2,
-      value: {num: 2},
-    },
-    {
-      left: {
-        left: tree.empty,
-        right: tree.empty,
-        size: 1,
-        value: {num: 0},
-      },
-      right: {
-        left: tree.empty,
-        right: tree.empty,
-        size: 1,
-        value: {num: 2},
-      },
-      size: 2,
-      value: {num: 1},
-    },
-    (a, b) => objectIs(a.num, b.num),
-  ));
-});
-
-test('fromDistinctAscArray', function () {
-  const node = oneToThirtyOneTree;
-  assert.ok(checkTreeInvariants(node, compareIntegers), 'tree is valid and balanced');
 });
 
 test('map', function () {
@@ -701,11 +653,110 @@ test('map', function () {
   );
 });
 
-test('toArray', function () {
-  assert.deepEqual(tree.toArray/*:: <mixed> */(tree.empty).sort(), []);
-  assert.deepEqual(tree.toArray(tree.create(1)), [1]);
-  assert.deepEqual(tree.toArray(tree.fromDistinctAscArray([1, 2, 3])), [1, 2, 3]);
-  assert.deepEqual(tree.toArray(tree.fromDistinctAscArray([3, 2, 1])), [3, 2, 1]);
+test('maxNode', function () {
+  assert.throws(
+    () => { tree.maxNode/*:: <number> */(tree.empty); },
+    EmptyTreeError,
+    'maxNode throws EmptyTreeError',
+  );
+  assert.equal(tree.maxNode(oneToThirtyOneTree).value, 31, 'max node value is 31');
+});
+
+test('maxValue', function () {
+  assert.equal(tree.maxValue(oneToThirtyOneTree), 31, 'max value is 31');
+});
+
+test('minNode', function () {
+  assert.throws(
+    () => { tree.minNode/*:: <number> */(tree.empty); },
+    EmptyTreeError,
+    'minNode throws EmptyTreeError',
+  );
+  assert.equal(tree.minNode(oneToThirtyOneTree).value, 1, 'min node value is 1');
+});
+
+test('minValue', function () {
+  assert.equal(tree.minValue(oneToThirtyOneTree), 1, 'min value is 1');
+});
+
+test('remove', function () {
+  assert.equal(
+    tree.remove(tree.empty, 1, compareIntegers),
+    tree.empty,
+    'tree is empty',
+  );
+
+  let node/*: ImmutableTree<number> */ = oneToThirtyOneTree;
+  node = tree.remove(node, 0, compareIntegers);
+  assert.equal(node, oneToThirtyOneTree);
+
+  let size = 31;
+  for (const num of oneToThirtyOne) {
+    node = tree.remove(node, num, compareIntegers);
+    assert.equal(tree.find(node, num, compareIntegers, null), null);
+    assert.equal(node.size, --size);
+  }
+
+  assert.equal(node, tree.empty, 'tree is empty');
+});
+
+test('removeIfExists', function () {
+  assert.equal(tree.remove, tree.removeIfExists);
+});
+
+test('removeOrThrowIfNotExists', function () {
+  let node/*: ImmutableTree<number> */ = tree.create(1);
+  assert.throws(
+    function () {
+      node = tree.removeOrThrowIfNotExists(node, 2, compareIntegers);
+    },
+    ValueNotFoundError,
+    'exception is thrown with removeOrThrowIfNotExists',
+  );
+  assert.equal(node.size, 1);
+  node = tree.removeOrThrowIfNotExists(node, 1, compareIntegers);
+  assert.equal(node, tree.empty, 'tree is empty');
+});
+
+test('reverseIterate', function () {
+  assert.deepEqual(
+    Array.from(tree.reverseIterate(oneToThirtyOneTree)),
+    oneToThirtyOne.slice(0).reverse(),
+  );
+});
+
+test('setBalancingParameters', function () {
+  assert.doesNotThrow(function () {
+    tree.setBalancingParameters(3, 2);
+  });
+});
+
+test('split', function () {
+  // test/monkey.js contains a more thorough test.
+  let small, equal, large;
+
+  [small, equal, large] = tree.split(tree.empty, 0, compareIntegers);
+  assert.equal(small, tree.empty);
+  assert.equal(equal, tree.empty);
+  assert.equal(large, tree.empty);
+
+  [small, equal, large] = tree.split(
+    tree.fromDistinctAscArray([1, 2, 3]),
+    2,
+    compareIntegers,
+  );
+  assert.ok(tree.equals(small, tree.create(1)));
+  assert.ok(equal.size === 3 && equal.value === 2);
+  assert.ok(tree.equals(large, tree.create(3)));
+
+  [small, equal, large] = tree.split(
+    tree.fromDistinctAscArray([1, 3]),
+    2,
+    compareIntegers,
+  );
+  assert.ok(tree.equals(small, tree.create(1)));
+  assert.ok(equal.size === 0);
+  assert.ok(tree.equals(large, tree.create(3)));
 });
 
 test('union', function () {
@@ -858,199 +909,186 @@ test('union', function () {
   );
 });
 
-test('intersection', function () {
-  assert.equal(
-    tree.intersection(tree.empty, tree.empty, compareIntegers),
-    tree.empty,
-  );
-  assert.ok(
-    tree.equals(
-      tree.intersection(tree.create(1), tree.empty, compareIntegers),
-      tree.empty,
-    ),
-  );
-  assert.ok(
-    tree.equals(
-      tree.intersection(
-        tree.fromDistinctAscArray([1, 2, 3, 4, 5]),
-        tree.fromDistinctAscArray([3, 4, 5, 6, 7]),
-        compareIntegers,
-      ),
-      tree.fromDistinctAscArray([3, 4, 5]),
-    ),
-  );
-  assert.ok(
-    tree.equals(
-      tree.intersection(
-        tree.fromDistinctAscArray(oneToThirtyOne),
-        tree.fromDistinctAscArray(oneToThirtyOne),
-        compareIntegers,
-      ),
-      oneToThirtyOneTree,
-    ),
-  );
-
-  const k3a = {key: 3};
-  const k3b = {key: 3};
-
-  const intersectionWithDefaultCombiner = tree.intersection(
-    tree.fromDistinctAscArray([k3a]),
-    tree.fromDistinctAscArray([k3b]),
-    compareObjectKeys,
-  );
-  assert.equal(
-    intersectionWithDefaultCombiner.value,
-    k3b,
-  );
-
-  const intersectionWithCustomCombiner = tree.intersection(
-    tree.fromDistinctAscArray([k3a]),
-    tree.fromDistinctAscArray([k3b]),
-    compareObjectKeys,
-    (v1, v2) => v1,
-  );
-  assert.equal(
-    intersectionWithCustomCombiner.value,
-    k3a,
-  );
-
-  assert.ok(
-    tree.equals(
-      tree.intersection(
-        tree.fromDistinctAscArray(oneToThirtyOne),
-        tree.fromDistinctAscArray(oneToThirtyOne),
-        compareIntegers,
-        (v1, v2) => v1 + v2,
-      ),
-      tree.fromDistinctAscArray(oneToThirtyOne.map(x => x * 2)),
-    ),
-  );
-
-  assert.throws(
-    function () {
-      tree.intersection(
-        tree.fromDistinctAscArray([1, 2, 3]),
-        tree.fromDistinctAscArray([1, 2, 3]),
-        compareIntegers,
-        (v1, v2) => -v1,
-      );
-    },
-    {
-      name: 'ValueOrderError',
-      message: 'The relative order of values has changed: expected -2 to be greater than -1',
-    },
-  );
-
-  assert.throws(
-    function () {
-      tree.intersection(
-        tree.fromDistinctAscArray([1, 2, 3]),
-        tree.fromDistinctAscArray([1, 2, 3]),
-        compareIntegers,
-        (v1, v2) => v1 === 2 ? 4 : v1,
-      );
-    },
-    {
-      name: 'ValueOrderError',
-      message: 'The relative order of values has changed: expected 4 to be less than 3',
-    },
-  );
+test('toArray', function () {
+  assert.deepEqual(tree.toArray/*:: <mixed> */(tree.empty).sort(), []);
+  assert.deepEqual(tree.toArray(tree.create(1)), [1]);
+  assert.deepEqual(tree.toArray(tree.fromDistinctAscArray([1, 2, 3])), [1, 2, 3]);
+  assert.deepEqual(tree.toArray(tree.fromDistinctAscArray([3, 2, 1])), [3, 2, 1]);
 });
 
-test('zip', function () {
-  assert.deepEqual(Array.from(tree.zip/*:: <mixed, mixed> */(tree.empty, tree.empty)), []);
-  assert.deepEqual(Array.from(tree.zip/*:: <number, number> */(tree.create(1), tree.empty)), [[1, undefined]]);
-  assert.deepEqual(Array.from(tree.zip/*:: <number, number> */(tree.empty, tree.create(1))), [[undefined, 1]]);
-  assert.deepEqual(
-    Array.from(
-      tree.zip(
-        tree.fromDistinctAscArray(['a', 'b', 'c']),
-        tree.fromDistinctAscArray([1, 2, 3, undefined]),
-      )
-    ),
-    [
-      ['a', 1],
-      ['b', 2],
-      ['c', 3],
-      [undefined, undefined],
-    ],
-  );
-});
-
-test('GHC issue #4242', function () {
-  // https://gitlab.haskell.org/ghc/ghc/-/issues/4242
-
-  let node/*: ImmutableTree<number> */ = tree.empty;
-  for (const num of [0, 2, 5, 1, 6, 4, 8, 9, 7, 11, 10, 3]) {
-    node = tree.insert(node, num, compareIntegers);
-  }
-
-  /*:: invariant(node.size !== 0); */
-
-  node = tree.remove(node, tree.minValue(node), compareIntegers);
-
-  assert.ok(checkTreeInvariants(node, compareIntegers));
-
-  /*:: invariant(node.size !== 0); */
-
-  node = tree.remove(node, tree.minValue(node), compareIntegers);
-
-  assert.ok(checkTreeInvariants(node, compareIntegers));
-});
-
-test('indexOf', function () {
-  let node = oneToThirtyOneTree;
-  assert.equal(tree.indexOf(tree.empty, 1, compareIntegers), -1);
-  assert.equal(tree.indexOf(node, 0, compareIntegers), -1);
-  assert.equal(tree.indexOf(node, 32, compareIntegers), -1);
-  assert.equal(
-    tree.indexOf(
-      {
-        left: tree.empty,
-        right: {
-          left: tree.empty,
-          right: tree.empty,
-          value: 2,
-          size: 1,
-        },
-        value: 1,
-        size: 2,
-      },
+test('update', function (t) {
+  t.test('onNotFoundDoNothing', function () {
+    const node = tree.create(1);
+    const newNode = tree.update(
+      node,
       2,
       compareIntegers,
-    ),
-    1,
+      onConflictThrowError,
+      onNotFoundDoNothing,
+    );
+    assert.equal(newNode, node, 'tree was not updated with onNotFoundDoNothing');
+  });
+
+  t.test('onNotFoundThrowError', function () {
+    assert.throws(
+      () => {
+        const node = tree.update/*:: <number, number> */(
+          tree.empty,
+          1,
+          compareIntegers,
+          onConflictKeepTreeValue,
+          onNotFoundThrowError,
+        );
+      },
+      ValueNotFoundError,
+    );
+  });
+
+  t.test('onNotFoundUseGivenValue', function () {
+    const node = tree.update/*:: <number, number> */(
+      tree.empty,
+      1,
+      compareIntegers,
+      onConflictKeepTreeValue,
+      onNotFoundUseGivenValue,
+    );
+    assert.equal(node.value, 1);
+  });
+
+  const v1 = {key: 1, value: 10};
+  const v2 = {key: 2, value: 20};
+
+  let node/*: ImmutableTree<KeyedObject> */ = tree.create(v1);
+
+  node = tree.update(
+    node,
+    v2,
+    compareObjectKeys,
+    onConflictThrowError,
+    (newItem) => {
+      assert.equal(newItem, v2);
+      return v2;
+    },
   );
-  for (const num of oneToThirtyOne) {
-    assert.equal(tree.indexOf(node, num, compareIntegers), num - 1);
-  }
-  node = tree.fromDistinctAscArray(oneToThirtyOne.slice(0).reverse());
-  for (const num of oneToThirtyOne) {
-    assert.equal(tree.indexOf(node, num, compareIntegersReverse), 31 - num);
-  }
+  assert.equal(tree.find(node, v2, compareObjectKeys, null), v2);
+
+  node = tree.update(
+    node,
+    3,
+    compareNumberWithObjectKey,
+    onConflictThrowError,
+    (newKey) => {
+      return {key: newKey, value: newKey * 10};
+    },
+  );
+  let v3 = tree.find(node, 3, compareNumberWithObjectKey, null);
+  assert.deepEqual(v3, {key: 3, value: 30});
+
+  node = tree.update(
+    node,
+    3,
+    compareNumberWithObjectKey,
+    onConflictKeepTreeValue,
+    (newKey) => {
+      return {key: newKey, value: newKey * 10};
+    },
+  );
+  assert.deepEqual(
+    tree.find(node, 3, compareNumberWithObjectKey, null),
+    v3,
+    'existing tree value it kept',
+  );
+
+  node = tree.update(
+    node,
+    3,
+    compareNumberWithObjectKey,
+    (treeValue, key) => {
+      v3 = {key, value: key * 10};
+      return v3;
+    },
+    () => {
+      throw new Error('unexpected');
+    },
+  );
+  assert.deepEqual(
+    tree.find(node, 3, compareNumberWithObjectKey, null),
+    v3,
+    'new tree value is used',
+  );
+
+  assert.throws(
+    function () {
+      node = tree.update(
+        node,
+        {key: 4, value: 40},
+        compareObjectKeys,
+        onConflictKeepTreeValue,
+        (newValue) => {
+          return {key: 5, value: 50};
+        },
+      );
+    },
+    {
+      name: 'ValueOrderError',
+      message: 'The relative order of values has changed: ' +
+        'expected [object Object] to be equal to [object Object]',
+    }
+  );
+
+  class CustomNotFoundError extends Error {}
+
+  assert.throws(
+    function () {
+      node = tree.update(
+        node,
+        5,
+        compareNumberWithObjectKey,
+        (treeValue, key) => treeValue,
+        () => {
+          throw new CustomNotFoundError();
+        },
+      );
+    },
+    CustomNotFoundError,
+  );
 });
 
-test('at', function () {
-  const node = oneToThirtyOneTree;
-  /*:: invariant(node.size !== 0); */
-  assert.throws(
-    function () {
-      tree.at(tree.create(1), 1);
+test('validate', function () {
+  assert.ok(tree.validate(tree.empty, compareIntegers).valid, 'null tree is valid');
+  assert.ok(tree.validate(tree.create(1), compareIntegers).valid, 'tree of size 1 is valid');
+
+  let node/*: ImmutableTree<number> */ = {
+    left: {
+      left: tree.empty,
+      right: tree.empty,
+      value: 2,
+      size: 1,
     },
-    IndexOutOfRangeError,
-    'IndexOutOfRangeError exception is thrown for index 1 of size 1 tree',
-  );
-  assert.throws(
-    function () {
-      tree.at(tree.create(1), -2);
+    right: tree.empty,
+    value: 1,
+    size: 2,
+  };
+  let result = tree.validate(node, compareIntegers);
+  assert.ok(!result.valid, 'tree is invalid');
+  assert.equal(result.subtree, 'left');
+  assert.equal(result.tree, node);
+
+  node = {
+    left: tree.empty,
+    right: {
+      left: tree.empty,
+      right: tree.empty,
+      value: 0,
+      size: 1,
     },
-    IndexOutOfRangeError,
-    'IndexOutOfRangeError exception is thrown for index -2 of size 1 tree',
-  );
-  for (const num of oneToThirtyOne) {
-    assert.equal(tree.at(node, num - 1), num);
-    assert.equal(tree.at(node, -num), oneToThirtyOne.length - (num - 1));
-  }
+    value: 1,
+    size: 2,
+  };
+  result = tree.validate(node, compareIntegers);
+  assert.ok(!result.valid, 'tree is invalid');
+  assert.equal(result.subtree, 'right');
+  assert.equal(result.tree, node);
 });
 
 test('withKeyComparator', function () {
@@ -1175,82 +1213,43 @@ test('withKeyComparator', function () {
   assert.ok(integerTree.validate(node).valid);
 });
 
-test('validate', function () {
-  assert.ok(tree.validate(tree.empty, compareIntegers).valid, 'null tree is valid');
-  assert.ok(tree.validate(tree.create(1), compareIntegers).valid, 'tree of size 1 is valid');
-
-  let node/*: ImmutableTree<number> */ = {
-    left: {
-      left: tree.empty,
-      right: tree.empty,
-      value: 2,
-      size: 1,
-    },
-    right: tree.empty,
-    value: 1,
-    size: 2,
-  };
-  let result = tree.validate(node, compareIntegers);
-  assert.ok(!result.valid, 'tree is invalid');
-  assert.equal(result.subtree, 'left');
-  assert.equal(result.tree, node);
-
-  node = {
-    left: tree.empty,
-    right: {
-      left: tree.empty,
-      right: tree.empty,
-      value: 0,
-      size: 1,
-    },
-    value: 1,
-    size: 2,
-  };
-  result = tree.validate(node, compareIntegers);
-  assert.ok(!result.valid, 'tree is invalid');
-  assert.equal(result.subtree, 'right');
-  assert.equal(result.tree, node);
-});
-
-test('setBalancingParameters', function () {
-  assert.doesNotThrow(function () {
-    tree.setBalancingParameters(3, 2);
-  });
-});
-
-test('empty', function () {
-  const empty = tree.empty;
-  assert.equal(empty.size, 0, 'empty has size 0');
-  assert.equal(empty.left, empty, 'empty left node is empty');
-  assert.equal(empty.right, empty, 'empty right node is empty');
-  assert.equal(empty.value, undefined, 'empty has undefined value');
-  assert.ok(Object.isFrozen(empty), 'empty is frozen');
-});
-
-test('split', function () {
-  // test/monkey.js contains a more thorough test.
-  let small, equal, large;
-
-  [small, equal, large] = tree.split(tree.empty, 0, compareIntegers);
-  assert.equal(small, tree.empty);
-  assert.equal(equal, tree.empty);
-  assert.equal(large, tree.empty);
-
-  [small, equal, large] = tree.split(
-    tree.fromDistinctAscArray([1, 2, 3]),
-    2,
-    compareIntegers,
+test('zip', function () {
+  assert.deepEqual(Array.from(tree.zip/*:: <mixed, mixed> */(tree.empty, tree.empty)), []);
+  assert.deepEqual(Array.from(tree.zip/*:: <number, number> */(tree.create(1), tree.empty)), [[1, undefined]]);
+  assert.deepEqual(Array.from(tree.zip/*:: <number, number> */(tree.empty, tree.create(1))), [[undefined, 1]]);
+  assert.deepEqual(
+    Array.from(
+      tree.zip(
+        tree.fromDistinctAscArray(['a', 'b', 'c']),
+        tree.fromDistinctAscArray([1, 2, 3, undefined]),
+      )
+    ),
+    [
+      ['a', 1],
+      ['b', 2],
+      ['c', 3],
+      [undefined, undefined],
+    ],
   );
-  assert.ok(tree.equals(small, tree.create(1)));
-  assert.ok(equal.size === 3 && equal.value === 2);
-  assert.ok(tree.equals(large, tree.create(3)));
+});
 
-  [small, equal, large] = tree.split(
-    tree.fromDistinctAscArray([1, 3]),
-    2,
-    compareIntegers,
-  );
-  assert.ok(tree.equals(small, tree.create(1)));
-  assert.ok(equal.size === 0);
-  assert.ok(tree.equals(large, tree.create(3)));
+test('GHC issue #4242', function () {
+  // https://gitlab.haskell.org/ghc/ghc/-/issues/4242
+
+  let node/*: ImmutableTree<number> */ = tree.empty;
+  for (const num of [0, 2, 5, 1, 6, 4, 8, 9, 7, 11, 10, 3]) {
+    node = tree.insert(node, num, compareIntegers);
+  }
+
+  /*:: invariant(node.size !== 0); */
+
+  node = tree.remove(node, tree.minValue(node), compareIntegers);
+
+  assert.ok(checkTreeInvariants(node, compareIntegers));
+
+  /*:: invariant(node.size !== 0); */
+
+  node = tree.remove(node, tree.minValue(node), compareIntegers);
+
+  assert.ok(checkTreeInvariants(node, compareIntegers));
 });
