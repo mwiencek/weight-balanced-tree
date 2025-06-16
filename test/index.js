@@ -74,18 +74,6 @@ test('all', function () {
       assert.ok(checkTreeInvariants(node, compareIntegers), 'tree is valid and balanced');
     }
 
-    assert.deepEqual(
-      Array.from(tree.iterate(node)),
-      oneToThirtyOne,
-      'tree is in order',
-    );
-
-    assert.deepEqual(
-      Array.from(tree.reverseIterate(node)),
-      thirtyOneToOne,
-      'tree is in order (reversed)',
-    );
-
     assert.throws(
       () => { tree.minNode/*:: <number> */(tree.empty); },
       EmptyTreeError,
@@ -139,6 +127,20 @@ test('all', function () {
     node = tree.remove(node, 0, compareIntegers);
     assert.equal(node, tree.empty, 'tree is still empty');
   }
+});
+
+test('iterate', function () {
+  assert.deepEqual(
+    Array.from(tree.iterate(oneToThirtyOneTree)),
+    oneToThirtyOne,
+  );
+});
+
+test('reverseIterate', function () {
+  assert.deepEqual(
+    Array.from(tree.reverseIterate(oneToThirtyOneTree)),
+    oneToThirtyOne.slice(0).reverse(),
+  );
 });
 
 test('find', function () {
