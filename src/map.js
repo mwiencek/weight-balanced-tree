@@ -1,5 +1,6 @@
 // @flow strict
 
+import {node} from './create.js';
 import empty from './empty.js';
 /*::
 import type {ImmutableTree} from './types.js';
@@ -12,10 +13,9 @@ export default function map/*:: <T, U> */(
   if (tree.size === 0) {
     return empty;
   }
-  return {
-    left: map(tree.left, mapper),
-    right: map(tree.right, mapper),
-    size: tree.size,
-    value: mapper(tree.value),
-  };
+  return node(
+    map(tree.left, mapper),
+    mapper(tree.value),
+    map(tree.right, mapper),
+  );
 }

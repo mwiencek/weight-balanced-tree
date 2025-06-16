@@ -1,6 +1,6 @@
 // @flow strict
 
-import create from './create.js';
+import create, {node} from './create.js';
 import empty from './empty.js';
 import {
   ValueExistsError,
@@ -89,12 +89,7 @@ export default function update/*:: <T, K> */(
     } else if (cmp(key, valueToInsert) !== 0) {
       throw new ValueOrderError(key, valueToInsert, 'equal to');
     }
-    return {
-      left: tree.left,
-      right: tree.right,
-      size: tree.size,
-      value: valueToInsert,
-    };
+    return node(tree.left, valueToInsert, tree.right);
   }
 
   if (order < 0) {
