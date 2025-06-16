@@ -1,6 +1,6 @@
 # Changelog
 
-## v0.9.0 (unreleased)
+## v0.9.0 (2025-06-16)
 
   * Added `split`, which splits a tree into two: one containing values
     smaller than `key`, and one containing values large than `key`,
