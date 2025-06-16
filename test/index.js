@@ -58,6 +58,8 @@ for (let i = 1; i <= 31; i++) {
 }
 
 const oneToThirtyOneTree = tree.fromDistinctAscArray(oneToThirtyOne);
+const oneToThirtyOneKeyTree/*: ImmutableTree<KeyedObject> */ =
+  tree.fromDistinctAscArray(oneToThirtyOne.map(key => ({key})));
 
 test('all', function () {
   const thirtyOneToOne = oneToThirtyOne.slice(0).reverse();
@@ -139,54 +141,70 @@ test('all', function () {
   }
 });
 
-test('find/findBy with different value type', function () {
-  const x1 = {key: 1};
-  const x2 = {key: 2};
+test('find', function () {
+  const node = oneToThirtyOneKeyTree;
+  let foundValue;
 
-  let node/*: ImmutableTree<KeyedObject> */ = tree.empty;
-  node = tree.insert(node, x1, compareObjectKeys);
-  node = tree.insert(node, x2, compareObjectKeys);
+  for (const num of oneToThirtyOne) {
+    let foundValue = tree.find(node, {key: num}, compareObjectKeys, null);
+    assert.equal(foundValue?.key, num);
+    foundValue = tree.find(node, num, compareNumberWithObjectKey, null);
+    assert.equal(foundValue?.key, num);
+  }
 
-  let foundValue = tree.find(node, 2, compareNumberWithObjectKey, null);
-  assert.ok(foundValue?.key === 2);
-  foundValue = tree.find(node, 3, compareNumberWithObjectKey, {key: 3});
-  assert.ok(foundValue.key === 3);
-
-  foundValue = tree.findBy(node, (x) => compareNumberWithObjectKey(2, x), null);
-  assert.ok(foundValue?.key === 2);
-  foundValue = tree.findBy(node, (x) => compareNumberWithObjectKey(3, x), {key: 3});
-  assert.ok(foundValue.key === 3);
+  foundValue = tree.find(node, {key: 32}, compareObjectKeys, null);
+  assert.equal(foundValue, null);
+  foundValue = tree.find(node, 32, compareNumberWithObjectKey, null);
+  assert.equal(foundValue, null);
 });
 
-test('findNext/findPrev with non-existent values', function () {
-  let node/*: ImmutableTree<number> */ = tree.empty;
-  node = tree.insert(node, 1, compareIntegers);
-  node = tree.insert(node, 3, compareIntegers);
-  node = tree.insert(node, 5, compareIntegers);
-  node = tree.insert(node, 7, compareIntegers);
-  node = tree.insert(node, 9, compareIntegers);
+test('findBy', function () {
+  const node = oneToThirtyOneKeyTree;
+  let foundValue;
 
-  assert.equal(tree.findNext(node, 0, compareIntegers, null), 1);
-  assert.equal(tree.findNext(node, 1, compareIntegers, null), 3);
-  assert.equal(tree.findNext(node, 2, compareIntegers, null), 3);
-  assert.equal(tree.findNext(node, 3, compareIntegers, null), 5);
-  assert.equal(tree.findNext(node, 4, compareIntegers, null), 5);
-  assert.equal(tree.findNext(node, 5, compareIntegers, null), 7);
-  assert.equal(tree.findNext(node, 6, compareIntegers, null), 7);
-  assert.equal(tree.findNext(node, 7, compareIntegers, null), 9);
-  assert.equal(tree.findNext(node, 8, compareIntegers, null), 9);
-  assert.equal(tree.findNext(node, 9, compareIntegers, null), null);
+  for (const num of oneToThirtyOne) {
+    let foundValue = tree.findBy(node, (obj) => compareIntegers(num, obj.key));
+    assert.equal(foundValue?.key, num);
+  }
 
-  assert.equal(tree.findPrev(node, 1, compareIntegers, null), null);
-  assert.equal(tree.findPrev(node, 2, compareIntegers, null), 1);
-  assert.equal(tree.findPrev(node, 3, compareIntegers, null), 1);
-  assert.equal(tree.findPrev(node, 4, compareIntegers, null), 3);
-  assert.equal(tree.findPrev(node, 5, compareIntegers, null), 3);
-  assert.equal(tree.findPrev(node, 6, compareIntegers, null), 5);
-  assert.equal(tree.findPrev(node, 7, compareIntegers, null), 5);
-  assert.equal(tree.findPrev(node, 8, compareIntegers, null), 7);
-  assert.equal(tree.findPrev(node, 9, compareIntegers, null), 7);
-  assert.equal(tree.findPrev(node, 10, compareIntegers, null), 9);
+  foundValue = tree.findBy/*:: <KeyedObject, string> */(node, (obj) => compareIntegers(32, obj.key), 'default');
+  assert.equal(foundValue, 'default');
+});
+
+test('findNext', function () {
+  const node = oneToThirtyOneKeyTree;
+  let foundValue;
+
+  for (const num of oneToThirtyOne) {
+    const nextNum = num >= 31 ? undefined : (num + 1);
+
+    let foundValue = tree.findNext(node, {key: num}, compareObjectKeys);
+    assert.equal(foundValue?.key, nextNum);
+
+    foundValue = tree.findNext(node, {key: num + 0.5}, compareObjectKeys);
+    assert.equal(foundValue?.key, nextNum);
+
+    foundValue = tree.findNext/*:: <KeyedObject, number, {+key: -1}> */(node, num, compareNumberWithObjectKey, {key: -1});
+    assert.equal(foundValue.key, nextNum ?? -1);
+  }
+});
+
+test('findPrev', function () {
+  const node = oneToThirtyOneKeyTree;
+  let foundValue;
+
+  for (const num of oneToThirtyOne) {
+    const nextNum = num <= 1 ? undefined : (num - 1);
+
+    let foundValue = tree.findPrev(node, {key: num}, compareObjectKeys);
+    assert.equal(foundValue?.key, nextNum);
+
+    foundValue = tree.findPrev(node, {key: num - 0.5}, compareObjectKeys);
+    assert.equal(foundValue?.key, nextNum);
+
+    foundValue = tree.findPrev/*:: <KeyedObject, number, {+key: -1}> */(node, num, compareNumberWithObjectKey, {key: -1});
+    assert.equal(foundValue.key, nextNum ?? -1);
+  }
 });
 
 test('insertIfNotExists', function () {
