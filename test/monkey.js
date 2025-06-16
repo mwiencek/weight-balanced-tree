@@ -214,12 +214,34 @@ class SplitCmd {
   }
 }
 
+class FilterCmd {
+  constructor(key) {
+    this.key = key;
+  }
+  toString() {
+    return `filter(${this.key})`;
+  }
+  check() {
+    return true;
+  }
+  run(model, real) {
+    const filteredModel = model.filter(x => x > this.key);
+    const filteredTree = wbt.filter(
+      real.tree,
+      x => x > this.key,
+    );
+    assert.ok(checkTreeInvariants(filteredTree, compareIntegers));
+    compareModelToReal(filteredModel, {tree: filteredTree});
+  }
+}
+
 const keyArb = fc.integer({min: -10_000, max: 10_000});
 
 const commandArb = [
   keyArb.map(key => new InsertCmd(key)),
   keyArb.map(key => new RemoveCmd(key)),
   keyArb.map(key => new SplitCmd(key)),
+  keyArb.map(key => new FilterCmd(key)),
   fc.array(keyArb, {maxLength: 50}).map(keys => new UnionCmd(keys)),
   fc.array(keyArb, {maxLength: 50}).map(keys => new DifferenceCmd(keys)),
   fc.array(keyArb, {maxLength: 50}).map(keys => new IntersectionCmd(keys)),

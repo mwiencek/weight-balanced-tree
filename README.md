@@ -261,6 +261,17 @@ values to `isEqual`.
 `isEqual` is optional. If not provided, it defaults to
 [`Object.is`](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object/is).
 
+### filter()
+
+```TypeScript
+function filter<T>(
+  tree: ImmutableTree<T>,
+  predicate: (value: T) => boolean,
+): ImmutableTree<T>;
+```
+
+Returns a tree containing only the values that satisfy `predicate`.
+
 ### find()
 
 ```TypeScript

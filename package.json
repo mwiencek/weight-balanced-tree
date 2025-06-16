@@ -40,6 +40,10 @@
       "types": "./src/errors.d.ts",
       "default": "./src/errors.js"
     },
+    "./filter": {
+      "types": "./src/filter.d.ts",
+      "default": "./src/filter.js"
+    },
     "./find": {
       "types": "./src/find.d.ts",
       "default": "./src/find.js"

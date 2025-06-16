@@ -17,6 +17,7 @@ import {
   ValueOrderError,
 } from '../src/errors';
 import equals from '../src/equals';
+import filter from '../src/filter';
 import find from '../src/find';
 import findBy from '../src/findBy';
 import findNext from '../src/findNext';
@@ -95,6 +96,7 @@ expectType<Generator<string, undefined, undefined>>(reverseIterate<string>(strin
 expectType<boolean>(equals<string>(stringTree, stringTree));
 expectType<boolean>(equals<string>(stringTree, stringTree, areStringsEqual));
 expectType<boolean>(equals<number, string>(numberTree, stringTree, areNumberAndStringEqual));
+expectType<types.ImmutableTree<string>>(filter(stringTree, (x: string) => x.startsWith('foo')));
 expectType<string>(find<string>(stringTree, '', cmpStrings, ''));
 expectType<string>(findBy<string>(stringTree, (treeValue: string) => cmpStrings(treeValue, ''), ''));
 expectType<string>(findNext<string>(stringTree, '', cmpStrings, ''));
@@ -221,6 +223,7 @@ expectType<typeof create>(wbt.create);
 expectType<typeof difference>(wbt.difference);
 expectType<typeof empty>(wbt.empty);
 expectType<typeof equals>(wbt.equals);
+expectType<typeof filter>(wbt.filter);
 expectType<typeof find>(wbt.find);
 expectType<typeof findBy>(wbt.findBy);
 expectType<typeof findNext>(wbt.findNext);

@@ -15,6 +15,7 @@
     `onConflict` values. The returned value no longer has to have an
     identical sort order, as long as the final tree is valid.
   * Added `intersection`.
+  * Added `filter`.
   * Refactoring and code cleanup.
 
 ## v0.8.0 (2025-06-13)

@@ -280,6 +280,21 @@ test('equals', function () {
   ));
 });
 
+test('filter', function () {
+  const predicate = (x/*: number */) => x > 5 && x < 10;
+  assert.equal(tree.filter(tree.empty, predicate), tree.empty);
+  assert.ok(
+    tree.equals(
+      tree.filter(oneToThirtyOneTree, predicate),
+      tree.fromDistinctAscArray([6, 7, 8, 9]),
+    ),
+  );
+  assert.equal(
+    tree.filter(oneToThirtyOneTree, (x/*: number */) => x > 0),
+    oneToThirtyOneTree,
+  );
+});
+
 test('find', function () {
   const node = oneToThirtyOneKeyTree;
   let foundValue;
