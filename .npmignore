@@ -7,4 +7,5 @@ CHANGELOG.md
 coverage/
 flow-typed.config.json
 flow-typed/
+src/index.test-d.ts
 test/
