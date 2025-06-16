@@ -94,13 +94,13 @@ export default function update/*:: <T, K> */(
 
   if (order < 0) {
     const newLeftBranch = update(tree.left, key, cmp, onConflict, onNotFound);
-    if (newLeftBranch.size === 0 || newLeftBranch === tree.left) {
+    if (newLeftBranch === tree.left) {
       return tree;
     }
     return join(newLeftBranch, tree.value, tree.right);
   } else {
     const newRightBranch = update(tree.right, key, cmp, onConflict, onNotFound);
-    if (newRightBranch.size === 0 || newRightBranch === tree.right) {
+    if (newRightBranch === tree.right) {
       return tree;
     }
     return join(tree.left, tree.value, newRightBranch);
