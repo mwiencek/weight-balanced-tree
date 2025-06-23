@@ -34,6 +34,12 @@ export default function withKeyComparator<T, K>(
     defaultValue: D,
   ): T | D,
 
+  findWithIndex<D = T>(
+    tree: ImmutableTree<T>,
+    key: K,
+    defaultValue: D,
+  ): [value: T | D, index: number],
+
   indexOf(
     tree: ImmutableTree<T>,
     key: K,

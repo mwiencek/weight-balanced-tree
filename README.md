@@ -342,6 +342,21 @@ immediately before it, or `defaultValue` if there is no such value.
 `key` does not have to be found in the tree: if a set has 1 & 3, the previous
 value from 2 is 1.
 
+### findWithIndex()
+
+```TypeScript
+function findWithIndex<T, K = T, D = T>(
+  tree: ImmutableTree<T>,
+  key: K,
+  cmp: (a: K, b: T) => number,
+  defaultValue: D,
+): [value: T | D, index: number];
+```
+
+Combines [find()](#find) and [indexOf()](#indexOf). Finds a value and its
+position in `tree` using the given `key`, and returns them as a tuple.
+Returns `[defaultValue, -1]` if not found.
+
 ### validate()
 
 ```TypeScript

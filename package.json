@@ -60,6 +60,10 @@
       "types": "./src/findPrev.d.ts",
       "default": "./src/findPrev.js"
     },
+    "./findWithIndex": {
+      "types": "./src/findWithIndex.d.ts",
+      "default": "./src/findWithIndex.js"
+    },
     "./fromDistinctAscArray": {
       "types": "./src/fromDistinctAscArray.d.ts",
       "default": "./src/fromDistinctAscArray.js"

@@ -22,6 +22,7 @@ import find from '../src/find';
 import findBy from '../src/findBy';
 import findNext from '../src/findNext';
 import findPrev from '../src/findPrev';
+import findWithIndex from '../src/findWithIndex';
 import fromDistinctAscArray from '../src/fromDistinctAscArray';
 import indexOf from '../src/indexOf';
 import insert, {
@@ -101,6 +102,7 @@ expectType<string>(find<string>(stringTree, '', cmpStrings, ''));
 expectType<string>(findBy<string>(stringTree, (treeValue: string) => cmpStrings(treeValue, ''), ''));
 expectType<string>(findNext<string>(stringTree, '', cmpStrings, ''));
 expectType<string>(findPrev<string>(stringTree, '', cmpStrings, ''));
+expectType<[string, number]>(findWithIndex<string>(stringTree, '', cmpStrings, ''));
 expectType<types.ImmutableTree<string>>(fromDistinctAscArray<string>(['']));
 expectType<number>(indexOf<number>(numberTree, 1, cmpNumbers));
 expectType<types.ImmutableTree<string>>(map<number, string>(numberTree, toString));
@@ -122,6 +124,7 @@ expectType<string | null>(find<string, number, null>(stringTree, 0, cmpNumberAnd
 expectType<string | null>(findBy<string, null>(stringTree, (treeValue: string) => cmpStrings(treeValue, ''), null));
 expectType<string | null>(findNext<string, number, null>(stringTree, 0, cmpNumberAndString, null));
 expectType<string | null>(findPrev<string, number, null>(stringTree, 0, cmpNumberAndString, null));
+expectType<[string | null, number]>(findWithIndex<string, number, null>(stringTree, 0, cmpNumberAndString, null));
 expectType<number>(indexOf<string, number>(stringTree, 1, cmpNumberAndString));
 expectType<[types.ImmutableTree<string>, types.ImmutableTree<string>, types.ImmutableTree<string>]>(split<string, number>(stringTree, 1, cmpNumberAndString));
 
@@ -136,6 +139,7 @@ expectError<Generator<number, undefined, undefined>>(reverseIterate<number>(stri
 expectError<boolean>(equals<number>(stringTree, stringTree, areStringsEqual));
 expectError<number>(find<number>(stringTree, 0, cmpNumbers, 0));
 expectError<number>(findBy<number>(stringTree, (treeValue: number) => cmpStrings(treeValue, 0), 0));
+expectError<[number, number]>(findWithIndex<number>(stringTree, 0, cmpNumbers, 0));
 expectError<types.ImmutableTree<number>>(fromDistinctAscArray<number>(['']));
 expectError<types.ImmutableTree<string>>(map<number, string>(stringTree, toString));
 expectError<number>(maxValue<number>(stringTree));
@@ -155,6 +159,7 @@ expectError<types.ImmutableTree<string>>(equals<string>(stringTree, stringTree, 
 expectError<string>(find<string>(stringTree, '', cmpNumbers, ''));
 expectError<string>(findNext<string>(stringTree, '', cmpNumbers, ''));
 expectError<string>(findPrev<string>(stringTree, '', cmpNumbers, ''));
+expectError<[string, number]>(findWithIndex<string>(stringTree, '', cmpNumbers, ''));
 expectError<types.ImmutableTree<string>>(insert<string>(stringTree, '', cmpNumbers));
 expectError<types.ImmutableTree<string>>(remove<string>(stringTree, '', cmpNumbers));
 expectError<types.ImmutableTree<string>>(removeIfExists<string>(stringTree, '', cmpNumbers));
@@ -171,6 +176,7 @@ expectError<types.ImmutableTree<string>>(map<number, string>(numberTree, (x: str
 expectError<string>(find<string, number>(stringTree, 0, cmpStrings, ''));
 expectError<string>(findNext<string, number>(stringTree, 0, cmpStrings, ''));
 expectError<string>(findPrev<string, number>(stringTree, 0, cmpStrings, ''));
+expectError<[string, number]>(findWithIndex<string, number>(stringTree, 0, cmpStrings, ''));
 
 // InsertConflictHandler
 expectAssignable<InsertConflictHandler<string, number>>((a: string, b: number) => a + String(b));
@@ -201,6 +207,8 @@ expectType<NSTuple>(mapTreeWrapper.findNext(numberStringMapTree, 0, [0, ''] as N
 expectType<NSTuple | string>(mapTreeWrapper.findNext<string>(numberStringMapTree, 0, ''));
 expectType<NSTuple>(mapTreeWrapper.findPrev(numberStringMapTree, 1, [0, ''] as NSTuple));
 expectType<NSTuple | string>(mapTreeWrapper.findPrev<string>(numberStringMapTree, 1, ''));
+expectType<[NSTuple, number]>(mapTreeWrapper.findWithIndex(numberStringMapTree, 1, [0, ''] as NSTuple));
+expectType<[NSTuple | string, number]>(mapTreeWrapper.findWithIndex<string>(numberStringMapTree, 1, ''));
 expectType<number>(mapTreeWrapper.indexOf(numberStringMapTree, 0));
 expectType<types.ImmutableTree<NSTuple>>(mapTreeWrapper.insert(numberStringMapTree, [0, ''] as NSTuple));
 expectType<types.ImmutableTree<NSTuple>>(mapTreeWrapper.insert(numberStringMapTree, [0, ''] as NSTuple, onConflictThrowError));
@@ -227,6 +235,7 @@ expectType<typeof find>(wbt.find);
 expectType<typeof findBy>(wbt.findBy);
 expectType<typeof findNext>(wbt.findNext);
 expectType<typeof findPrev>(wbt.findPrev);
+expectType<typeof findWithIndex>(wbt.findWithIndex);
 expectType<typeof fromDistinctAscArray>(wbt.fromDistinctAscArray);
 expectType<typeof indexOf>(wbt.indexOf);
 expectType<typeof insert>(wbt.insert);

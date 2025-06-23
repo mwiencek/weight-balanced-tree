@@ -1,5 +1,9 @@
 # Changelog
 
+## v0.10.0 (2025-06-22)
+
+  * Added `findWithIndex`, which combines `find` and `indexOf`.
+
 ## v0.9.0 (2025-06-16)
 
   * Added `split`, which splits a tree into two: one containing values

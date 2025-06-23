@@ -4,6 +4,7 @@ import difference from './difference.js';
 import find from './find.js';
 import findNext from './findNext.js';
 import findPrev from './findPrev.js';
+import findWithIndex from './findWithIndex.js';
 import indexOf from './indexOf.js';
 import insert, {
   insertIfNotExists,
@@ -56,6 +57,12 @@ export default function withKeyComparator/*:: <T, K> */(
     key: K,
     defaultValue: D,
   ): T | D,
+
+  findWithIndex<D = T>(
+    tree: ImmutableTree<T>,
+    key: K,
+    defaultValue: D,
+  ): [value: T | D, index: number],
 
   indexOf(
     tree: ImmutableTree<T>,
@@ -151,6 +158,9 @@ export default function withKeyComparator/*:: <T, K> */(
     },
     findPrev(tree, key, defaultValue) {
       return findPrev(tree, key, cmpKeyWithValue, defaultValue);
+    },
+    findWithIndex(tree, key, defaultValue) {
+      return findWithIndex(tree, key, cmpKeyWithValue, defaultValue);
     },
     indexOf(tree, key) {
       return indexOf(tree, key, cmpKeyWithValue);

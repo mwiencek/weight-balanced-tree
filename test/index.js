@@ -383,6 +383,27 @@ test('findPrev', function () {
   }
 });
 
+test('findWithIndex', function () {
+  const node = oneToThirtyOneKeyTree;
+
+  assert.deepEqual(tree.findWithIndex(tree.empty, {key: 1}, compareObjectKeys), [undefined, -1]);
+  assert.deepEqual(tree.findWithIndex(node, {key: 0}, compareObjectKeys), [undefined, -1]);
+  assert.deepEqual(tree.findWithIndex(node, {key: 32}, compareObjectKeys), [undefined, -1]);
+
+  for (const num of oneToThirtyOne) {
+    let [foundValue, foundIndex] = tree.findWithIndex(node, {key: num}, compareObjectKeys, null);
+    assert.deepEqual([foundValue, foundIndex], [{key: num}, num - 1]);
+    [foundValue, foundIndex] = tree.findWithIndex(node, num, compareNumberWithObjectKey, null);
+    assert.deepEqual([foundValue, foundIndex], [{key: num}, num - 1]);
+  }
+
+  let foundValue, foundIndex;
+  [foundValue, foundIndex] = tree.findWithIndex(node, {key: 32}, compareObjectKeys, null);
+  assert.deepEqual([foundValue, foundIndex], [null, -1]);
+  [foundValue, foundIndex] = tree.findWithIndex(node, 32, compareNumberWithObjectKey, null);
+  assert.deepEqual([foundValue, foundIndex], [null, -1]);
+});
+
 test('fromDistinctAscArray', function () {
   const node = oneToThirtyOneTree;
   assert.ok(checkTreeInvariants(node, compareIntegers), 'tree is valid and balanced');

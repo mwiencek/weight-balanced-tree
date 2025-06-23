@@ -11,6 +11,7 @@ export {default as find} from './find.js';
 export {default as findBy} from './findBy.js';
 export {default as findNext} from './findNext.js';
 export {default as findPrev} from './findPrev.js';
+export {default as findWithIndex} from './findWithIndex.js';
 export {default as fromDistinctAscArray} from './fromDistinctAscArray.js';
 export {default as indexOf} from './indexOf.js';
 export {
