@@ -6,6 +6,7 @@ export {default as empty} from './empty';
 export {default as equals} from './equals';
 export {default as filter} from './filter';
 export {default as find} from './find';
+export {default as findAll} from './findAll';
 export {default as findBy} from './findBy';
 export {default as findNext} from './findNext';
 export {default as findPrev} from './findPrev';

@@ -334,6 +334,57 @@ test('find', function () {
   assert.equal(foundValue, null);
 });
 
+test('findAll', function () {
+  let node = oneToThirtyOneKeyTree;
+  let foundValues;
+
+  foundValues = Array.from(
+    tree.findAll(
+      node,
+      15,
+      (key, obj) => (
+        (obj.key < (key + 3) && obj.key > (key - 3))
+          ? 0
+          : (key - obj.key)
+      ),
+    ),
+  );
+  assert.deepEqual(
+    foundValues,
+    [{key: 13}, {key: 14}, {key: 15}, {key: 16}, {key: 17}],
+  );
+
+  const compareValueAndKey = (
+    a/*: {+value: number, +key: number} */,
+    b/*: {+value: number, +key: number} */,
+  ) => compareIntegers(a.value, b.value) || compareObjectKeys(a, b);
+
+  node = tree.fromDistinctAscArray([
+    {value: 10, key: 1},
+    {value: 20, key: 1},
+    {value: 30, key: 1},
+  ]);
+  node = tree.insert(node, {value: 20, key: 2}, compareValueAndKey);
+  node = tree.insert(node, {value: 20, key: 3}, compareValueAndKey);
+
+  foundValues = Array.from(
+    tree.findAll(node, 20, (value, obj) => compareIntegers(value, obj.value)),
+  );
+  assert.deepEqual(
+    foundValues,
+    [
+      {value: 20, key: 1},
+      {value: 20, key: 2},
+      {value: 20, key: 3},
+    ],
+  );
+
+  foundValues = Array.from(
+    tree.findAll(node, 40, (value, obj) => compareIntegers(value, obj.value)),
+  );
+  assert.deepEqual(foundValues, []);
+});
+
 test('findBy', function () {
   const node = oneToThirtyOneKeyTree;
   let foundValue;

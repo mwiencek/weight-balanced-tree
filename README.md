@@ -292,6 +292,45 @@ Finds a value in `tree` using the given `key` and returns it, or
 `cmp` receives `key` as its first argument, and a value of type `T` from
 `tree` as its second argument.
 
+### findAll()
+
+```TypeScript
+function findAll<T, K = T>(
+  tree: ImmutableTree<T>,
+  key: K,
+  cmp: (a: K, b: T) => number,
+): Generator<T, void, void>;
+```
+
+Iterates over all values in `tree` found using the given `key`. This is useful
+when `cmp` implements a left prefix of the comparator used to order `tree`.
+
+```TypeScript
+const cmp = (a, b) => a < b ? -1 : (a > b ? 1 : 0);
+
+// The `.value` comparison is a left prefix of the tree comparator:
+function compareValueAndIndex(a, b) {
+  return cmp(a.value, b.value) || cmp(a.index, b.index);
+}
+
+let node = tree.fromDistinctAscArray([
+  {value: 'A', index: 1},
+  {value: 'B', index: 1},
+  {value: 'C', index: 1},
+]);
+node = tree.insert(node, {value: 'B', index: 2}, compareValueAndIndex);
+node = tree.insert(node, {value: 'B', index: 3}, compareValueAndIndex);
+
+Array.from(
+  tree.findAll(node, 'B', (key, obj) => cmp(key, obj.value)),
+); /* => Returns:
+[
+  {value: 'B', index: 1},
+  {value: 'B', index: 2},
+  {value: 'B', index: 3},
+] */
+```
+
 ### findBy()
 
 ```TypeScript

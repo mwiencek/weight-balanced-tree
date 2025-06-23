@@ -19,6 +19,7 @@ import {
 import equals from '../src/equals';
 import filter from '../src/filter';
 import find from '../src/find';
+import findAll from '../src/findAll';
 import findBy from '../src/findBy';
 import findNext from '../src/findNext';
 import findPrev from '../src/findPrev';
@@ -99,6 +100,7 @@ expectType<boolean>(equals<string>(stringTree, stringTree, areStringsEqual));
 expectType<boolean>(equals<number, string>(numberTree, stringTree, areNumberAndStringEqual));
 expectType<types.ImmutableTree<string>>(filter(stringTree, (x: string) => x.startsWith('foo')));
 expectType<string>(find<string>(stringTree, '', cmpStrings, ''));
+expectType<Generator<string, undefined, undefined>>(findAll<string>(stringTree, '', cmpStrings));
 expectType<string>(findBy<string>(stringTree, (treeValue: string) => cmpStrings(treeValue, ''), ''));
 expectType<string>(findNext<string>(stringTree, '', cmpStrings, ''));
 expectType<string>(findPrev<string>(stringTree, '', cmpStrings, ''));
@@ -121,6 +123,7 @@ expectType<undefined>(setDelta(3));
 
 // Value type override
 expectType<string | null>(find<string, number, null>(stringTree, 0, cmpNumberAndString, null));
+expectType<Generator<string, undefined, undefined>>(findAll<string, number>(stringTree, 0, cmpNumberAndString));
 expectType<string | null>(findBy<string, null>(stringTree, (treeValue: string) => cmpStrings(treeValue, ''), null));
 expectType<string | null>(findNext<string, number, null>(stringTree, 0, cmpNumberAndString, null));
 expectType<string | null>(findPrev<string, number, null>(stringTree, 0, cmpNumberAndString, null));
@@ -138,6 +141,7 @@ expectError<Generator<number, undefined, undefined>>(iterate<number>(stringTree)
 expectError<Generator<number, undefined, undefined>>(reverseIterate<number>(stringTree));
 expectError<boolean>(equals<number>(stringTree, stringTree, areStringsEqual));
 expectError<number>(find<number>(stringTree, 0, cmpNumbers, 0));
+expectError<Generator<number, undefined, undefined>>(findAll<number>(stringTree, 0, cmpNumbers));
 expectError<number>(findBy<number>(stringTree, (treeValue: number) => cmpStrings(treeValue, 0), 0));
 expectError<[number, number]>(findWithIndex<number>(stringTree, 0, cmpNumbers, 0));
 expectError<types.ImmutableTree<number>>(fromDistinctAscArray<number>(['']));
@@ -157,6 +161,7 @@ expectError<Generator<[string | undefined, number | undefined], undefined, undef
 // Wrong comparator function type
 expectError<types.ImmutableTree<string>>(equals<string>(stringTree, stringTree, areNumbersEqual));
 expectError<string>(find<string>(stringTree, '', cmpNumbers, ''));
+expectError<Generator<string, undefined, undefined>>(findAll<string>(stringTree, '', cmpNumbers));
 expectError<string>(findNext<string>(stringTree, '', cmpNumbers, ''));
 expectError<string>(findPrev<string>(stringTree, '', cmpNumbers, ''));
 expectError<[string, number]>(findWithIndex<string>(stringTree, '', cmpNumbers, ''));
@@ -174,6 +179,7 @@ expectError<types.ImmutableTree<string>>(map<number, string>(numberTree, (x: str
 
 // Value type override + wrong comparator function type
 expectError<string>(find<string, number>(stringTree, 0, cmpStrings, ''));
+expectError<Generator<string, undefined, undefined>>(findAll<string, number>(stringTree, 0, cmpStrings));
 expectError<string>(findNext<string, number>(stringTree, 0, cmpStrings, ''));
 expectError<string>(findPrev<string, number>(stringTree, 0, cmpStrings, ''));
 expectError<[string, number]>(findWithIndex<string, number>(stringTree, 0, cmpStrings, ''));
@@ -232,6 +238,7 @@ expectType<typeof empty>(wbt.empty);
 expectType<typeof equals>(wbt.equals);
 expectType<typeof filter>(wbt.filter);
 expectType<typeof find>(wbt.find);
+expectType<typeof findAll>(wbt.findAll);
 expectType<typeof findBy>(wbt.findBy);
 expectType<typeof findNext>(wbt.findNext);
 expectType<typeof findPrev>(wbt.findPrev);

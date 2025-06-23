@@ -8,6 +8,7 @@ export {default as empty} from './empty.js';
 export {default as equals} from './equals.js';
 export {default as filter} from './filter.js';
 export {default as find} from './find.js';
+export {default as findAll} from './findAll.js';
 export {default as findBy} from './findBy.js';
 export {default as findNext} from './findNext.js';
 export {default as findPrev} from './findPrev.js';

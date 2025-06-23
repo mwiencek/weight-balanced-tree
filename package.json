@@ -48,6 +48,10 @@
       "types": "./src/find.d.ts",
       "default": "./src/find.js"
     },
+    "./findAll": {
+      "types": "./src/findAll.d.ts",
+      "default": "./src/findAll.js"
+    },
     "./findBy": {
       "types": "./src/findBy.d.ts",
       "default": "./src/findBy.js"

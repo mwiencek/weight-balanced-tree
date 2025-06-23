@@ -3,6 +3,9 @@
 ## v0.10.0 (2025-06-22)
 
   * Added `findWithIndex`, which combines `find` and `indexOf`.
+  * Added `findAll`, which iterates over all values found using `key` and
+    `cmp`. This is useful when `cmp` implements a left prefix of the
+    comparator used to order `tree`.
 
 ## v0.9.0 (2025-06-16)
 
