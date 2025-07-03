@@ -7,69 +7,70 @@
     "persistent tree"
   ],
   "main": "src/index.js",
+  "types": "types/index.d.ts",
   "exports": {
     ".": {
-      "types": "./src/index.d.ts",
+      "types": "./types/index.d.ts",
       "default": "./src/index.js"
     },
     "./at": {
-      "types": "./src/at.d.ts",
+      "types": "./types/at.d.ts",
       "default": "./src/at.js"
     },
     "./balance": {
-      "types": "./src/balance.d.ts",
+      "types": "./types/balance.d.ts",
       "default": "./src/balance.js"
     },
     "./create": {
-      "types": "./src/create.d.ts",
+      "types": "./types/create.d.ts",
       "default": "./src/create.js"
     },
     "./difference": {
-      "types": "./src/difference.d.ts",
+      "types": "./types/difference.d.ts",
       "default": "./src/difference.js"
     },
     "./empty": {
-      "types": "./src/empty.d.ts",
+      "types": "./types/empty.d.ts",
       "default": "./src/empty.js"
     },
     "./equals": {
-      "types": "./src/equals.d.ts",
+      "types": "./types/equals.d.ts",
       "default": "./src/equals.js"
     },
     "./errors": {
-      "types": "./src/errors.d.ts",
+      "types": "./types/errors.d.ts",
       "default": "./src/errors.js"
     },
     "./filter": {
-      "types": "./src/filter.d.ts",
+      "types": "./types/filter.d.ts",
       "default": "./src/filter.js"
     },
     "./find": {
-      "types": "./src/find.d.ts",
+      "types": "./types/find.d.ts",
       "default": "./src/find.js"
     },
     "./findAll": {
-      "types": "./src/findAll.d.ts",
+      "types": "./types/findAll.d.ts",
       "default": "./src/findAll.js"
     },
     "./findBy": {
-      "types": "./src/findBy.d.ts",
+      "types": "./types/findBy.d.ts",
       "default": "./src/findBy.js"
     },
     "./findNext": {
-      "types": "./src/findNext.d.ts",
+      "types": "./types/findNext.d.ts",
       "default": "./src/findNext.js"
     },
     "./findPrev": {
-      "types": "./src/findPrev.d.ts",
+      "types": "./types/findPrev.d.ts",
       "default": "./src/findPrev.js"
     },
     "./findWithIndex": {
-      "types": "./src/findWithIndex.d.ts",
+      "types": "./types/findWithIndex.d.ts",
       "default": "./src/findWithIndex.js"
     },
     "./fromDistinctAscArray": {
-      "types": "./src/fromDistinctAscArray.d.ts",
+      "types": "./types/fromDistinctAscArray.d.ts",
       "default": "./src/fromDistinctAscArray.js"
     },
     "./indexOf": {
@@ -77,63 +78,63 @@
       "default": "./indexOf.js"
     },
     "./intersection": {
-      "types": "./src/intersection.d.ts",
+      "types": "./types/intersection.d.ts",
       "default": "./src/intersection.js"
     },
     "./iterate": {
-      "types": "./src/iterate.d.ts",
+      "types": "./types/iterate.d.ts",
       "default": "./src/iterate.js"
     },
     "./maxNode": {
-      "types": "./src/maxNode.d.ts",
+      "types": "./types/maxNode.d.ts",
       "default": "./src/maxNode.js"
     },
     "./maxValue": {
-      "types": "./src/maxValue.d.ts",
+      "types": "./types/maxValue.d.ts",
       "default": "./src/maxValue.js"
     },
     "./minNode": {
-      "types": "./src/minNode.d.ts",
+      "types": "./types/minNode.d.ts",
       "default": "./src/minNode.js"
     },
     "./minValue": {
-      "types": "./src/minValue.d.ts",
+      "types": "./types/minValue.d.ts",
       "default": "./src/minValue.js"
     },
     "./remove": {
-      "types": "./src/remove.d.ts",
+      "types": "./types/remove.d.ts",
       "default": "./src/remove.js"
     },
     "./reverseIterate": {
-      "types": "./src/reverseIterate.d.ts",
+      "types": "./types/reverseIterate.d.ts",
       "default": "./src/reverseIterate.js"
     },
     "./split": {
-      "types": "./src/split.d.ts",
+      "types": "./types/split.d.ts",
       "default": "./src/split.js"
     },
     "./toArray": {
-      "types": "./src/toArray.d.ts",
+      "types": "./types/toArray.d.ts",
       "default": "./src/toArray.js"
     },
     "./types": {
-      "types": "./src/types.d.ts",
+      "types": "./types/types.d.ts",
       "default": "./src/types.js"
     },
     "./union": {
-      "types": "./src/union.d.ts",
+      "types": "./types/union.d.ts",
       "default": "./src/union.js"
     },
     "./update": {
-      "types": "./src/update.d.ts",
+      "types": "./types/update.d.ts",
       "default": "./src/update.js"
     },
     "./withKeyComparator": {
-      "types": "./src/withKeyComparator.d.ts",
+      "types": "./types/withKeyComparator.d.ts",
       "default": "./src/withKeyComparator.js"
     },
     "./zip": {
-      "types": "./src/zip.d.ts",
+      "types": "./types/zip.d.ts",
       "default": "./src/zip.js"
     }
   },

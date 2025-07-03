@@ -4,48 +4,48 @@ import {
   expectType,
 } from 'tsd';
 
-import * as types from '../src/types';
-import * as wbt from '../src/index';
-import at from '../src/at';
-import {setDelta} from '../src/balance';
-import create from '../src/create';
-import difference from '../src/difference';
-import empty from '../src/empty';
+import * as types from './types';
+import * as wbt from './index';
+import at from './at';
+import {setDelta} from './balance';
+import create from './create';
+import difference from './difference';
+import empty from './empty';
 import {
   ValueExistsError,
   ValueNotFoundError,
   ValueOrderError,
-} from '../src/errors';
-import equals from '../src/equals';
-import filter from '../src/filter';
-import find from '../src/find';
-import findAll from '../src/findAll';
-import findBy from '../src/findBy';
-import findNext from '../src/findNext';
-import findPrev from '../src/findPrev';
-import findWithIndex from '../src/findWithIndex';
-import fromDistinctAscArray from '../src/fromDistinctAscArray';
-import indexOf from '../src/indexOf';
+} from './errors';
+import equals from './equals';
+import filter from './filter';
+import find from './find';
+import findAll from './findAll';
+import findBy from './findBy';
+import findNext from './findNext';
+import findPrev from './findPrev';
+import findWithIndex from './findWithIndex';
+import fromDistinctAscArray from './fromDistinctAscArray';
+import indexOf from './indexOf';
 import insert, {
   insertIfNotExists,
   insertOrReplaceIfExists,
   insertOrThrowIfExists,
-} from '../src/insert';
-import intersection from '../src/intersection';
-import iterate from '../src/iterate';
-import map from '../src/map';
-import maxValue from '../src/maxValue';
-import minValue from '../src/minValue';
+} from './insert';
+import intersection from './intersection';
+import iterate from './iterate';
+import map from './map';
+import maxValue from './maxValue';
+import minValue from './minValue';
 import remove, {
   removeIfExists,
   removeOrThrowIfNotExists,
-} from '../src/remove';
-import reverseIterate from '../src/reverseIterate';
-import split from '../src/split';
-import toArray from '../src/toArray';
+} from './remove';
+import reverseIterate from './reverseIterate';
+import split from './split';
+import toArray from './toArray';
 import union, {
   onConflictUseSecondValue,
-} from '../src/union';
+} from './union';
 import update, {
   onConflictKeepTreeValue,
   onConflictThrowError,
@@ -53,16 +53,16 @@ import update, {
   onNotFoundDoNothing,
   onNotFoundThrowError,
   onNotFoundUseGivenValue,
-} from '../src/update';
+} from './update';
 import validate, {
   type ValidateResult,
-} from '../src/validate';
-import withKeyComparator from '../src/withKeyComparator';
+} from './validate';
+import withKeyComparator from './withKeyComparator';
 import type {
   InsertConflictHandler,
   InsertNotFoundHandler,
-} from '../src/update';
-import zip from '../src/zip';
+} from './update';
+import zip from './zip';
 
 declare type NSTuple = [number, string];
 declare const stringTree: types.ImmutableTree<string>;
