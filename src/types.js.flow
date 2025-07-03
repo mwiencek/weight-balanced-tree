@@ -25,4 +25,9 @@ export type MutableTree<T> = {
   size: number,
   value: T,
 };
+
+export type Stack<T> = {
+  +node: NonEmptyImmutableTree<T>,
+  +next: Stack<T> | null,
+};
 */

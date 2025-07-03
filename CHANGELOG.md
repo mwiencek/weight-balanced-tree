@@ -2,6 +2,8 @@
 
 ## v0.11.0 (unreleased)
 
+  * `iterate` and `reverseIterate` now use a stack rather than an array
+    internally.
   * Moved TypeScript types to the `types/` subdirectory.
 
 ## v0.10.0 (2025-06-22)
