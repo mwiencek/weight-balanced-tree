@@ -1,5 +1,9 @@
 # Changelog
 
+## v0.11.0 (unreleased)
+
+  * No changes.
+
 ## v0.10.0 (2025-06-22)
 
   * Added `findWithIndex`, which combines `find` and `indexOf`.
