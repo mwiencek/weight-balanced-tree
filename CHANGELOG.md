@@ -2,6 +2,9 @@
 
 ## v0.11.0 (unreleased)
 
+  * `remove` now takes a type parameter `K` and a `key` argument of type `K`,
+    instead of the previous `value` argument. `key` may differ from the tree
+    value type, similar to how `update` works.
   * `iterate` and `reverseIterate` now use a stack rather than an array
     internally.
   * Moved TypeScript types to the `types/` subdirectory.

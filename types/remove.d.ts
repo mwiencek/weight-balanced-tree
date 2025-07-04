@@ -1,9 +1,9 @@
 import type {ImmutableTree} from './types';
 
-export default function remove<T>(
+export default function remove<T, K>(
   tree: ImmutableTree<T>,
-  value: T,
-  cmp: (a: T, b: T) => number,
+  key: K,
+  cmp: (key: K, treeValue: T) => number,
 ): ImmutableTree<T>;
 
 export const removeIfExists: typeof remove;

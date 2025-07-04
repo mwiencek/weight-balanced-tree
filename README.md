@@ -219,21 +219,22 @@ different values of `onConflict` for you:
 ### remove()
 
 ```TypeScript
-function remove<T>(
+function remove<T, K>(
     tree: ImmutableTree<T>,
-    value: T,
-    cmp: (T, T) => number,
+    key: K,
+    cmp: (key: K, treeValue: T) => number,
 ): ImmutableTree<T>;
 ```
 
-Returns a new version of `tree` with `value` removed.
+Returns a new version of `tree` with the value located by `key` removed.
 
-If `value` is not found in the tree, the same tree reference is returned
+If `key` is not found in the tree, the same tree reference is returned
 back.
 
 If this was the last value in `tree`, `empty` is returned.
 
-The `cmp` function is the same one used for `insert`.
+The `cmp` function works the same as with [update()](#update), with `key`
+being passed as the first argument.
 
 `removeIfExists` is an alias of `remove`.
 

@@ -809,6 +809,14 @@ test('remove', function () {
   }
 
   assert.equal(node, tree.empty, 'tree is empty');
+
+  let keyNode = oneToThirtyOneKeyTree;
+  size = 31;
+  for (const num of oneToThirtyOne) {
+    keyNode = tree.remove(keyNode, num, compareNumberWithObjectKey);
+    assert.equal(tree.find(keyNode, num, compareNumberWithObjectKey, null), null);
+    assert.equal(keyNode.size, --size);
+  }
 });
 
 test('removeIfExists', function () {

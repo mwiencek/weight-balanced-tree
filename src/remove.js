@@ -10,34 +10,34 @@ import update, {
 import type {ImmutableTree, MutableTree} from './types.js';
 */
 
-export default function remove/*:: <T> */(
+export default function remove/*:: <T, K> */(
   tree/*: ImmutableTree<T> */,
-  value/*: T */,
-  cmp/*: (a: T, b: T) => number */,
+  key/*: K */,
+  cmp/*: (key: K, treeValue: T) => number */,
 )/*: ImmutableTree<T> */ {
   return update(
     tree,
-    value,
+    key,
     cmp,
     onConflictRemoveValue,
     onNotFoundDoNothing,
   );
 }
 
-export const removeIfExists/*: <T> (
+export const removeIfExists/*: <T, K> (
   tree: ImmutableTree<T>,
-  value: T,
-  cmp: (a: T, b: T) => number,
+  key: K,
+  cmp: (key: K, treeValue: T) => number,
 ) => ImmutableTree<T> */ = remove;
 
-export function removeOrThrowIfNotExists/*:: <T> */(
+export function removeOrThrowIfNotExists/*:: <T, K> */(
   tree/*: ImmutableTree<T> */,
-  value/*: T */,
-  cmp/*: (a: T, b: T) => number */,
+  key/*: K */,
+  cmp/*: (key: K, treeValue: T) => number */,
 )/*: ImmutableTree<T> */ {
-  const newTree = remove(tree, value, cmp);
+  const newTree = remove(tree, key, cmp);
   if (newTree === tree) {
-    throw new ValueNotFoundError(value);
+    throw new ValueNotFoundError(key);
   }
   return newTree;
 }
