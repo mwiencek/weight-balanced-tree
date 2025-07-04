@@ -33,8 +33,6 @@ import invariant from '../src/invariant.js';
 import type {ImmutableTree} from '../src/types.js';
 */
 
-import shuffle from './shuffle.js';
-
 /*::
 type KeyedObject = {+key: number, ...};
 */
@@ -400,7 +398,6 @@ test('findBy', function () {
 
 test('findNext', function () {
   const node = oneToThirtyOneKeyTree;
-  let foundValue;
 
   for (const num of oneToThirtyOne) {
     const nextNum = num >= 31 ? undefined : (num + 1);
@@ -418,7 +415,6 @@ test('findNext', function () {
 
 test('findPrev', function () {
   const node = oneToThirtyOneKeyTree;
-  let foundValue;
 
   for (const num of oneToThirtyOne) {
     const nextNum = num <= 1 ? undefined : (num - 1);
@@ -697,7 +693,7 @@ test('intersection', function () {
     tree.fromDistinctAscArray([k3a]),
     tree.fromDistinctAscArray([k3b]),
     compareObjectKeys,
-    (v1, v2) => v1,
+    (v1) => v1,
   );
   assert.equal(
     intersectionWithCustomCombiner.value,
@@ -722,7 +718,7 @@ test('intersection', function () {
         tree.fromDistinctAscArray([1, 2, 3]),
         tree.fromDistinctAscArray([1, 2, 3]),
         compareIntegers,
-        (v1, v2) => -v1,
+        (v1) => -v1,
       );
     },
     {
@@ -737,7 +733,7 @@ test('intersection', function () {
         tree.fromDistinctAscArray([1, 2, 3]),
         tree.fromDistinctAscArray([1, 2, 3]),
         compareIntegers,
-        (v1, v2) => v1 === 2 ? 4 : v1,
+        (v1) => v1 === 2 ? 4 : v1,
       );
     },
     {
@@ -972,7 +968,7 @@ test('union', function () {
     tree.fromDistinctAscArray([{key: 1}, {key: 2}, k3a]),
     tree.fromDistinctAscArray([k3b, {key: 4}, {key: 5}]),
     compareObjectKeys,
-    (v1, v2) => v1,
+    (v1) => v1,
   );
   assert.deepEqual(
     tree.toArray(
@@ -1003,7 +999,7 @@ test('union', function () {
         tree.fromDistinctAscArray([1, 2, 3]),
         tree.fromDistinctAscArray([1, 2, 3]),
         compareIntegers,
-        (v1, v2) => -v1,
+        (v1) => -v1,
       );
     },
     {
@@ -1018,7 +1014,7 @@ test('union', function () {
         tree.fromDistinctAscArray([1, 2, 3]),
         tree.fromDistinctAscArray([1, 2, 3]),
         compareIntegers,
-        (v1, v2) => v1 === 2 ? 4 : v1,
+        (v1) => v1 === 2 ? 4 : v1,
       );
     },
     {
@@ -1051,7 +1047,7 @@ test('update', function (t) {
   t.test('onNotFoundThrowError', function () {
     assert.throws(
       () => {
-        const node = tree.update/*:: <number, number> */(
+        tree.update/*:: <number, number> */(
           tree.empty,
           1,
           compareIntegers,
@@ -1143,7 +1139,7 @@ test('update', function (t) {
         {key: 4, value: 40},
         compareObjectKeys,
         onConflictKeepTreeValue,
-        (newValue) => {
+        () => {
           return {key: 5, value: 50};
         },
       );
@@ -1163,7 +1159,7 @@ test('update', function (t) {
         node,
         5,
         compareNumberWithObjectKey,
-        (treeValue, key) => treeValue,
+        (treeValue) => treeValue,
         () => {
           throw new CustomNotFoundError();
         },
@@ -1251,7 +1247,7 @@ test('withKeyComparator', function () {
       integerTree.intersection(
         tree.fromDistinctAscArray([1, 2, 3]),
         tree.fromDistinctAscArray([3, 4, 5]),
-        (v1, v2) => v1,
+        (v1) => v1,
       ),
       tree.create(3),
     ),

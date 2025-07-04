@@ -1,6 +1,5 @@
 // @flow strict
 
-import empty from './empty.js';
 import {ValueNotFoundError} from './errors.js';
 import update, {
   onConflictRemoveValue,

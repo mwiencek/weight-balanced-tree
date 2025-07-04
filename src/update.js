@@ -37,8 +37,7 @@ export function onConflictThrowError()/*: empty */ {
 }
 
 export function onConflictKeepTreeValue/*:: <T, K> */(
-  treeValue/*: T */,
-  givenValue/*: K */,
+  treeValue/*: T */
 )/*: T */ {
   return treeValue;
 }
@@ -54,9 +53,7 @@ export function onConflictRemoveValue()/*: RemoveValue */ {
   return REMOVE_VALUE;
 }
 
-export function onNotFoundDoNothing(
-  givenValue/*: mixed */,
-)/*: DoNothing */ {
+export function onNotFoundDoNothing()/*: DoNothing */ {
   return DO_NOTHING;
 }
 

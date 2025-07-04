@@ -152,14 +152,17 @@ const equalsSuite = new Benchmark.Suite('Sorted set equals')
 
 const iterationSuite = new Benchmark.Suite('Sorted set iteration')
   .add('weight-balanced-tree (iterate, Iterator protocol)', function () {
-    for (const i of wbt.iterate(weightBalancedTree)) {}
+    // eslint-disable-next-line no-unused-vars
+    for (const _ of wbt.iterate(weightBalancedTree));
   })
   .add('Immutable.Set (toArray, sort, Iterator protocol)', function () {
     const sortedValues = immutableJsSet.toArray().sort(compareIntegers);
-    for (const i of sortedValues) {}
+    // eslint-disable-next-line no-unused-vars
+    for (const _ of sortedValues);
   })
   .add('mori (Iterator protocol)', function () {
-    for (const i of moriSortedSet) {}
+    // eslint-disable-next-line no-unused-vars
+    for (const _ of moriSortedSet);
   });
 
 [

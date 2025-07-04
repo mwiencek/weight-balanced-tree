@@ -1,7 +1,6 @@
 // @flow strict
 
 import iterate from './iterate.js';
-import zip from './zip.js';
 /*::
 import invariant from './invariant.js';
 import type {ImmutableTree} from './types.js';
