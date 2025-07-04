@@ -5,6 +5,7 @@ weight-balanced ([bounded balance](https://en.wikipedia.org/wiki/Weight-balanced
 tree for JavaScript.
 
  * Zero dependencies
+ * Trees are plain objects
  * Usable as a persistent map or set
  * Works in Node.js and the browser
  * Flow and TypeScript definitions included
@@ -53,6 +54,10 @@ const empty: EmptyImmutableTree;
 ```
 
 The empty tree.
+
+Note: The correct way to check if a tree is empty is with `tree.size === 0`.
+The `empty` object reference won't be consistent across realms or in cases
+where a tree is parsed from JSON.
 
 ### create()
 

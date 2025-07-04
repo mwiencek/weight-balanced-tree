@@ -10,8 +10,11 @@ export default function findWithIndex/*:: <T, K = T, D = T> */(
   cmp/*: (a: K, b: T) => number */,
   defaultValue/*: D */,
 )/*: [value: T | D, index: number] */ {
-  let cursor = tree;
-  let index = cursor.left.size;
+  if (tree.size === 0) {
+    return [defaultValue, -1];
+  }
+  let index = tree.left.size;
+  let cursor/*: ImmutableTree<T> */ = tree;
   while (cursor.size !== 0) {
     const order = cmp(key, cursor.value);
     if (order === 0) {

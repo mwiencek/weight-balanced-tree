@@ -5,6 +5,10 @@
   * `remove` now takes a type parameter `K` and a `key` argument of type `K`,
     instead of the previous `value` argument. `key` may differ from the tree
     value type, similar to how `update` works.
+  * The `empty` tree is no longer self-referencing in its `left` and `right`
+    properties, which are now set to `null`. This allows for direct JSON
+    serialization of trees again. The (unused) `empty.value` property is also
+    set to `null` (instead of `undefined`).
   * `iterate` and `reverseIterate` now use a stack rather than an array
     internally.
   * Moved TypeScript types to the `types/` subdirectory.

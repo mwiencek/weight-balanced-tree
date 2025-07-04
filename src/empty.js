@@ -4,17 +4,11 @@
 import type {EmptyImmutableTree} from './types.js';
 */
 
-// $FlowIgnore[unclear-type]
-let _empty/*: any */ = {
+const empty/*: EmptyImmutableTree */ = Object.freeze({
   left: null,
   right: null,
   size: 0,
-  value: undefined,
-};
-_empty.left = _empty;
-_empty.right = _empty;
-Object.freeze(_empty);
-
-const empty/*: EmptyImmutableTree */ = _empty;
+  value: null,
+});
 
 export default empty;

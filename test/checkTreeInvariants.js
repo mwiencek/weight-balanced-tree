@@ -15,16 +15,25 @@ function countSize(
   return 1 + countSize(tree.left) + countSize(tree.right);
 }
 
+function getSize(
+  tree/*: ImmutableTree<mixed> | null */,
+)/*: number */ {
+  if (tree === null) {
+    return 0;
+  }
+  return tree.size;
+}
+
 function checkBalance(
   tree/*: ImmutableTree<mixed> */,
 )/*: boolean */ {
-  if (tree.left.size <= 1 && tree.right.size <= 1) {
+  if (getSize(tree.left) <= 1 && getSize(tree.right) <= 1) {
     return true;
   }
   /* c8 ignore start */
   return !(
-    heavy(tree.left.size, tree.right.size) ||
-    heavy(tree.right.size, tree.left.size)
+    heavy(getSize(tree.left), getSize(tree.right)) ||
+    heavy(getSize(tree.right), getSize(tree.left))
   );
   /* c8 ignore stop */
 }

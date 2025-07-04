@@ -2,10 +2,10 @@
 
 /*::
 export type EmptyImmutableTree = {
-  +left: EmptyImmutableTree,
-  +right: EmptyImmutableTree,
+  +left: null,
+  +right: null,
   +size: 0,
-  +value: void,
+  +value: null,
 };
 
 export type NonEmptyImmutableTree<+T> = {

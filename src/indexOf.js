@@ -9,8 +9,11 @@ export default function indexOf/*:: <T, K = T> */(
   key/*: K */,
   cmp/*: (a: K, b: T) => number */,
 )/*: number */ {
-  let cursor = tree;
-  let index = cursor.left.size;
+  if (tree.size === 0) {
+    return -1;
+  }
+  let index = tree.left.size;
+  let cursor/*: ImmutableTree<T> */ = tree;
   while (cursor.size !== 0) {
     const order = cmp(key, cursor.value);
     if (order === 0) {

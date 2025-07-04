@@ -253,9 +253,9 @@ test('difference', function () {
 test('empty', function () {
   const empty = tree.empty;
   assert.equal(empty.size, 0, 'empty has size 0');
-  assert.equal(empty.left, empty, 'empty left node is empty');
-  assert.equal(empty.right, empty, 'empty right node is empty');
-  assert.equal(empty.value, undefined, 'empty has undefined value');
+  assert.equal(empty.left, null, 'empty left node is null');
+  assert.equal(empty.right, null, 'empty right node is null');
+  assert.equal(empty.value, null, 'empty has null value');
   assert.ok(Object.isFrozen(empty), 'empty is frozen');
 });
 
@@ -1351,4 +1351,19 @@ test('GHC issue #4242', function () {
   node = tree.remove(node, tree.minValue(node), compareIntegers);
 
   assert.ok(checkTreeInvariants(node, compareIntegers));
+});
+
+test('JSON.stringify', function () {
+  const reparsedTree = JSON.parse(JSON.stringify(oneToThirtyOneKeyTree));
+  assert.deepEqual(
+    oneToThirtyOneKeyTree,
+    reparsedTree,
+  );
+  assert.ok(
+    tree.equals(
+      oneToThirtyOneKeyTree,
+      reparsedTree,
+      (a/*: KeyedObject */, b/*: KeyedObject */) => compareObjectKeys(a, b) === 0,
+    ),
+  );
 });

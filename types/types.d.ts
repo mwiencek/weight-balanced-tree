@@ -1,8 +1,8 @@
 export type EmptyImmutableTree = {
-  readonly left: EmptyImmutableTree;
-  readonly right: EmptyImmutableTree;
+  readonly left: null;
+  readonly right: null;
   readonly size: 0;
-  readonly value: undefined;
+  readonly value: null;
 };
 
 export type NonEmptyImmutableTree<T> = {
