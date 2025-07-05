@@ -270,6 +270,11 @@ test('difference', function (t) {
       rightNode,
     );
   });
+
+  t.test('entire left tree is reused', () => {
+    assert.equal(tree.difference(oneToThirtyOneTree, tree.create(0), compareIntegers), oneToThirtyOneTree);
+    assert.equal(tree.difference(oneToThirtyOneTree, tree.create(32), compareIntegers), oneToThirtyOneTree);
+  });
 });
 
 test('empty', function () {

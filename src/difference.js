@@ -25,6 +25,10 @@ export default function difference/*:: <T> */(
   if (equal.size) {
     return join2(leftDifference, rightDifference);
   } else {
-    return join(leftDifference, t1.value, rightDifference);
+    if (t1.left === leftDifference && t1.right == rightDifference) {
+      return t1;
+    } else {
+      return join(leftDifference, t1.value, rightDifference);
+    }
   }
 }
