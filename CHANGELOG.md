@@ -14,6 +14,8 @@
     `weight-balanced-tree/union`.
   * The `useSecondValue` export has been removed from
     `weight-balanced-tree/intersection`.
+  * Added a `SplitResult` type for the tuple return value of `split`. It's
+    now read-only.
   * Optimized `split` such that if `key < minValue(tree)` or
     `key > maxValue(tree)`, the same `tree` reference is returned as either
     `large` or `small`, respectively.

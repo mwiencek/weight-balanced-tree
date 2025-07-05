@@ -16,7 +16,7 @@ import remove, {
   removeIfExists,
   removeOrThrowIfNotExists,
 } from './remove.js';
-import split from './split.js';
+import split/*:: , {type SplitResult} */ from './split.js';
 import union from './union.js';
 import update from './update.js';
 import validate from './validate.js';
@@ -114,11 +114,7 @@ export default function withKeyComparator/*:: <T, K> */(
   split(
     tree: ImmutableTree<T>,
     key: K,
-  ): [
-    small: ImmutableTree<T>,
-    equal: ImmutableTree<T>,
-    large: ImmutableTree<T>,
-  ],
+  ): SplitResult<T>,
 
   union(
     t1: ImmutableTree<T>,

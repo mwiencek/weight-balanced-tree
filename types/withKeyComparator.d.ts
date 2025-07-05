@@ -1,3 +1,4 @@
+import type {SplitResult} from './split';
 import type {ImmutableTree} from './types';
 import type {
   InsertConflictHandler,
@@ -90,11 +91,7 @@ export default function withKeyComparator<T, K>(
   split(
     tree: ImmutableTree<T>,
     key: K,
-  ): [
-    small: ImmutableTree<T>,
-    equal: ImmutableTree<T>,
-    large: ImmutableTree<T>,
-  ],
+  ): SplitResult<T>;
 
   union(
     t1: ImmutableTree<T>,

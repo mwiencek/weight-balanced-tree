@@ -4,17 +4,19 @@ import empty from './empty.js';
 import join from './join.js';
 /*::
 import type {ImmutableTree} from './types.js';
+
+export type SplitResult<+T> = [
+  +small: ImmutableTree<T>,
+  +equal: ImmutableTree<T>,
+  +large: ImmutableTree<T>,
+];
 */
 
 export default function split/*:: <T, K = T> */(
   tree/*: ImmutableTree<T> */,
   key/*: K */,
   cmp/*: (a: K, b: T) => number */,
-)/*:: : [
-  small: ImmutableTree<T>,
-  equal: ImmutableTree<T>,
-  large: ImmutableTree<T>,
-] */ {
+)/*:: : SplitResult<T> */ {
   if (tree.size === 0) {
     return [empty, empty, empty];
   }
