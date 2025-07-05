@@ -12,7 +12,7 @@ export default function union/*:: <T> */(
   t1/*: ImmutableTree<T> */,
   t2/*: ImmutableTree<T> */,
   cmp/*: (a: T, b: T) => number */,
-  onConflict/*:: ?: (v1: T, v2: T) => T */ = (v1) => v1,
+  combiner/*:: ?: (v1: T, v2: T) => T */ = (v1) => v1,
 )/*: ImmutableTree<T> */ {
   if (t1.size === 0) {
     return t2;
@@ -21,11 +21,11 @@ export default function union/*:: <T> */(
     return t1;
   }
   const [small, equal, large] = split(t2, t1.value, cmp);
-  const leftUnion = union(t1.left, small, cmp, onConflict);
-  const rightUnion = union(t1.right, large, cmp, onConflict);
+  const leftUnion = union(t1.left, small, cmp, combiner);
+  const rightUnion = union(t1.right, large, cmp, combiner);
   let unionValue = t1.value;
   if (equal.size) {
-    unionValue = onConflict(t1.value, equal.value);
+    unionValue = combiner(t1.value, equal.value);
     if (
       !Object.is(unionValue, t1.value) &&
       !Object.is(unionValue, equal.value)

@@ -123,7 +123,7 @@ export default function withKeyComparator/*:: <T, K> */(
   union(
     t1: ImmutableTree<T>,
     t2: ImmutableTree<T>,
-    onConflict?: (v1: T, v2: T) => T,
+    combiner?: (v1: T, v2: T) => T,
   ): ImmutableTree<T>,
 
   update(
@@ -192,8 +192,8 @@ export default function withKeyComparator/*:: <T, K> */(
     split(tree, key) {
       return split(tree, key, cmpKeyWithValue);
     },
-    union(t1, t2, onConflict) {
-      return union(t1, t2, cmp, onConflict);
+    union(t1, t2, combiner) {
+      return union(t1, t2, cmp, combiner);
     },
     update(tree, key, onConflict, onNotFound) {
       return update(tree, key, cmpKeyWithValue, onConflict, onNotFound);

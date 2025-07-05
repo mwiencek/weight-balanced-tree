@@ -551,13 +551,13 @@ function union<T>(
   t1: ImmutableTree<T>,
   t2: ImmutableTree<T>,
   cmp: (a: T, b: T) => number,
-  onConflict?: (v1: T, v2: T) => T,
+  combiner?: (v1: T, v2: T) => T,
 ): ImmutableTree<T>;
 ```
 
 Merges two trees together using the comparator `cmp`.
 
-`onConflict` handles the case where an equivalent value appears in both
+`combiner` handles the case where an equivalent value appears in both
 trees, and is expected to return the final value to use in the union. If not
 specified, by `union` will prefer values in `t1`. If you return a different
 value, then the relative sort order must be preserved; otherwise
