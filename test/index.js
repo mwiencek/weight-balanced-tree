@@ -55,12 +55,15 @@ const compareIntegersReverse = (
 // $FlowIssue[method-unbinding]
 const objectIs/*: <T>(a: T, b: T) => boolean */ = Object.is;
 
-const oneToThirtyOne = [];
+const buildAscIntegerArray = (start/*: number */, stop/*: number */) => {
+  const ints = [];
+  for (let i = start; i <= stop; i++) {
+    ints.push(i);
+  }
+  return ints;
+};
 
-for (let i = 1; i <= 31; i++) {
-  oneToThirtyOne.push(i);
-}
-
+const oneToThirtyOne = buildAscIntegerArray(1, 31);
 const oneToThirtyOneTree = tree.fromDistinctAscArray(oneToThirtyOne);
 const oneToThirtyOneKeyTree/*: ImmutableTree<KeyedObject> */ =
   tree.fromDistinctAscArray(oneToThirtyOne.map(key => ({key})));
@@ -988,6 +991,34 @@ test('split', function () {
   assert.ok(tree.equals(small, tree.create(1)));
   assert.ok(equal.size === 0);
   assert.ok(tree.equals(large, tree.create(3)));
+});
+
+test('splitIndex', () => {
+  let small, equal, large;
+
+  for (let i = -1; i <= 1; i++) {
+    [small, equal, large] = tree.splitIndex/*:: <number, number> */(tree.empty, i);
+    assert.equal(small, tree.empty);
+    assert.equal(equal, tree.empty);
+    assert.equal(large, tree.empty);
+  }
+
+  for (let i = 1; i <= 31; i++) {
+    [small, equal, large] = tree.splitIndex(oneToThirtyOneTree, i - 1);
+    assert.ok(
+      tree.equals(
+        small,
+        tree.fromDistinctAscArray(buildAscIntegerArray(1, i - 1)),
+      ),
+    );
+    assert.equal(equal.value, i);
+    assert.ok(
+      tree.equals(
+        large,
+        tree.fromDistinctAscArray(buildAscIntegerArray(i + 1, 31)),
+      ),
+    );
+  }
 });
 
 test('union', function (t) {

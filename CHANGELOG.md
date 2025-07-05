@@ -14,8 +14,11 @@
     `weight-balanced-tree/union`.
   * The `useSecondValue` export has been removed from
     `weight-balanced-tree/intersection`.
+  * Added `splitIndex` to split a tree by index rather than key.
   * Added a `SplitResult` type for the tuple return value of `split`. It's
     now read-only.
+  * The comparator `cmp` passed to `split` now receives the index of the
+    current tree node as its third argument.
   * Optimized `split` such that if `key < minValue(tree)` or
     `key > maxValue(tree)`, the same `tree` reference is returned as either
     `large` or `small`, respectively.

@@ -534,6 +534,22 @@ containing values large than `key`, according to `cmp`.
 If `key` exists in the tree, `equal` will reference the node in `tree`
 containing `key`; otherwise it will equal the `empty` tree.
 
+### splitIndex()
+
+```TypeScript
+function splitIndex<T>(
+  tree: ImmutableTree<T>,
+  index: number,
+): [
+  small: ImmutableTree<T>,
+  equal: ImmutableTree<T>,
+  large: ImmutableTree<T>,
+];
+```
+
+This is similar to [`split()`](#split), but uses the position in the tree
+rather than a key and comparator. Negative indices are not supported.
+
 ### toArray()
 
 ```TypeScript

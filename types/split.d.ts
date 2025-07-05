@@ -9,5 +9,5 @@ export type SplitResult<T> = readonly [
 export default function split<T, K = T>(
   tree: ImmutableTree<T>,
   key: K,
-  cmp: (a: K, b: T) => number,
+  cmp: (a: K, b: T, index: number) => number,
 ): SplitResult<T>;

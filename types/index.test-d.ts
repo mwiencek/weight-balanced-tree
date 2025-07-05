@@ -42,6 +42,7 @@ import remove, {
 } from './remove';
 import reverseIterate from './reverseIterate';
 import split, {type SplitResult} from './split';
+import splitIndex from './splitIndex';
 import toArray from './toArray';
 import union from './union';
 import update, {
@@ -110,6 +111,7 @@ expectType<types.ImmutableTree<string>>(remove<string, string>(stringTree, '', c
 expectType<types.ImmutableTree<string>>(removeIfExists<string, string>(stringTree, '', cmpStrings));
 expectType<types.ImmutableTree<string>>(removeOrThrowIfNotExists<string, string>(stringTree, '', cmpStrings));
 expectType<SplitResult<number>>(split(numberTree, 0, cmpNumbers));
+expectType<SplitResult<number>>(splitIndex(numberTree, 0));
 expectType<Array<string>>(toArray(stringTree));
 expectType<types.ImmutableTree<string>>(union(stringTree, stringTree, cmpStrings));
 expectType<types.ImmutableTree<string>>(union(stringTree, stringTree, cmpStrings, (v1, v2) => v2));
@@ -258,6 +260,7 @@ expectType<typeof removeOrThrowIfNotExists>(wbt.removeOrThrowIfNotExists);
 expectType<typeof reverseIterate>(wbt.reverseIterate);
 expectType<typeof setDelta>(wbt.setDelta);
 expectType<typeof split>(wbt.split);
+expectType<typeof splitIndex>(wbt.splitIndex);
 expectType<typeof toArray>(wbt.toArray);
 expectType<typeof union>(wbt.union);
 expectType<typeof update>(wbt.update);
