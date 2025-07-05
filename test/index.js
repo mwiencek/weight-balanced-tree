@@ -247,6 +247,18 @@ test('difference', function (t) {
     ),
   );
 
+  t.test('left node reference is reused', () => {
+    const leftNode = newNode(tree.empty, 0, tree.empty);
+    assert.equal(
+      tree.difference(
+        newNode(leftNode, 1, tree.empty),
+        tree.create(1),
+        compareIntegers,
+      ),
+      leftNode,
+    );
+  });
+
   t.test('right node reference is reused', () => {
     const rightNode = newNode(tree.empty, 1, tree.empty);
     assert.equal(
@@ -325,6 +337,17 @@ test('filter', function (t) {
     tree.filter(oneToThirtyOneTree, (x/*: number */) => x > 0),
     oneToThirtyOneTree,
   );
+
+  t.test('left node reference is reused', () => {
+    const leftNode = newNode(tree.empty, 0, tree.empty);
+    assert.equal(
+      tree.filter(
+        newNode(leftNode, 1, tree.empty),
+        (x/*: number */) => x < 1,
+      ),
+      leftNode,
+    );
+  });
 
   t.test('right node reference is reused', () => {
     const rightNode = newNode(tree.empty, 1, tree.empty);

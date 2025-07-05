@@ -28,6 +28,9 @@ export default function join2/*:: <T> */(
   if (left.size === 0) {
     return right;
   }
+  if (right.size === 0) {
+    return left;
+  }
   const {tree: newLeft, value} = splitLast(left);
   return join(newLeft, value, right);
 }
