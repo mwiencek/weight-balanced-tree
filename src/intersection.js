@@ -9,18 +9,11 @@ import split from './split.js';
 import type {ImmutableTree} from './types.js';
 */
 
-export function useSecondValue/*:: <T> */(
-  v1/*: T */,
-  v2/*: T */,
-)/*: T */ {
-  return v2;
-}
-
 export default function intersection/*:: <T> */(
   t1/*: ImmutableTree<T> */,
   t2/*: ImmutableTree<T> */,
   cmp/*: (a: T, b: T) => number */,
-  combiner/*:: ?: (v1: T, v2: T) => T */ = useSecondValue,
+  combiner/*:: ?: (v1: T, v2: T) => T */ = (v1) => v1,
 )/*: ImmutableTree<T> */ {
   if (t1.size === 0 || t2.size === 0) {
     return empty;

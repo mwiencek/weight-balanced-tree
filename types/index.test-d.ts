@@ -43,9 +43,7 @@ import remove, {
 import reverseIterate from './reverseIterate';
 import split from './split';
 import toArray from './toArray';
-import union, {
-  onConflictUseSecondValue,
-} from './union';
+import union from './union';
 import update, {
   onConflictKeepTreeValue,
   onConflictThrowError,
@@ -114,7 +112,7 @@ expectType<types.ImmutableTree<string>>(removeOrThrowIfNotExists<string, string>
 expectType<[types.ImmutableTree<number>, types.ImmutableTree<number>, types.ImmutableTree<number>]>(split(numberTree, 0, cmpNumbers));
 expectType<Array<string>>(toArray(stringTree));
 expectType<types.ImmutableTree<string>>(union(stringTree, stringTree, cmpStrings));
-expectType<types.ImmutableTree<string>>(union(stringTree, stringTree, cmpStrings, onConflictUseSecondValue));
+expectType<types.ImmutableTree<string>>(union(stringTree, stringTree, cmpStrings, (v1, v2) => v2));
 expectType<types.ImmutableTree<string>>(difference(stringTree, stringTree, cmpStrings));
 expectType<types.ImmutableTree<string>>(intersection(stringTree, stringTree, cmpStrings));
 expectType<Generator<[string | undefined, number | undefined], undefined, undefined>>(zip(stringTree, numberTree));

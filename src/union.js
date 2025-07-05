@@ -8,18 +8,11 @@ import invariant from './invariant.js';
 import type {ImmutableTree} from './types.js';
 */
 
-export function onConflictUseSecondValue/*:: <T> */(
-  v1/*: T */,
-  v2/*: T */,
-)/*: T */ {
-  return v2;
-}
-
 export default function union/*:: <T> */(
   t1/*: ImmutableTree<T> */,
   t2/*: ImmutableTree<T> */,
   cmp/*: (a: T, b: T) => number */,
-  onConflict/*:: ?: (v1: T, v2: T) => T */ = onConflictUseSecondValue,
+  onConflict/*:: ?: (v1: T, v2: T) => T */ = (v1) => v1,
 )/*: ImmutableTree<T> */ {
   if (t1.size === 0) {
     return t2;

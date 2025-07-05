@@ -559,7 +559,7 @@ Merges two trees together using the comparator `cmp`.
 
 `onConflict` handles the case where an equivalent value appears in both
 trees, and is expected to return the final value to use in the union. If not
-specified, by `union` will prefer values in `t2`. If you return a different
+specified, by `union` will prefer values in `t1`. If you return a different
 value, then the relative sort order must be preserved; otherwise
 `ValueOrderError` is thrown.
 
@@ -591,7 +591,7 @@ Returns a new tree with values common to both `t1` and `t2`, using the
 comparator `cmp`.
 
 `combiner` determines which value is chosen; by default it returns the value
-from the second tree, `t2`. If you return a different value, then the
+from the first tree, `t1`. If you return a different value, then the
 relative sort order must be preserved; otherwise `ValueOrderError` is thrown.
 
 ### zip()

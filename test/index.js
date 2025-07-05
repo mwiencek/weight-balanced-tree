@@ -736,7 +736,7 @@ test('intersection', function () {
   );
   assert.equal(
     intersectionWithDefaultCombiner.value,
-    k3b,
+    k3a,
   );
 
   const intersectionWithCustomCombiner = tree.intersection(
@@ -1011,7 +1011,7 @@ test('union', function () {
   );
   assert.equal(
     tree.find(unionWithDefaultConflictHandler, {key: 3}, compareObjectKeys, null),
-    k3b,
+    k3a,
   );
 
   const unionWithCustomConflictHandler = tree.union(

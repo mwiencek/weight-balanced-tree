@@ -1,7 +1,5 @@
 import type {ImmutableTree} from './types';
 
-export function useSecondValue<T>(v1: T, v2: T): T;
-
 export default function intersection<T>(
   t1: ImmutableTree<T>,
   t2: ImmutableTree<T>,

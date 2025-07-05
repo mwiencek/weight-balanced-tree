@@ -9,6 +9,11 @@
     properties, which are now set to `null`. This allows for direct JSON
     serialization of trees again. The (unused) `empty.value` property is also
     set to `null` (instead of `undefined`).
+  * `union` and `intersection` now prefer values in `t1` rather than `t2`.
+  * The `onConflictUseSecondValue` export has been removed from
+    `weight-balanced-tree/union`.
+  * The `useSecondValue` export has been removed from
+    `weight-balanced-tree/intersection`.
   * Optimized `split` such that if `key < minValue(tree)` or
     `key > maxValue(tree)`, the same `tree` reference is returned as either
     `large` or `small`, respectively.
