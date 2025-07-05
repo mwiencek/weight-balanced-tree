@@ -507,6 +507,8 @@ test('findWithIndex', function () {
 });
 
 test('fromDistinctAscArray', function () {
+  assert.equal(tree.fromDistinctAscArray([]), tree.empty);
+
   const node = oneToThirtyOneTree;
   assert.ok(checkTreeInvariants(node, compareIntegers), 'tree is valid and balanced');
 });
