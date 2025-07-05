@@ -6,6 +6,7 @@ import join from './join.js';
 import join2 from './join2.js';
 import split from './split.js';
 /*::
+import invariant from './invariant.js';
 import type {ImmutableTree} from './types.js';
 */
 
@@ -23,10 +24,9 @@ export default function intersection/*:: <T> */(
   const rightIntersection = intersection(t1.right, large, cmp, combiner);
   if (equal.size) {
     const combinedValue = combiner(t1.value, equal.value);
-    if (
-      !Object.is(combinedValue, t1.value) &&
-      !Object.is(combinedValue, equal.value)
-    ) {
+    const leftIsEqual = Object.is(combinedValue, t1.value);
+    const rightIsEqual = Object.is(combinedValue, equal.value);
+    if (!leftIsEqual && !rightIsEqual) {
       if (
         leftIntersection.size !== 0 &&
         cmp(combinedValue, leftIntersection.value) <= 0
@@ -39,6 +39,13 @@ export default function intersection/*:: <T> */(
       ) {
         throw new ValueOrderError(combinedValue, rightIntersection.value, 'less than');
       }
+    }
+    if (t1.left === leftIntersection && t1.right === rightIntersection && leftIsEqual) {
+      return t1;
+    }
+    if (t2.left === leftIntersection && t2.right === rightIntersection && rightIsEqual) {
+      /*:: invariant(t2 === equal); */
+      return t2;
     }
     return join(leftIntersection, combinedValue, rightIntersection);
   } else {

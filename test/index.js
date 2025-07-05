@@ -694,7 +694,7 @@ test('insertOrThrowIfExists', function () {
   assert.equal(node.size, 31);
 });
 
-test('intersection', function () {
+test('intersection', function (t) {
   assert.equal(
     tree.intersection(tree.empty, tree.empty, compareIntegers),
     tree.empty,
@@ -791,6 +791,65 @@ test('intersection', function () {
       message: 'The relative order of values has changed: expected 4 to be less than 3',
     },
   );
+
+  t.test('left node reference is reused', () => {
+    const leftNode1 = newNode(tree.empty, {key: 0}, tree.empty);
+    const leftNode2 = newNode(tree.empty, {key: 0}, tree.empty);
+    assert.equal(
+      tree.intersection(
+        newNode(leftNode1, {key: 1}, tree.empty),
+        leftNode2,
+        compareObjectKeys,
+        (v1) => v1,
+      ),
+      leftNode1,
+    );
+    assert.equal(
+      tree.intersection(
+        newNode(leftNode1, {key: 1}, tree.empty),
+        leftNode2,
+        compareObjectKeys,
+        (v1, v2) => v2,
+      ),
+      leftNode2,
+    );
+  });
+
+  t.test('right node reference is reused', () => {
+    const rightNode1 = newNode(tree.empty, {key: 1}, tree.empty);
+    const rightNode2 = newNode(tree.empty, {key: 1}, tree.empty);
+    assert.equal(
+      tree.intersection(
+        newNode(tree.empty, {key: 0}, rightNode1),
+        rightNode2,
+        compareObjectKeys,
+        (v1) => v1,
+      ),
+      rightNode1,
+    );
+    assert.equal(
+      tree.intersection(
+        newNode(tree.empty, {key: 0}, rightNode1),
+        rightNode2,
+        compareObjectKeys,
+        (v1, v2) => v2,
+      ),
+      rightNode2,
+    );
+  });
+
+  t.test('entire left tree is reused', () => {
+    assert.equal(tree.intersection(oneToThirtyOneTree, oneToThirtyOneTree, compareIntegers), oneToThirtyOneTree);
+  });
+
+  t.test('entire right tree is reused', () => {
+    const oneToThirtyOneKeyTree2/*: ImmutableTree<KeyedObject> */ =
+      tree.fromDistinctAscArray(oneToThirtyOne.map(key => ({key})));
+    assert.equal(
+      tree.intersection(oneToThirtyOneKeyTree, oneToThirtyOneKeyTree2, compareObjectKeys, (v1, v2) => v2),
+      oneToThirtyOneKeyTree2,
+    );
+  });
 });
 
 test('iterate', function () {
