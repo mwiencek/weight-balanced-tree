@@ -206,6 +206,18 @@ class SplitCmd {
       compareIntegers,
     );
 
+    if (model.length > 0) {
+      if (this.key < model[0]) {
+        assert.equal(smallTree.size, 0);
+        assert.equal(equalTree.size, 0);
+        assert.equal(largeTree, real.tree);
+      } else if (this.key > model[model.length - 1]) {
+        assert.equal(smallTree, real.tree);
+        assert.equal(equalTree.size, 0);
+        assert.equal(largeTree.size, 0);
+      }
+    }
+
     assert.equal(keyExistsInModel, equalTree.size !== 0);
     assert.ok(checkTreeInvariants(smallTree, compareIntegers));
     assert.ok(checkTreeInvariants(largeTree, compareIntegers));

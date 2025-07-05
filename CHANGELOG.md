@@ -9,6 +9,9 @@
     properties, which are now set to `null`. This allows for direct JSON
     serialization of trees again. The (unused) `empty.value` property is also
     set to `null` (instead of `undefined`).
+  * Optimized `split` such that if `key < minValue(tree)` or
+    `key > maxValue(tree)`, the same `tree` reference is returned as either
+    `large` or `small`, respectively.
   * `iterate` and `reverseIterate` now use a stack rather than an array
     internally.
   * Moved TypeScript types to the `types/` subdirectory.
