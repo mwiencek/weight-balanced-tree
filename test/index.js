@@ -164,7 +164,7 @@ test('create', function () {
   });
 });
 
-test('difference', function () {
+test('difference', function (t) {
   assert.equal(tree.difference(tree.empty, tree.empty, compareIntegers), tree.empty);
   assert.deepEqual(
     tree.difference(tree.create(1), tree.empty, compareIntegers),
@@ -246,6 +246,18 @@ test('difference', function () {
       oneToThirtyOneOdds,
     ),
   );
+
+  t.test('right node reference is reused', () => {
+    const rightNode = newNode(tree.empty, 1, tree.empty);
+    assert.equal(
+      tree.difference(
+        newNode(tree.empty, 0, rightNode),
+        tree.create(0),
+        compareIntegers,
+      ),
+      rightNode,
+    );
+  });
 });
 
 test('empty', function () {
@@ -300,7 +312,7 @@ test('equals', function () {
   ));
 });
 
-test('filter', function () {
+test('filter', function (t) {
   const predicate = (x/*: number */) => x > 5 && x < 10;
   assert.equal(tree.filter(tree.empty, predicate), tree.empty);
   assert.ok(
@@ -313,6 +325,21 @@ test('filter', function () {
     tree.filter(oneToThirtyOneTree, (x/*: number */) => x > 0),
     oneToThirtyOneTree,
   );
+
+  t.test('right node reference is reused', () => {
+    const rightNode = newNode(tree.empty, 1, tree.empty);
+    assert.equal(
+      tree.filter(
+        newNode(tree.empty, 0, rightNode),
+        (x/*: number */) => x > 0,
+      ),
+      rightNode,
+    );
+  });
+
+  t.test('entire tree is reused', () => {
+    assert.equal(tree.filter(oneToThirtyOneTree, Boolean), oneToThirtyOneTree);
+  });
 });
 
 test('find', function () {
