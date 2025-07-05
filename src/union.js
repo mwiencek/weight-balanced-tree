@@ -24,12 +24,13 @@ export default function union/*:: <T> */(
   const leftUnion = union(t1.left, small, cmp, combiner);
   const rightUnion = union(t1.right, large, cmp, combiner);
   let unionValue = t1.value;
+  let leftIsEqual = true;
+  let rightIsEqual = false;
   if (equal.size) {
     unionValue = combiner(t1.value, equal.value);
-    if (
-      !Object.is(unionValue, t1.value) &&
-      !Object.is(unionValue, equal.value)
-    ) {
+    leftIsEqual = Object.is(unionValue, t1.value);
+    rightIsEqual = Object.is(unionValue, equal.value);
+    if (!leftIsEqual && !rightIsEqual) {
       if (
         leftUnion.size !== 0 &&
         cmp(unionValue, leftUnion.value) <= 0
@@ -43,6 +44,13 @@ export default function union/*:: <T> */(
         throw new ValueOrderError(unionValue, rightUnion.value, 'less than');
       }
     }
+  }
+  if (t1.left === leftUnion && t1.right === rightUnion && leftIsEqual) {
+    return t1;
+  }
+  if (t2.left === leftUnion && t2.right === rightUnion && rightIsEqual) {
+    /*:: invariant(t2 === equal); */
+    return t2;
   }
   return join(leftUnion, unionValue, rightUnion);
 }

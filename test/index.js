@@ -988,7 +988,7 @@ test('split', function () {
   assert.ok(tree.equals(large, tree.create(3)));
 });
 
-test('union', function () {
+test('union', function (t) {
   assert.equal(tree.union(tree.empty, tree.empty, compareIntegers), tree.empty);
   assert.deepEqual(
     tree.union(tree.create(1), tree.empty, compareIntegers),
@@ -1136,6 +1136,65 @@ test('union', function () {
       message: 'The relative order of values has changed: expected 4 to be less than 3',
     },
   );
+
+  t.test('left node reference is reused', () => {
+    const leftNode1 = newNode(tree.empty, {key: 0}, tree.empty);
+    const leftNode2 = newNode(tree.empty, {key: 0}, tree.empty);
+    assert.equal(
+      tree.union(
+        newNode(leftNode1, {key: 1}, tree.empty),
+        leftNode2,
+        compareObjectKeys,
+        (v1) => v1,
+      ).left,
+      leftNode1,
+    );
+    assert.equal(
+      tree.union(
+        newNode(leftNode1, {key: 1}, tree.empty),
+        leftNode2,
+        compareObjectKeys,
+        (v1, v2) => v2,
+      ).left,
+      leftNode2,
+    );
+  });
+
+  t.test('right node reference is reused', () => {
+    const rightNode1 = newNode(tree.empty, {key: 1}, tree.empty);
+    const rightNode2 = newNode(tree.empty, {key: 1}, tree.empty);
+    assert.equal(
+      tree.union(
+        newNode(tree.empty, {key: 0}, rightNode1),
+        rightNode2,
+        compareObjectKeys,
+        (v1) => v1,
+      ).right,
+      rightNode1,
+    );
+    assert.equal(
+      tree.union(
+        newNode(tree.empty, {key: 0}, rightNode1),
+        rightNode2,
+        compareObjectKeys,
+        (v1, v2) => v2,
+      ).right,
+      rightNode2,
+    );
+  });
+
+  t.test('entire left tree is reused', () => {
+    assert.equal(tree.union(oneToThirtyOneTree, oneToThirtyOneTree, compareIntegers), oneToThirtyOneTree);
+  });
+
+  t.test('entire right tree is reused', () => {
+    const oneToThirtyOneKeyTree2/*: ImmutableTree<KeyedObject> */ =
+      tree.fromDistinctAscArray(oneToThirtyOne.map(key => ({key})));
+    assert.equal(
+      tree.union(oneToThirtyOneKeyTree, oneToThirtyOneKeyTree2, compareObjectKeys, (v1, v2) => v2),
+      oneToThirtyOneKeyTree2,
+    );
+  });
 });
 
 test('toArray', function () {
