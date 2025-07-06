@@ -44,6 +44,7 @@ import reverseIterate from './reverseIterate';
 import splice, {type SpliceResult} from './splice';
 import split, {type SplitResult} from './split';
 import splitIndex from './splitIndex';
+import splitLast from './splitLast';
 import toArray from './toArray';
 import union from './union';
 import update, {
@@ -68,6 +69,7 @@ declare type NSTuple = [number, string];
 declare const stringTree: types.ImmutableTree<string>;
 declare const numberTree: types.ImmutableTree<number>;
 declare const numberStringMapTree: types.ImmutableTree<NSTuple>;
+declare const nonEmptyNumberTree: types.NonEmptyImmutableTree<number>;
 
 declare function areStringsEqual(a: string, b: string): boolean;
 declare function areNumbersEqual(a: number, b: number): boolean;
@@ -114,6 +116,7 @@ expectType<types.ImmutableTree<string>>(removeOrThrowIfNotExists<string, string>
 expectType<SpliceResult<number>>(splice(numberTree, 1, 2, numberTree));
 expectType<SplitResult<number>>(split(numberTree, 0, cmpNumbers));
 expectType<SplitResult<number>>(splitIndex(numberTree, 0));
+expectType<{readonly tree: types.ImmutableTree<number>; readonly value: number}>(splitLast<number>(nonEmptyNumberTree));
 expectType<Array<string>>(toArray(stringTree));
 expectType<types.ImmutableTree<string>>(union(stringTree, stringTree, cmpStrings));
 expectType<types.ImmutableTree<string>>(union(stringTree, stringTree, cmpStrings, (v1, v2) => v2));
@@ -155,6 +158,7 @@ expectError<types.ImmutableTree<number>>(removeIfExists<number, number>(stringTr
 expectError<types.ImmutableTree<number>>(removeOrThrowIfNotExists<number, number>(stringTree, 0, cmpNumbers));
 expectError<SpliceResult<number>>(splice(stringTree, 1, 2, numberTree));
 expectError<SplitResult<number>>(split<number>(stringTree, 1, cmpNumbers));
+expectError<{readonly tree: types.ImmutableTree<number>; readonly value: number}>(splitLast<number>(numberTree));
 expectError<ReadonlyArray<string>>(toArray<string>(numberTree));
 expectError<types.ImmutableTree<number>>(union<number>(stringTree, stringTree, cmpNumbers));
 expectError<types.ImmutableTree<number>>(difference<number>(stringTree, stringTree, cmpNumbers));
@@ -265,6 +269,7 @@ expectType<typeof setDelta>(wbt.setDelta);
 expectType<typeof splice>(wbt.splice);
 expectType<typeof split>(wbt.split);
 expectType<typeof splitIndex>(wbt.splitIndex);
+expectType<typeof splitLast>(wbt.splitLast);
 expectType<typeof toArray>(wbt.toArray);
 expectType<typeof union>(wbt.union);
 expectType<typeof update>(wbt.update);

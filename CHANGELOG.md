@@ -16,6 +16,8 @@
     `weight-balanced-tree/intersection`.
   * Added `splice`, which works like `Array.prototype.splice`.
   * Added `splitIndex` to split a tree by index rather than key.
+  * Exposed and documented `splitLast`, which splits a tree into the last
+    value and the rest.
   * Added a `SplitResult` type for the tuple return value of `split`. It's
     now read-only.
   * The comparator `cmp` passed to `split` now receives the index of the

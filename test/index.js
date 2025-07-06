@@ -1069,6 +1069,19 @@ test('splitIndex', () => {
   }
 });
 
+test('splitLast', () => {
+  const node1 = tree.create(1);
+  let result = tree.splitLast(node1);
+  assert.equal(result.value, 1);
+  assert.equal(result.tree, tree.empty);
+
+  const node2 = tree.fromDistinctAscArray([1, 2, 3]);
+  /*:: invariant(node2.size !== 0); */
+  result = tree.splitLast(node2);
+  assert.equal(result.value, 3);
+  assert.ok(tree.equals(result.tree, tree.fromDistinctAscArray([1, 2])));
+});
+
 test('union', function (t) {
   assert.equal(tree.union(tree.empty, tree.empty, compareIntegers), tree.empty);
   assert.deepEqual(

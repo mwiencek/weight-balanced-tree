@@ -578,6 +578,29 @@ function splitIndex<T>(
 This is similar to [`split()`](#split), but uses the position in the tree
 rather than a key and comparator. Negative indices are not supported.
 
+### splitLast()
+
+```TypeScript
+function splitLast<T>(tree: NonEmptyImmutableTree<T>): {
+  readonly tree: ImmutableTree<T>;
+  readonly value: T;
+};
+```
+
+Removes the last value from a non-empty tree, and returns an object
+containing that value and the remaining tree.
+
+Example:
+
+```TypeScript
+const node = fromDistinctAscArray([1, 2, 3]);
+const {tree: newNode, value} = splitLast(node);
+// newNode: [1, 2]
+// value: 3
+```
+
+Time complexity: `O(log n)`.
+
 ### toArray()
 
 ```TypeScript

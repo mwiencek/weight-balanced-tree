@@ -121,6 +121,10 @@
       "types": "./types/splitIndex.d.ts",
       "default": "./src/splitIndex.js"
     },
+    "./splitLast": {
+      "types": "./types/splitLast.d.ts",
+      "default": "./src/splitLast.js"
+    },
     "./toArray": {
       "types": "./types/toArray.d.ts",
       "default": "./src/toArray.js"
