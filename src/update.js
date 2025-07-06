@@ -11,7 +11,7 @@ import join from './join.js';
 import join2 from './join2.js';
 /*::
 import invariant from './invariant.js';
-import type {ImmutableTree} from './types.js';
+import type {ImmutableTree, NonEmptyImmutableTree} from './types.js';
 
 export type InsertConflictHandler<T, K> =
   (existingTreeValue: T, key: K) => T | RemoveValue;
@@ -67,6 +67,20 @@ export function onNotFoundUseGivenValue/*:: <T> */(
   return givenValue;
 }
 
+export function updateLeft/*:: <T> */(
+  tree/*: NonEmptyImmutableTree<T> */,
+  left/*: ImmutableTree<T> */,
+)/*: ImmutableTree<T> */ {
+  return left === tree.left ? tree : join(left, tree.value, tree.right);
+}
+
+export function updateRight/*:: <T> */(
+  tree/*: NonEmptyImmutableTree<T> */,
+  right/*: ImmutableTree<T> */,
+)/*: ImmutableTree<T> */ {
+  return right === tree.right ? tree : join(tree.left, tree.value, right);
+}
+
 export default function update/*:: <T, K> */(
   tree/*: ImmutableTree<T> */,
   key/*: K */,
@@ -102,16 +116,8 @@ export default function update/*:: <T, K> */(
     }
     return node(tree.left, valueToInsert, tree.right);
   } else if (order < 0) {
-    const newLeftBranch = update(tree.left, key, cmp, onConflict, onNotFound);
-    if (newLeftBranch === tree.left) {
-      return tree;
-    }
-    return join(newLeftBranch, tree.value, tree.right);
+    return updateLeft(tree, update(tree.left, key, cmp, onConflict, onNotFound));
   } else {
-    const newRightBranch = update(tree.right, key, cmp, onConflict, onNotFound);
-    if (newRightBranch === tree.right) {
-      return tree;
-    }
-    return join(tree.left, tree.value, newRightBranch);
+    return updateRight(tree, update(tree.right, key, cmp, onConflict, onNotFound));
   }
 }
