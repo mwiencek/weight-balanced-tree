@@ -626,6 +626,29 @@ const {tree: newNode, value} = splitLast(node);
 
 Time complexity: `O(log n)`.
 
+### splitFirst()
+
+```TypeScript
+function splitFirst<T>(tree: NonEmptyImmutableTree<T>): {
+  readonly tree: ImmutableTree<T>;
+  readonly value: T;
+};
+```
+
+Removes the first value from a non-empty tree, and returns an object
+containing that value and the remaining tree.
+
+Example:
+
+```TypeScript
+const node = fromDistinctAscArray([1, 2, 3]);
+const {tree: newNode, value} = splitFirst(node);
+// newNode: [2, 3]
+// value: 1
+```
+
+Time complexity: `O(log n)`.
+
 ### toArray()
 
 ```TypeScript

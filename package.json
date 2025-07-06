@@ -121,6 +121,10 @@
       "types": "./types/split.d.ts",
       "default": "./src/split.js"
     },
+    "./splitFirst": {
+      "types": "./types/splitFirst.d.ts",
+      "default": "./src/splitFirst.js"
+    },
     "./splitIndex": {
       "types": "./types/splitIndex.d.ts",
       "default": "./src/splitIndex.js"

@@ -1064,6 +1064,19 @@ test('split', function () {
   assert.ok(tree.equals(large, tree.create(3)));
 });
 
+test('splitFirst', () => {
+  const node1 = tree.create(1);
+  let result = tree.splitFirst(node1);
+  assert.equal(result.value, 1);
+  assert.equal(result.tree, tree.empty);
+
+  const node2 = tree.fromDistinctAscArray([1, 2, 3]);
+  /*:: invariant(node2.size !== 0); */
+  result = tree.splitFirst(node2);
+  assert.equal(result.value, 1);
+  assert.ok(tree.equals(result.tree, tree.fromDistinctAscArray([2, 3])));
+});
+
 test('splitIndex', () => {
   let small, equal, large;
 

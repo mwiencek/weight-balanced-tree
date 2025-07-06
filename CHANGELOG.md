@@ -17,6 +17,7 @@
   * Added `setIndex`, which replaces the value at a given index in a tree.
   * Added `splice`, which works like `Array.prototype.splice`.
   * Added `splitIndex` to split a tree by index rather than key.
+  * Added `splitFirst` to split a tree into the first value and the rest.
   * Exposed and documented `splitLast`, which splits a tree into the last
     value and the rest.
   * Added a `SplitResult` type for the tuple return value of `split`. It's
