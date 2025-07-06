@@ -4,15 +4,15 @@
 import invariant from './invariant.js';
 import type {ImmutableTree} from './types.js';
 */
-import {IndexOutOfRangeError} from './errors.js';
 
-export default function at/*:: <T> */(
+export default function at/*:: <T, D = T> */(
   tree/*: ImmutableTree<T> */,
   index/*: number */,
-)/*: T */ {
+  defaultValue/*: D */,
+)/*: T | D */ {
   let adjustedIndex = index < 0 ? (tree.size + index) : index;
   if (adjustedIndex < 0 || adjustedIndex >= tree.size) {
-    throw new IndexOutOfRangeError(adjustedIndex);
+    return defaultValue;
   }
   let cursor/*: ImmutableTree<T> */ = tree;
   while (cursor.size !== 0) {
@@ -20,12 +20,11 @@ export default function at/*:: <T> */(
     if (adjustedIndex < leftSize) {
       cursor = cursor.left;
     } else if (adjustedIndex == leftSize) {
-      break;
+      return cursor.value;
     } else {
       adjustedIndex -= (leftSize + 1);
       cursor = cursor.right;
     }
   }
-  /*:: invariant(cursor.size !== 0); */
-  return cursor.value;
+  /*:: invariant(false); */
 }

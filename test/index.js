@@ -13,7 +13,6 @@ import {
 import {node as newNode} from '../src/create.js';
 import {
   EmptyTreeError,
-  IndexOutOfRangeError,
   ValueExistsError,
   ValueNotFoundError,
 } from '../src/errors.js';
@@ -75,20 +74,8 @@ const oneToThirtyOneKeyTree/*: ImmutableTree<KeyedObject> */ =
 test('at', function () {
   const node = oneToThirtyOneTree;
   /*:: invariant(node.size !== 0); */
-  assert.throws(
-    function () {
-      tree.at(tree.create(1), 1);
-    },
-    IndexOutOfRangeError,
-    'IndexOutOfRangeError exception is thrown for index 1 of size 1 tree',
-  );
-  assert.throws(
-    function () {
-      tree.at(tree.create(1), -2);
-    },
-    IndexOutOfRangeError,
-    'IndexOutOfRangeError exception is thrown for index -2 of size 1 tree',
-  );
+  assert.equal(tree.at(tree.create(1), 1), undefined);
+  assert.equal(tree.at(tree.create(1), -2, null), null);
   for (const num of oneToThirtyOne) {
     assert.equal(tree.at(node, num - 1), num);
     assert.equal(tree.at(node, -num), oneToThirtyOne.length - (num - 1));

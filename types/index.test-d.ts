@@ -85,6 +85,9 @@ declare function toString(num: number): string;
 
 // Basic usage
 expectType<types.EmptyImmutableTree>(empty);
+expectType<string | undefined>(at(stringTree, 0));
+expectType<string>(at(stringTree, 0, ''));
+expectType<string | number>(at<string, number>(stringTree, 0, 0));
 expectType<types.ImmutableTree<string>>(create<string>(''));
 expectType<types.ImmutableTree<number | null>>(update<number | null, number>(numberTree, 0, cmpNullableNumbers, onConflictKeepTreeValue, onNotFoundUseGivenValue));
 expectType<types.ImmutableTree<string>>(update<string, number>(stringTree, 0, cmpNumberAndString, onConflictKeepTreeValue, onNotFoundDoNothing));

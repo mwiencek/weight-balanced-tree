@@ -6,15 +6,6 @@ export class EmptyTreeError extends Error {
   }
 }
 
-export class IndexOutOfRangeError extends Error {
-  constructor(value/*: mixed */) {
-    super(
-      'The given tree is out of range: ' +
-      String(value),
-    );
-  }
-}
-
 export class ValueExistsError extends Error {
   constructor(value/*: mixed */) {
     super(

@@ -1,6 +1,7 @@
 import type {ImmutableTree} from './types';
 
-export default function at<T>(
+export default function at<T, D = T>(
   tree: ImmutableTree<T>,
   index: number,
-): T;
+  defaultValue?: D,
+): T | D;

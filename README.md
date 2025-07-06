@@ -430,19 +430,21 @@ Returns the position of `key` in `tree`, or `-1` if not found.
 ### at()
 
 ```TypeScript
-function at<T>(
+function at<T, D = T>(
   tree: ImmutableTree<T>,
   index: number,
-): T;
+  defaultValue?: D,
+): T | D;
 ```
 
 Returns the value positioned at (0-based) `index` in `tree`. Negative indices
 retrieve values from the end.
 
-This is equivalent to `toArray(tree)[index]`, but doesn't create an
+This is equivalent to `toArray(tree).at(index)`, but doesn't create an
 intermediary array, and locates `index` in `O(log n)`.
 
-An out-of-bounds `index` will throw `IndexOutOfRangeError`.
+An out-of-bounds `index` will return `defaultValue` (or `undefined` if not
+specified).
 
 ### iterate()
 

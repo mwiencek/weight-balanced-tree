@@ -9,6 +9,8 @@
     properties, which are now set to `null`. This allows for direct JSON
     serialization of trees again. The (unused) `empty.value` property is also
     set to `null` (instead of `undefined`).
+  * `at` no longer throws, and accepts a `defaultValue` argument that is
+    returned when `index` is out-of-bounds.
   * `union` and `intersection` now prefer values in `t1` rather than `t2`.
   * The `onConflictUseSecondValue` export has been removed from
     `weight-balanced-tree/union`.
