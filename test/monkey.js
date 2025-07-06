@@ -25,7 +25,7 @@ const compareModelToReal = (model, real) => {
   assert.ok(true);
 };
 
-const uniqueIntegers = (keys) => Array.from(new Set(keys));
+const uniqueIntegers = (keys) => Array.from(new Set(keys)).sort(compareIntegers);
 
 class InsertCmd {
   constructor(key) {
@@ -95,7 +95,7 @@ class RemoveCmd {
 
 class UnionCmd {
   constructor(keys) {
-    this.keys = uniqueIntegers(keys).sort(compareIntegers);
+    this.keys = uniqueIntegers(keys);
   }
   toString() {
     return `union(${this.keys})`;
@@ -126,7 +126,7 @@ class UnionCmd {
 
 class DifferenceCmd {
   constructor(keys) {
-    this.keys = uniqueIntegers(keys).sort(compareIntegers);
+    this.keys = uniqueIntegers(keys);
   }
   toString() {
     return `difference(${this.keys})`;
@@ -157,7 +157,7 @@ class DifferenceCmd {
 
 class IntersectionCmd {
   constructor(keys) {
-    this.keys = uniqueIntegers(keys).sort(compareIntegers);
+    this.keys = uniqueIntegers(keys);
   }
   toString() {
     return `intersection(${this.keys})`;
@@ -175,6 +175,47 @@ class IntersectionCmd {
     );
     assert.ok(checkTreeInvariants(realIntersection, compareIntegers));
     compareModelToReal(modelIntersection, {tree: realIntersection});
+  }
+}
+
+class SpliceCmd {
+  constructor(args) {
+    this.start = args.start;
+    this.deleteCount = args.deleteCount;
+    this.items = args.items;
+  }
+  toString() {
+    return `splice(${this.start}, ${this.deleteCount}, Array(${this.items.length}))`;
+  }
+  check() {
+    return true;
+  }
+  run(model, real) {
+    const rawStart = this.start;
+    const rawDeleteCount = this.deleteCount;
+
+    let actualStart = Math.min(Math.max(rawStart < 0 ? model.length + rawStart : rawStart, 0), model.length);
+    const actualDeleteCount = Math.max(0, Math.min(rawDeleteCount, model.length - actualStart));
+    const itemMin = actualStart > 0 ? model[actualStart - 1] : -Infinity;
+    const itemMax = actualStart + actualDeleteCount < model.length
+      ? model[actualStart + actualDeleteCount]
+      : Infinity;
+    const validItems = this.items.filter(x => x > itemMin && x < itemMax);
+
+    const splicedModel = model.slice();
+    const deletedFromModel = splicedModel.splice(rawStart, rawDeleteCount, ...validItems);
+
+    const {tree: splicedTree, deleted: deletedFromTree} = wbt.splice(
+      real.tree,
+      rawStart,
+      rawDeleteCount,
+      wbt.fromDistinctAscArray(validItems),
+    );
+
+    assert.ok(checkTreeInvariants(splicedTree, compareIntegers));
+    assert.ok(checkTreeInvariants(deletedFromTree, compareIntegers));
+    compareModelToReal(splicedModel, {tree: splicedTree});
+    compareModelToReal(deletedFromModel, {tree: deletedFromTree});
   }
 }
 
@@ -257,6 +298,11 @@ const commandArb = [
   fc.array(keyArb, {maxLength: 50}).map(keys => new UnionCmd(keys)),
   fc.array(keyArb, {maxLength: 50}).map(keys => new DifferenceCmd(keys)),
   fc.array(keyArb, {maxLength: 50}).map(keys => new IntersectionCmd(keys)),
+  fc.record({
+    start: fc.integer({min: -1_000, max: 1_000}),
+    deleteCount: fc.integer({min: -100, max: 100}),
+    items: fc.array(keyArb, {maxLength: 100}).map(uniqueIntegers),
+  }).map(args => new SpliceCmd(args)),
 ];
 
 test('weight-balanced-tree', () => {

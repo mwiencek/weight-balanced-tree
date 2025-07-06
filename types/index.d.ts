@@ -30,6 +30,7 @@ export {
   removeOrThrowIfNotExists,
 } from './remove';
 export {default as reverseIterate} from './reverseIterate';
+export {default as splice} from './splice';
 export {default as split} from './split';
 export {default as splitIndex} from './splitIndex';
 export {default as toArray} from './toArray';

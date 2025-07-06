@@ -514,6 +514,34 @@ Returns the "largest" (right-most) value in `tree`.
 
 This is equivalent to `maxNode(tree).value`.
 
+### splice()
+
+```TypeScript
+function splice<T>(
+  tree: ImmutableTree<T>,
+  start: number,
+  deleteCount: number,
+  items: ImmutableTree<T>
+): {
+  readonly tree: ImmutableTree<T>,
+  readonly deleted: ImmutableTree<T>,
+};
+```
+
+Has the same arguments as [Array.prototype.splice](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Array/splice).
+
+Example:
+
+```TypeScript
+const tree = fromDistinctAscArray([1, 2, 3, 4, 5]);
+const {tree: newTree, deleted} = splice(tree, 1, 2, fromDistinctAscArray([8, 9]));
+// newTree: [1, 8, 9, 4, 5]
+// deleted: [2, 3]
+```
+
+Time complexity: `O(log n + m)`, where `n` is the size of `tree`
+and `m` is the size of `items`.
+
 ### split()
 
 ```TypeScript

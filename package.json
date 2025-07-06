@@ -109,6 +109,10 @@
       "types": "./types/reverseIterate.d.ts",
       "default": "./src/reverseIterate.js"
     },
+    "./splice": {
+      "types": "./types/splice.d.ts",
+      "default": "./src/splice.js"
+    },
     "./split": {
       "types": "./types/split.d.ts",
       "default": "./src/split.js"

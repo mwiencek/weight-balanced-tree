@@ -41,6 +41,7 @@ import remove, {
   removeOrThrowIfNotExists,
 } from './remove';
 import reverseIterate from './reverseIterate';
+import splice, {type SpliceResult} from './splice';
 import split, {type SplitResult} from './split';
 import splitIndex from './splitIndex';
 import toArray from './toArray';
@@ -110,6 +111,7 @@ expectType<types.ImmutableTree<string>>(map<number, string>(numberTree, toString
 expectType<types.ImmutableTree<string>>(remove<string, string>(stringTree, '', cmpStrings));
 expectType<types.ImmutableTree<string>>(removeIfExists<string, string>(stringTree, '', cmpStrings));
 expectType<types.ImmutableTree<string>>(removeOrThrowIfNotExists<string, string>(stringTree, '', cmpStrings));
+expectType<SpliceResult<number>>(splice(numberTree, 1, 2, numberTree));
 expectType<SplitResult<number>>(split(numberTree, 0, cmpNumbers));
 expectType<SplitResult<number>>(splitIndex(numberTree, 0));
 expectType<Array<string>>(toArray(stringTree));
@@ -151,6 +153,7 @@ expectError<number>(minValue<number>(stringTree));
 expectError<types.ImmutableTree<number>>(remove<number, number>(stringTree, 0, cmpNumbers));
 expectError<types.ImmutableTree<number>>(removeIfExists<number, number>(stringTree, 0, cmpNumbers));
 expectError<types.ImmutableTree<number>>(removeOrThrowIfNotExists<number, number>(stringTree, 0, cmpNumbers));
+expectError<SpliceResult<number>>(splice(stringTree, 1, 2, numberTree));
 expectError<SplitResult<number>>(split<number>(stringTree, 1, cmpNumbers));
 expectError<ReadonlyArray<string>>(toArray<string>(numberTree));
 expectError<types.ImmutableTree<number>>(union<number>(stringTree, stringTree, cmpNumbers));
@@ -259,6 +262,7 @@ expectType<typeof removeIfExists>(wbt.removeIfExists);
 expectType<typeof removeOrThrowIfNotExists>(wbt.removeOrThrowIfNotExists);
 expectType<typeof reverseIterate>(wbt.reverseIterate);
 expectType<typeof setDelta>(wbt.setDelta);
+expectType<typeof splice>(wbt.splice);
 expectType<typeof split>(wbt.split);
 expectType<typeof splitIndex>(wbt.splitIndex);
 expectType<typeof toArray>(wbt.toArray);

@@ -14,6 +14,7 @@
     `weight-balanced-tree/union`.
   * The `useSecondValue` export has been removed from
     `weight-balanced-tree/intersection`.
+  * Added `splice`, which works like `Array.prototype.splice`.
   * Added `splitIndex` to split a tree by index rather than key.
   * Added a `SplitResult` type for the tuple return value of `split`. It's
     now read-only.

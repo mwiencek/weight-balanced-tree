@@ -63,6 +63,10 @@ const buildAscIntegerArray = (start/*: number */, stop/*: number */) => {
   return ints;
 };
 
+const buildAscIntegerTree = (start/*: number */, stop/*: number */) => (
+  tree.fromDistinctAscArray(buildAscIntegerArray(start, stop))
+);
+
 const oneToThirtyOne = buildAscIntegerArray(1, 31);
 const oneToThirtyOneTree = tree.fromDistinctAscArray(oneToThirtyOne);
 const oneToThirtyOneKeyTree/*: ImmutableTree<KeyedObject> */ =
@@ -963,6 +967,50 @@ test('setDelta', function () {
   assert.doesNotThrow(function () {
     tree.setDelta(3);
   });
+});
+
+test('splice', () => {
+  const node = buildAscIntegerTree(1, 10);
+
+  let {tree: newNode, deleted} = tree.splice(node, 0, 0, tree.empty);
+  assert.equal(newNode, node);
+  assert.equal(deleted, tree.empty);
+
+  ({tree: newNode, deleted} = tree.splice(node, 100, 0, tree.empty));
+  assert.equal(newNode, node);
+  assert.equal(deleted, tree.empty);
+
+  ({tree: newNode, deleted} = tree.splice(node, -Infinity, 0, tree.empty));
+  assert.equal(newNode, node);
+  assert.equal(deleted, tree.empty);
+
+  ({tree: newNode, deleted} = tree.splice(node, Infinity, 0, tree.empty));
+  assert.equal(newNode, node);
+  assert.equal(deleted, tree.empty);
+
+  ({tree: newNode, deleted} = tree.splice(node, 0, 0, buildAscIntegerTree(-10, 0)));
+  assert.ok(tree.equals(newNode, buildAscIntegerTree(-10, 10)));
+  assert.equal(deleted, tree.empty);
+
+  ({tree: newNode, deleted} = tree.splice(node, 10, 0, buildAscIntegerTree(11, 20)));
+  assert.ok(tree.equals(newNode, buildAscIntegerTree(1, 20)));
+  assert.equal(deleted, tree.empty);
+
+  for (const i of [0, -10]) {
+    ({tree: newNode, deleted} = tree.splice(node, i, 10, tree.empty));
+    assert.equal(newNode, tree.empty);
+    assert.equal(deleted, node);
+  }
+
+  for (const i of [1, -9]) {
+    ({tree: newNode, deleted} = tree.splice(node, i, 8, buildAscIntegerTree(2, 9)));
+    assert.ok(tree.equals(newNode, buildAscIntegerTree(1, 10)));
+    assert.ok(tree.equals(deleted, buildAscIntegerTree(2, 9)));
+  }
+
+  ({tree: newNode, deleted} = tree.splice(node, 0, 10, buildAscIntegerTree(-10, 0)));
+  assert.ok(tree.equals(newNode, buildAscIntegerTree(-10, 0)));
+  assert.equal(deleted, node);
 });
 
 test('split', function () {
