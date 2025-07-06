@@ -4,6 +4,7 @@ import test from 'node:test';
 import fc from 'fast-check';
 
 import * as wbt from '../src/index.js';
+import join2 from '../src/join2.js';
 
 import checkTreeInvariants from './checkTreeInvariants.js';
 import compareIntegers from './compareIntegers.js';
@@ -15,10 +16,10 @@ import {
 
 const compareModelToReal = (model, real) => {
   const treeArray = wbt.toArray(real.tree);
-  const modelLength = model.length;
+  const modelLength = model.array.length;
   assert.equal(modelLength, treeArray.length);
   for (let i = 0; i < modelLength; i++) {
-    if (model[i] !== treeArray[i]) {
+    if (model.array[i] !== treeArray[i]) {
       assert.ok(false);
     }
   }
@@ -39,7 +40,7 @@ class InsertCmd {
   }
   run(model, real) {
     sortedArrayFindOrInsert(
-      model,
+      model.array,
       this.key,
       compareIntegers,
       /* copy = */ false,
@@ -76,7 +77,7 @@ class RemoveCmd {
   }
   run(model, real) {
     sortedArrayRemove(
-      model,
+      model.array,
       this.key,
       compareIntegers,
       /* copy = */ false,
@@ -106,7 +107,7 @@ class UnionCmd {
   run(model, real) {
     for (const key of this.keys) {
       sortedArrayFindOrInsert(
-        model,
+        model.array,
         key,
         compareIntegers,
         /* copy = */ false,
@@ -137,7 +138,7 @@ class DifferenceCmd {
   run(model, real) {
     for (const key of this.keys) {
       sortedArrayRemove(
-        model,
+        model.array,
         key,
         compareIntegers,
         /* copy = */ false,
@@ -167,14 +168,14 @@ class IntersectionCmd {
   }
   run(model, real) {
     const keySet = new Set(this.keys);
-    const modelIntersection = model.filter(keySet.has.bind(keySet));
-    const realIntersection = wbt.intersection(
+    model.array = model.array.filter(keySet.has.bind(keySet));
+    real.tree = wbt.intersection(
       real.tree,
       wbt.fromDistinctAscArray(this.keys),
       compareIntegers,
     );
-    assert.ok(checkTreeInvariants(realIntersection, compareIntegers));
-    compareModelToReal(modelIntersection, {tree: realIntersection});
+    assert.ok(checkTreeInvariants(real.tree, compareIntegers));
+    compareModelToReal(model, real);
   }
 }
 
@@ -193,29 +194,29 @@ class SpliceCmd {
   run(model, real) {
     const rawStart = this.start;
     const rawDeleteCount = this.deleteCount;
+    const modelSize = model.array.length;
 
-    let actualStart = Math.min(Math.max(rawStart < 0 ? model.length + rawStart : rawStart, 0), model.length);
-    const actualDeleteCount = Math.max(0, Math.min(rawDeleteCount, model.length - actualStart));
-    const itemMin = actualStart > 0 ? model[actualStart - 1] : -Infinity;
-    const itemMax = actualStart + actualDeleteCount < model.length
-      ? model[actualStart + actualDeleteCount]
+    let actualStart = Math.min(Math.max(rawStart < 0 ? modelSize + rawStart : rawStart, 0), modelSize);
+    const actualDeleteCount = Math.max(0, Math.min(rawDeleteCount, modelSize - actualStart));
+    const itemMin = actualStart > 0 ? model.array[actualStart - 1] : -Infinity;
+    const itemMax = actualStart + actualDeleteCount < modelSize
+      ? model.array[actualStart + actualDeleteCount]
       : Infinity;
     const validItems = this.items.filter(x => x > itemMin && x < itemMax);
 
-    const splicedModel = model.slice();
-    const deletedFromModel = splicedModel.splice(rawStart, rawDeleteCount, ...validItems);
-
+    const deletedFromModel = model.array.splice(rawStart, rawDeleteCount, ...validItems);
     const {tree: splicedTree, deleted: deletedFromTree} = wbt.splice(
       real.tree,
       rawStart,
       rawDeleteCount,
       wbt.fromDistinctAscArray(validItems),
     );
+    real.tree = splicedTree;
 
     assert.ok(checkTreeInvariants(splicedTree, compareIntegers));
     assert.ok(checkTreeInvariants(deletedFromTree, compareIntegers));
-    compareModelToReal(splicedModel, {tree: splicedTree});
-    compareModelToReal(deletedFromModel, {tree: deletedFromTree});
+    compareModelToReal(model, real);
+    compareModelToReal({array: deletedFromModel}, {tree: deletedFromTree});
   }
 }
 
@@ -231,13 +232,13 @@ class SplitCmd {
   }
   run(model, real) {
     const [modelIndex, keyExistsInModel] = getSortedArrayIndex(
-      model,
-      model.length,
+      model.array,
+      model.array.length,
       this.key,
       compareIntegers,
     );
-    const smallModel = model.slice(0, modelIndex);
-    const largeModel = model.slice(
+    const smallArray = model.array.slice(0, modelIndex);
+    const largeArray = model.array.slice(
       keyExistsInModel ? (modelIndex + 1) : modelIndex,
     );
 
@@ -247,12 +248,12 @@ class SplitCmd {
       compareIntegers,
     );
 
-    if (model.length > 0) {
-      if (this.key < model[0]) {
+    if (model.array.length > 0) {
+      if (this.key < model.array[0]) {
         assert.equal(smallTree.size, 0);
         assert.equal(equalTree.size, 0);
         assert.equal(largeTree, real.tree);
-      } else if (this.key > model[model.length - 1]) {
+      } else if (this.key > model.array[model.array.length - 1]) {
         assert.equal(smallTree, real.tree);
         assert.equal(equalTree.size, 0);
         assert.equal(largeTree.size, 0);
@@ -262,8 +263,14 @@ class SplitCmd {
     assert.equal(keyExistsInModel, equalTree.size !== 0);
     assert.ok(checkTreeInvariants(smallTree, compareIntegers));
     assert.ok(checkTreeInvariants(largeTree, compareIntegers));
-    compareModelToReal(smallModel, {tree: smallTree});
-    compareModelToReal(largeModel, {tree: largeTree});
+    compareModelToReal({array: smallArray}, {tree: smallTree});
+    compareModelToReal({array: largeArray}, {tree: largeTree});
+
+    model.array = smallArray.concat(largeArray);
+    real.tree = join2(smallTree, largeTree);
+
+    assert.ok(checkTreeInvariants(real.tree, compareIntegers));
+    compareModelToReal(model, real);
   }
 }
 
@@ -278,13 +285,13 @@ class FilterCmd {
     return true;
   }
   run(model, real) {
-    const filteredModel = model.filter(x => x > this.key);
-    const filteredTree = wbt.filter(
+    model.array = model.array.filter(x => x > this.key);
+    real.tree = wbt.filter(
       real.tree,
       x => x > this.key,
     );
-    assert.ok(checkTreeInvariants(filteredTree, compareIntegers));
-    compareModelToReal(filteredModel, {tree: filteredTree});
+    assert.ok(checkTreeInvariants(real.tree, compareIntegers));
+    compareModelToReal(model, real);
   }
 }
 
@@ -311,7 +318,7 @@ test('weight-balanced-tree', () => {
       fc.commands(commandArb, {maxCommands: 5_000, size: 'max'}),
       function (cmds) {
         const initial = {
-          model: [],
+          model: {array: []},
           real: {tree: wbt.empty},
         };
         fc.modelRun(() => ({...initial}), cmds);
