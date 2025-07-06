@@ -969,6 +969,29 @@ test('setDelta', function () {
   });
 });
 
+test('setIndex', function () {
+  const node = tree.fromDistinctAscArray([1, 2, 3]);
+
+  let newNode = tree.setIndex(node, 0, 7);
+  newNode = tree.setIndex(newNode, 1, 8);
+  newNode = tree.setIndex(newNode, 2, 9);
+  assert.deepEqual(tree.toArray(newNode), [7, 8, 9]);
+  assert.notEqual(newNode, node);
+
+  // Set to the same value (should return the same node)
+  newNode = tree.setIndex(node, 1, 2);
+  assert.deepEqual(tree.toArray(newNode), [1, 2, 3]);
+  assert.equal(newNode, node);
+
+  // Negative indexing
+  newNode = tree.setIndex(node, -1, 5);
+  assert.deepEqual(tree.toArray(newNode), [1, 2, 5]);
+
+  // Out of range indices are no-ops
+  assert.equal(tree.setIndex(node, 3, 10), node);
+  assert.equal(tree.setIndex(node, -4, 10), node);
+});
+
 test('splice', () => {
   const node = buildAscIntegerTree(1, 10);
 

@@ -14,6 +14,7 @@
     `weight-balanced-tree/union`.
   * The `useSecondValue` export has been removed from
     `weight-balanced-tree/intersection`.
+  * Added `setIndex`, which replaces the value at a given index in a tree.
   * Added `splice`, which works like `Array.prototype.splice`.
   * Added `splitIndex` to split a tree by index rather than key.
   * Exposed and documented `splitLast`, which splits a tree into the last

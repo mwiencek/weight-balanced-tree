@@ -34,6 +34,7 @@ export {
   removeOrThrowIfNotExists,
 } from './remove.js';
 export {default as reverseIterate} from './reverseIterate.js';
+export {default as setIndex} from './setIndex.js';
 export {default as splice} from './splice.js';
 export {default as split} from './split.js';
 export {default as splitIndex} from './splitIndex.js';

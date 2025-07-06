@@ -41,6 +41,7 @@ import remove, {
   removeOrThrowIfNotExists,
 } from './remove';
 import reverseIterate from './reverseIterate';
+import setIndex from './setIndex';
 import splice, {type SpliceResult} from './splice';
 import split, {type SplitResult} from './split';
 import splitIndex from './splitIndex';
@@ -113,6 +114,7 @@ expectType<types.ImmutableTree<string>>(map<number, string>(numberTree, toString
 expectType<types.ImmutableTree<string>>(remove<string, string>(stringTree, '', cmpStrings));
 expectType<types.ImmutableTree<string>>(removeIfExists<string, string>(stringTree, '', cmpStrings));
 expectType<types.ImmutableTree<string>>(removeOrThrowIfNotExists<string, string>(stringTree, '', cmpStrings));
+expectType<types.ImmutableTree<string>>(setIndex(stringTree, 0, 'foo'));
 expectType<SpliceResult<number>>(splice(numberTree, 1, 2, numberTree));
 expectType<SplitResult<number>>(split(numberTree, 0, cmpNumbers));
 expectType<SplitResult<number>>(splitIndex(numberTree, 0));
@@ -156,6 +158,7 @@ expectError<number>(minValue<number>(stringTree));
 expectError<types.ImmutableTree<number>>(remove<number, number>(stringTree, 0, cmpNumbers));
 expectError<types.ImmutableTree<number>>(removeIfExists<number, number>(stringTree, 0, cmpNumbers));
 expectError<types.ImmutableTree<number>>(removeOrThrowIfNotExists<number, number>(stringTree, 0, cmpNumbers));
+expectError<types.ImmutableTree<number>>(setIndex(stringTree, 0, 42));
 expectError<SpliceResult<number>>(splice(stringTree, 1, 2, numberTree));
 expectError<SplitResult<number>>(split<number>(stringTree, 1, cmpNumbers));
 expectError<{readonly tree: types.ImmutableTree<number>; readonly value: number}>(splitLast<number>(numberTree));
@@ -266,6 +269,7 @@ expectType<typeof removeIfExists>(wbt.removeIfExists);
 expectType<typeof removeOrThrowIfNotExists>(wbt.removeOrThrowIfNotExists);
 expectType<typeof reverseIterate>(wbt.reverseIterate);
 expectType<typeof setDelta>(wbt.setDelta);
+expectType<typeof setIndex>(wbt.setIndex);
 expectType<typeof splice>(wbt.splice);
 expectType<typeof split>(wbt.split);
 expectType<typeof splitIndex>(wbt.splitIndex);

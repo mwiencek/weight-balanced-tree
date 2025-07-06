@@ -514,6 +514,31 @@ Returns the "largest" (right-most) value in `tree`.
 
 This is equivalent to `maxNode(tree).value`.
 
+### setIndex()
+
+```TypeScript
+function setIndex<T>(
+  tree: ImmutableTree<T>,
+  index: number,
+  value: T,
+): NonEmptyImmutableTree<T>;
+```
+
+Returns a new version of `tree` with the value at position `index` replaced
+by `value`.
+
+Negative indices can be used to update values from the end of the tree. An
+out-of-bounds `index` is a no-op and just returns `tree`.
+
+If you replace a value with one that has a different relative order, the
+tree will become invalid. However, if you're using the tree as a list, where
+the `index` itself is the ordering, then this obviously isn't a concern.
+
+If `value` is identical to the existing value at `index` (according to
+`Object.is`), the same `tree` reference is returned back.
+
+Time complexity: `O(log n)`.
+
 ### splice()
 
 ```TypeScript
