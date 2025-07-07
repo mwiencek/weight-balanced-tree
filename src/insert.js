@@ -18,13 +18,12 @@ export default function insert/*:: <T> */(
   cmp/*: (a: T, b: T) => number */,
   onConflict/*:: ?: InsertConflictHandler<T, T> */ = onConflictThrowError,
 )/*: NonEmptyImmutableTree<T> */ {
-  const result = update/*:: <T, T> */(
-    tree,
-    value,
+  const result = update/*:: <T, T> */(tree, {
+    key: value,
     cmp,
     onConflict,
-    onNotFoundUseGivenValue,
-  );
+    onNotFound: onNotFoundUseGivenValue,
+  });
   /*:: invariant(result.size !== 0); */
   return result;
 }
@@ -34,13 +33,12 @@ export function insertIfNotExists/*:: <T> */(
   value/*: T */,
   cmp/*: (a: T, b: T) => number */,
 )/*: NonEmptyImmutableTree<T> */ {
-  const result = update/*:: <T, T> */(
-    tree,
-    value,
+  const result = update/*:: <T, T> */(tree, {
+    key: value,
     cmp,
-    onConflictKeepTreeValue,
-    onNotFoundUseGivenValue,
-  );
+    onConflict: onConflictKeepTreeValue,
+    onNotFound: onNotFoundUseGivenValue,
+  });
   /*:: invariant(result.size !== 0); */
   return result;
 }
@@ -50,13 +48,12 @@ export function insertOrReplaceIfExists/*:: <T> */(
   value/*: T */,
   cmp/*: (a: T, b: T) => number */,
 )/*: NonEmptyImmutableTree<T> */ {
-  const result = update/*:: <T, T> */(
-    tree,
-    value,
+  const result = update/*:: <T, T> */(tree, {
+    key: value,
     cmp,
-    onConflictUseGivenValue,
-    onNotFoundUseGivenValue,
-  );
+    onConflict: onConflictUseGivenValue,
+    onNotFound: onNotFoundUseGivenValue,
+  });
   /*:: invariant(result.size !== 0); */
   return result;
 }
@@ -66,13 +63,12 @@ export function insertOrThrowIfExists/*:: <T> */(
   value/*: T */,
   cmp/*: (a: T, b: T) => number */,
 )/*: NonEmptyImmutableTree<T> */ {
-  const result = update/*:: <T, T> */(
-    tree,
-    value,
+  const result = update/*:: <T, T> */(tree, {
+    key: value,
     cmp,
-    onConflictThrowError,
-    onNotFoundUseGivenValue,
-  );
+    onConflict: onConflictThrowError,
+    onNotFound: onNotFoundUseGivenValue,
+  });
   /*:: invariant(result.size !== 0); */
   return result;
 }

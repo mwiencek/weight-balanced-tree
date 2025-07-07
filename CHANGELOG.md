@@ -2,6 +2,9 @@
 
 ## v0.11.0 (unreleased)
 
+  * `update` now takes a single options object as its second argument, with
+     properties `key`, `cmp`, `onConflict`, and `onNotFound`, instead of
+     separate positional arguments. All usages must be updated accordingly.
   * `remove` now takes a type parameter `K` and a `key` argument of type `K`,
     instead of the previous `value` argument. `key` may differ from the tree
     value type, similar to how `update` works.

@@ -18,6 +18,13 @@ export type InsertConflictHandler<T, K> =
 
 export type InsertNotFoundHandler<T, K> =
   (key: K) => T | DoNothing;
+
+export type UpdateOptions<T, K> = {
+  key: K,
+  cmp: (key: K, treeValue: T) => number,
+  onConflict: InsertConflictHandler<T, K>,
+  onNotFound: InsertNotFoundHandler<T, K>,
+};
 */
 
 class DoNothing {}
@@ -81,7 +88,7 @@ export function updateRight/*:: <T> */(
   return right === tree.right ? tree : join(tree.left, tree.value, right);
 }
 
-export default function update/*:: <T, K> */(
+function _update/*:: <T, K> */(
   tree/*: ImmutableTree<T> */,
   key/*: K */,
   cmp/*: (key: K, treeValue: T) => number */,
@@ -116,8 +123,21 @@ export default function update/*:: <T, K> */(
     }
     return node(tree.left, valueToInsert, tree.right);
   } else if (order < 0) {
-    return updateLeft(tree, update(tree.left, key, cmp, onConflict, onNotFound));
+    return updateLeft(tree, _update(tree.left, key, cmp, onConflict, onNotFound));
   } else {
-    return updateRight(tree, update(tree.right, key, cmp, onConflict, onNotFound));
+    return updateRight(tree, _update(tree.right, key, cmp, onConflict, onNotFound));
   }
+}
+
+export default function update/*:: <T, K> */(
+  tree/*: ImmutableTree<T> */,
+  options/*: UpdateOptions<T, K> */,
+)/*: ImmutableTree<T> */ {
+  return _update(
+    tree,
+    options.key,
+    options.cmp,
+    options.onConflict,
+    options.onNotFound,
+  );
 }

@@ -1324,39 +1324,36 @@ test('toArray', function () {
 test('update', function (t) {
   t.test('onNotFoundDoNothing', function () {
     const node = tree.create(1);
-    const newNode = tree.update(
-      node,
-      2,
-      compareIntegers,
-      onConflictThrowError,
-      onNotFoundDoNothing,
-    );
+    const newNode = tree.update(node, {
+      key: 2,
+      cmp: compareIntegers,
+      onConflict: onConflictThrowError,
+      onNotFound: onNotFoundDoNothing,
+    });
     assert.equal(newNode, node, 'tree was not updated with onNotFoundDoNothing');
   });
 
   t.test('onNotFoundThrowError', function () {
     assert.throws(
       () => {
-        tree.update/*:: <number, number> */(
-          tree.empty,
-          1,
-          compareIntegers,
-          onConflictKeepTreeValue,
-          onNotFoundThrowError,
-        );
+        tree.update/*:: <number, number> */(tree.empty, {
+          key: 1,
+          cmp: compareIntegers,
+          onConflict: onConflictKeepTreeValue,
+          onNotFound: onNotFoundThrowError,
+        });
       },
       ValueNotFoundError,
     );
   });
 
   t.test('onNotFoundUseGivenValue', function () {
-    const node = tree.update/*:: <number, number> */(
-      tree.empty,
-      1,
-      compareIntegers,
-      onConflictKeepTreeValue,
-      onNotFoundUseGivenValue,
-    );
+    const node = tree.update/*:: <number, number> */(tree.empty, {
+      key: 1,
+      cmp: compareIntegers,
+      onConflict: onConflictKeepTreeValue,
+      onNotFound: onNotFoundUseGivenValue,
+    });
     assert.equal(node.value, 1);
   });
 
@@ -1367,36 +1364,36 @@ test('update', function (t) {
 
   node = tree.update(
     node,
-    v2,
-    compareObjectKeys,
-    onConflictThrowError,
-    (newItem) => {
-      assert.equal(newItem, v2);
-      return v2;
+    {
+      key: v2,
+      cmp: compareObjectKeys,
+      onConflict: onConflictThrowError,
+      onNotFound: (newItem) => {
+        assert.equal(newItem, v2);
+        return v2;
+      },
     },
   );
   assert.equal(tree.find(node, v2, compareObjectKeys, null), v2);
 
-  node = tree.update(
-    node,
-    3,
-    compareNumberWithObjectKey,
-    onConflictThrowError,
-    (newKey) => {
+  node = tree.update(node, {
+    key: 3,
+    cmp: compareNumberWithObjectKey,
+    onConflict: onConflictThrowError,
+    onNotFound: (newKey) => {
       return {key: newKey, value: newKey * 10};
-    },
+    }},
   );
   let v3 = tree.find(node, 3, compareNumberWithObjectKey, null);
   assert.deepEqual(v3, {key: 3, value: 30});
 
-  node = tree.update(
-    node,
-    3,
-    compareNumberWithObjectKey,
-    onConflictKeepTreeValue,
-    (newKey) => {
+  node = tree.update(node, {
+    key: 3,
+    cmp: compareNumberWithObjectKey,
+    onConflict: onConflictKeepTreeValue,
+    onNotFound: (newKey) => {
       return {key: newKey, value: newKey * 10};
-    },
+    }},
   );
   assert.deepEqual(
     tree.find(node, 3, compareNumberWithObjectKey, null),
@@ -1404,17 +1401,13 @@ test('update', function (t) {
     'existing tree value it kept',
   );
 
-  node = tree.update(
-    node,
-    3,
-    compareNumberWithObjectKey,
-    (treeValue, key) => {
-      v3 = {key, value: key * 10};
-      return v3;
-    },
-    () => {
+  node = tree.update(node, {
+    key: 3,
+    cmp: compareNumberWithObjectKey,
+    onConflict: treeValue => treeValue,
+    onNotFound: () => {
       throw new Error('unexpected');
-    },
+    }},
   );
   assert.deepEqual(
     tree.find(node, 3, compareNumberWithObjectKey, null),
@@ -1424,15 +1417,14 @@ test('update', function (t) {
 
   assert.throws(
     function () {
-      node = tree.update(
-        node,
-        {key: 4, value: 40},
-        compareObjectKeys,
-        onConflictKeepTreeValue,
-        () => {
+      node = tree.update(node, {
+        key: {key: 4, value: 40},
+        cmp: compareObjectKeys,
+        onConflict: onConflictKeepTreeValue,
+        onNotFound: () => {
           return {key: 5, value: 50};
         },
-      );
+      });
     },
     {
       name: 'ValueOrderError',
@@ -1445,15 +1437,14 @@ test('update', function (t) {
 
   assert.throws(
     function () {
-      node = tree.update(
-        node,
-        5,
-        compareNumberWithObjectKey,
-        (treeValue) => treeValue,
-        () => {
+      node = tree.update(node, {
+        key: 5,
+        cmp: compareNumberWithObjectKey,
+        onConflict: (treeValue) => treeValue,
+        onNotFound: () => {
           throw new CustomNotFoundError();
         },
-      );
+      });
     },
     CustomNotFoundError,
   );
@@ -1576,23 +1567,43 @@ test('withKeyComparator', function () {
   );
 
   const num1 = new Number(1);
-  // $FlowIgnore[incompatible-call]
-  node = integerTree.update(node, num1, onConflictKeepTreeValue, onNotFoundThrowError);
+  node = integerTree.update(node, {
+    // $FlowIgnore[incompatible-call]
+    key: num1,
+    onConflict: onConflictKeepTreeValue,
+    onNotFound: onNotFoundThrowError,
+  });
   assert.equal(integerTree.find(node, 1), 1);
-  // $FlowIgnore[incompatible-call]
-  node = integerTree.update(node, num1, onConflictUseGivenValue, onNotFoundThrowError);
+  node = integerTree.update(node, {
+    // $FlowIgnore[incompatible-call]
+    key: num1,
+    onConflict: onConflictUseGivenValue,
+    onNotFound: onNotFoundThrowError,
+  });
   // $FlowIgnore[incompatible-call]
   assert.equal(integerTree.find(node, 1), num1);
   assert.throws(
     function () {
-      node = integerTree.update(node, 1, onConflictThrowError, onNotFoundThrowError);
+      node = integerTree.update(node, {
+        key: 1,
+        onConflict: onConflictThrowError,
+        onNotFound: onNotFoundThrowError,
+      });
     },
     ValueExistsError,
     'exception is thrown with update using onConflictThrowError',
   );
-  node = integerTree.update(node, 32, onConflictThrowError, onNotFoundDoNothing);
+  node = integerTree.update(node, {
+    key: 32,
+    onConflict: onConflictThrowError,
+    onNotFound: onNotFoundDoNothing,
+  });
   assert.equal(integerTree.find(node, 32), undefined);
-  node = integerTree.update(node, 32, onConflictThrowError, onNotFoundUseGivenValue);
+  node = integerTree.update(node, {
+    key: 32,
+    onConflict: onConflictThrowError,
+    onNotFound: onNotFoundUseGivenValue,
+  });
   assert.equal(integerTree.find(node, 32), 32);
 
   assert.ok(integerTree.validate(node).valid);

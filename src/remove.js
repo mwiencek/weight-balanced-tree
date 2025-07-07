@@ -14,13 +14,12 @@ export default function remove/*:: <T, K> */(
   key/*: K */,
   cmp/*: (key: K, treeValue: T) => number */,
 )/*: ImmutableTree<T> */ {
-  return update(
-    tree,
+  return update(tree, {
     key,
     cmp,
-    onConflictRemoveValue,
-    onNotFoundDoNothing,
-  );
+    onConflict: onConflictRemoveValue,
+    onNotFound: onNotFoundDoNothing,
+  });
 }
 
 export const removeIfExists/*: <T, K> (

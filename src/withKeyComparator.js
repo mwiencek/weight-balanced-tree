@@ -124,9 +124,11 @@ export default function withKeyComparator/*:: <T, K> */(
 
   update(
     tree: ImmutableTree<T>,
-    value: K,
-    onConflict: InsertConflictHandler<T, K>,
-    onNotFound: InsertNotFoundHandler<T, K>,
+    options: {
+      +key: K,
+      +onConflict: InsertConflictHandler<T, K>,
+      +onNotFound: InsertNotFoundHandler<T, K>,
+    },
   ): ImmutableTree<T>,
 
   validate(
@@ -191,8 +193,8 @@ export default function withKeyComparator/*:: <T, K> */(
     union(t1, t2, combiner) {
       return union(t1, t2, cmp, combiner);
     },
-    update(tree, key, onConflict, onNotFound) {
-      return update(tree, key, cmpKeyWithValue, onConflict, onNotFound);
+    update(tree, {key, onConflict, onNotFound}) {
+      return update(tree, {key, cmp: cmpKeyWithValue, onConflict, onNotFound});
     },
     validate(tree) {
       return validate(tree, cmp);
