@@ -860,6 +860,25 @@ test('iterate', function () {
   );
 });
 
+test('join', function () {
+  const node = tree.join(
+    oneToThirtyOneTree,
+    32,
+    tree.create(33),
+  );
+  assert.ok(checkTreeInvariants(node, compareIntegers));
+  assert.deepEqual(
+    tree.toArray(node),
+    buildAscIntegerArray(1, 33),
+  );
+
+  // Nodes are reused when the tree is already balanced
+  const negativeOneToThirtyOneTree = buildAscIntegerTree(-31, -1);
+  const joinedTree = tree.join(negativeOneToThirtyOneTree, 0, oneToThirtyOneTree);
+  assert.equal(joinedTree.left, negativeOneToThirtyOneTree);
+  assert.equal(joinedTree.right, oneToThirtyOneTree);
+});
+
 test('map', function () {
   const toString = (x/*: mixed */)/*: string */ => String(x);
 

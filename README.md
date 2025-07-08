@@ -711,6 +711,21 @@ comparator `cmp`.
 from the first tree, `t1`. If you return a different value, then the
 relative sort order must be preserved; otherwise `ValueOrderError` is thrown.
 
+### join()
+
+```TypeScript
+function join<T>(
+  left: ImmutableTree<T>,
+  value: T,
+  right: ImmutableTree<T>
+): NonEmptyImmutableTree<T>;
+```
+
+Implements the [*join* operation](https://en.wikipedia.org/wiki/Join-based_tree_algorithms).
+
+This is a low-level operation, and the resulting tree is not checked for
+validity.
+
 ### zip()
 
 ```TypeScript

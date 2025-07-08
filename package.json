@@ -85,6 +85,10 @@
       "types": "./types/iterate.d.ts",
       "default": "./src/iterate.js"
     },
+    "./join": {
+      "types": "./types/join.d.ts",
+      "default": "./src/join.js"
+    },
     "./maxNode": {
       "types": "./types/maxNode.d.ts",
       "default": "./src/maxNode.js"
