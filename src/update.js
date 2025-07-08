@@ -28,11 +28,11 @@ export type UpdateOptions<T, K> = {
 };
 */
 
-class DoNothing {}
+export class DoNothing {}
 Object.freeze(DoNothing);
 Object.freeze(DoNothing.prototype);
 
-class RemoveValue {}
+export class RemoveValue {}
 Object.freeze(RemoveValue);
 Object.freeze(RemoveValue.prototype);
 
