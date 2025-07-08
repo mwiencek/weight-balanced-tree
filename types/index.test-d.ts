@@ -34,6 +34,7 @@ import insert, {
 import intersection from './intersection';
 import iterate from './iterate';
 import join from './join';
+import join2 from './join2';
 import map from './map';
 import maxValue from './maxValue';
 import minValue from './minValue';
@@ -116,6 +117,7 @@ expectType<[string, number]>(findWithIndex<string>(stringTree, '', cmpStrings, '
 expectType<types.ImmutableTree<string>>(fromDistinctAscArray<string>(['']));
 expectType<number>(indexOf<number>(numberTree, 1, cmpNumbers));
 expectType<types.NonEmptyImmutableTree<number>>(join(numberTree, 0, numberTree));
+expectType<types.ImmutableTree<number>>(join2(numberTree, numberTree));
 expectType<types.ImmutableTree<string>>(map<number, string>(numberTree, toString));
 expectType<types.ImmutableTree<string>>(remove<string, string>(stringTree, '', cmpStrings));
 expectType<types.ImmutableTree<string>>(removeIfExists<string, string>(stringTree, '', cmpStrings));
@@ -160,6 +162,7 @@ expectError<number>(findBy<number>(stringTree, (treeValue: number) => cmpStrings
 expectError<[number, number]>(findWithIndex<number>(stringTree, 0, cmpNumbers, 0));
 expectError<types.ImmutableTree<number>>(fromDistinctAscArray<number>(['']));
 expectError<types.NonEmptyImmutableTree<number>>(join<number>(stringTree, 0, stringTree));
+expectError<types.ImmutableTree<number>>(join2<number>(stringTree, stringTree));
 expectError<types.ImmutableTree<string>>(map<number, string>(stringTree, toString));
 expectError<number>(maxValue<number>(stringTree));
 expectError<number>(minValue<number>(stringTree));
@@ -271,6 +274,7 @@ expectType<typeof insertOrThrowIfExists>(wbt.insertOrThrowIfExists);
 expectType<typeof intersection>(wbt.intersection);
 expectType<typeof iterate>(wbt.iterate);
 expectType<typeof join>(wbt.join);
+expectType<typeof join2>(wbt.join2);
 expectType<typeof map>(wbt.map);
 expectType<typeof maxValue>(wbt.maxValue);
 expectType<typeof minValue>(wbt.minValue);

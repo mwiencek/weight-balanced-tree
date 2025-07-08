@@ -24,6 +24,7 @@ export {
 export {default as intersection} from './intersection.js';
 export {default as iterate} from './iterate.js';
 export {default as join} from './join.js';
+export {default as join2} from './join2.js';
 export {default as map} from './map.js';
 export {default as maxNode} from './maxNode.js';
 export {default as maxValue} from './maxValue.js';

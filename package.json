@@ -89,6 +89,10 @@
       "types": "./types/join.d.ts",
       "default": "./src/join.js"
     },
+    "./join2": {
+      "types": "./types/join2.d.ts",
+      "default": "./src/join2.js"
+    },
     "./maxNode": {
       "types": "./types/maxNode.d.ts",
       "default": "./src/maxNode.js"

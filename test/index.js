@@ -879,6 +879,22 @@ test('join', function () {
   assert.equal(joinedTree.right, oneToThirtyOneTree);
 });
 
+test('join2', function () {
+  const node = tree.join2(
+    oneToThirtyOneTree,
+    tree.create(32),
+  );
+  assert.ok(checkTreeInvariants(node, compareIntegers));
+  assert.deepEqual(
+    tree.toArray(node),
+    buildAscIntegerArray(1, 32),
+  );
+
+  // Joining with the empty tree is a no-op
+  assert.equal(tree.join2(tree.empty, oneToThirtyOneTree), oneToThirtyOneTree);
+  assert.equal(tree.join2(oneToThirtyOneTree, tree.empty), oneToThirtyOneTree);
+});
+
 test('map', function () {
   const toString = (x/*: mixed */)/*: string */ => String(x);
 

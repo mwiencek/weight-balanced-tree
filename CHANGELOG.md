@@ -39,7 +39,7 @@
     `large` or `small`, respectively.
   * `iterate` and `reverseIterate` now use a stack rather than an array
     internally.
-  * Exposed and documented `join`.
+  * Exposed and documented `join` and `join2`.
   * Moved TypeScript types to the `types/` subdirectory.
   * Setup ESLint and fixed lint issues.
 

@@ -726,6 +726,20 @@ Implements the [*join* operation](https://en.wikipedia.org/wiki/Join-based_tree_
 This is a low-level operation, and the resulting tree is not checked for
 validity.
 
+### join2()
+
+```TypeScript
+function join2<T>(
+  left: ImmutableTree<T>,
+  right: ImmutableTree<T>
+): ImmutableTree<T>;
+```
+
+Implements the [*join2* operation](https://en.wikipedia.org/wiki/Join-based_tree_algorithms#Join2).
+
+This is a low-level operation, and the resulting tree is not checked for
+validity.
+
 ### zip()
 
 ```TypeScript

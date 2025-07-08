@@ -22,6 +22,7 @@ export {
 export {default as intersection} from './intersection';
 export {default as iterate} from './iterate';
 export {default as join} from './join';
+export {default as join2} from './join2';
 export {default as map} from './map';
 export {default as maxValue} from './maxValue';
 export {default as minValue} from './minValue';
