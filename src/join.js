@@ -8,14 +8,14 @@ import {
 import {node} from './create.js';
 /*::
 import invariant from './invariant.js';
-import type {ImmutableTree} from './types.js';
+import type {ImmutableTree, NonEmptyImmutableTree} from './types.js';
 */
 
 export default function join/*:: <T> */(
   left/*: ImmutableTree<T> */,
   value/*: T */,
   right/*: ImmutableTree<T> */,
-)/*: ImmutableTree<T> */ {
+)/*: NonEmptyImmutableTree<T> */ {
   if ((left.size + right.size) >= 2) {
     if (heavy(left.size, right.size)) {
       /*:: invariant(left.size !== 0); */

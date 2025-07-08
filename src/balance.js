@@ -2,7 +2,11 @@
 
 import {node} from './create.js';
 /*::
-import type {ImmutableTree, MutableTree} from './types.js';
+import type {
+  ImmutableTree,
+  MutableTree,
+  NonEmptyImmutableTree,
+} from './types.js';
 import invariant from './invariant.js';
 */
 
@@ -18,7 +22,7 @@ export function heavy(w1/*: number */, w2/*: number */)/*: boolean */ {
 
 export function balanceLeft/*:: <T> */(
   tree/*: MutableTree<T> */,
-)/*: ImmutableTree<T> */ {
+)/*: NonEmptyImmutableTree<T> */ {
   const left = tree.left;
   const right = tree.right;
   /*:: invariant(left.size !== 0); */
@@ -47,7 +51,7 @@ export function balanceLeft/*:: <T> */(
 
 export function balanceRight/*:: <T> */(
   tree/*: MutableTree<T> */,
-)/*: ImmutableTree<T> */ {
+)/*: NonEmptyImmutableTree<T> */ {
   const left = tree.left;
   const right = tree.right;
   /*:: invariant(right.size !== 0); */
