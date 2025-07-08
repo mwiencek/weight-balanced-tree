@@ -1357,6 +1357,24 @@ test('update', function (t) {
     assert.equal(node.value, 1);
   });
 
+  t.test('isEqual', function () {
+    const v1 = {key: 1, value: 10};
+    const v2 = {key: 1, value: 10};
+    const node = tree.create(v1);
+
+    const updated = tree.update(node, {
+      key: v2,
+      cmp: compareObjectKeys,
+      onConflict: onConflictUseGivenValue,
+      onNotFound: onNotFoundThrowError,
+      isEqual: (a, b) => a.value === b.value,
+    });
+    assert.equal(
+      updated, node,
+      'node is reused when isEqual returns true',
+    );
+  });
+
   const v1 = {key: 1, value: 10};
   const v2 = {key: 2, value: 20};
 

@@ -22,6 +22,7 @@ export type InsertNotFoundHandler<T, K> =
 export type UpdateOptions<T, K> = {
   key: K,
   cmp: (key: K, treeValue: T) => number,
+  isEqual?: (a: T, b: T) => boolean,
   onConflict: InsertConflictHandler<T, K>,
   onNotFound: InsertNotFoundHandler<T, K>,
 };
@@ -94,6 +95,7 @@ function _update/*:: <T, K> */(
   cmp/*: (key: K, treeValue: T) => number */,
   onConflict/*: InsertConflictHandler<T, K> */,
   onNotFound/*: InsertNotFoundHandler<T, K> */,
+  isEqual/*: (a: T, b: T) => boolean */,
 )/*: ImmutableTree<T> */ {
   if (tree.size === 0) {
     const valueToInsert = onNotFound(key);
@@ -116,16 +118,22 @@ function _update/*:: <T, K> */(
       return join2(tree.left, tree.right);
     }
     /*:: invariant(!(valueToInsert instanceof RemoveValue)); */
-    if (Object.is(valueToInsert, tree.value)) {
+    if (isEqual(valueToInsert, tree.value)) {
       return tree;
     } else if (cmp(key, valueToInsert) !== 0) {
       throw new ValueOrderError(key, valueToInsert, 'equal to');
     }
     return node(tree.left, valueToInsert, tree.right);
   } else if (order < 0) {
-    return updateLeft(tree, _update(tree.left, key, cmp, onConflict, onNotFound));
+    return updateLeft(
+      tree,
+      _update(tree.left, key, cmp, onConflict, onNotFound, isEqual),
+    );
   } else {
-    return updateRight(tree, _update(tree.right, key, cmp, onConflict, onNotFound));
+    return updateRight(
+      tree,
+      _update(tree.right, key, cmp, onConflict, onNotFound, isEqual),
+    );
   }
 }
 
@@ -139,5 +147,7 @@ export default function update/*:: <T, K> */(
     options.cmp,
     options.onConflict,
     options.onNotFound,
+    // $FlowIssue[method-unbinding]
+    options.isEqual ?? Object.is,
   );
 }
