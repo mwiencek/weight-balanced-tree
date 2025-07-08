@@ -15,15 +15,11 @@ import {
 } from './sortedArray.js';
 
 const compareModelToReal = (model, real) => {
-  const treeArray = wbt.toArray(real.tree);
-  const modelLength = model.array.length;
-  assert.equal(modelLength, treeArray.length);
-  for (let i = 0; i < modelLength; i++) {
-    if (model.array[i] !== treeArray[i]) {
-      assert.ok(false);
-    }
-  }
-  assert.ok(true);
+  assert.deepEqual(
+    wbt.toArray(real.tree),
+    model.array,
+    'real tree and model array should have the same values',
+  );
 };
 
 const uniqueIntegers = (keys) => Array.from(new Set(keys)).sort(compareIntegers);
