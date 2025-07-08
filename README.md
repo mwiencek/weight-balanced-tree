@@ -4,9 +4,14 @@ A [persistent](https://en.wikipedia.org/wiki/Persistent_data_structure)
 weight-balanced ([bounded balance](https://en.wikipedia.org/wiki/Weight-balanced_tree))
 tree for JavaScript.
 
+WBTs can be used to implement persistent maps or sets, where the entries have
+a defined order. Indexed access is also `O(log n)` due to the fact that
+indices can be located using the `size` stored on each node; therefore
+they're also a viable option for implementing persistent lists if you don't
+need `O(1)` reads or writes at the head or tail of the list.
+
  * Zero dependencies
  * Trees are plain objects
- * Usable as a persistent map or set
  * Works in Node.js and the browser
  * Flow and TypeScript definitions included
 
