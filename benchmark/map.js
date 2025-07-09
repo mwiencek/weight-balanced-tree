@@ -83,7 +83,7 @@ const immutableJsMap = buildImmutableJsMap(mapData);
 const moriHashMap = buildMoriHashMap(mapData);
 
 const getSuite = new Bench({name: 'Map get', time: 100})
-  .add('weight-balanced-tree (findBy)', function () {
+  .add('weight-balanced-tree (find)', function () {
     for (const [key] of mapData) {
       treeMap.find(weightBalancedTree, key);
     }
