@@ -1,4 +1,4 @@
-import Benchmark from 'benchmark';
+import {Bench} from 'tinybench';
 import * as Immutable from 'immutable';
 import mori from 'mori';
 
@@ -46,7 +46,7 @@ function buildMoriSortedSet(data) {
 
 const setDataCopy1 = setData.slice(0);
 
-const createSuite = new Benchmark.Suite('Sorted set create')
+const createSuite = new Bench({name: 'Sorted set create', time: 100})
   .add('weight-balanced-tree (fromDistinctAscArray)', function () {
     setDataCopy1.sort(compareIntegers);
     wbt.fromDistinctAscArray(setDataCopy1);
@@ -60,7 +60,7 @@ const createSuite = new Benchmark.Suite('Sorted set create')
     mori.sortedSet(...setDataCopy1);
   });
 
-const setSuite = new Benchmark.Suite('Sorted set add')
+const setSuite = new Bench({name: 'Sorted set add', time: 100})
   .add('weight-balanced-tree (insert)', function () {
     buildWeightBalancedTree(setData);
   })
@@ -77,7 +77,7 @@ const moriSortedSet = buildMoriSortedSet(setData);
 // XXX https://github.com/swannodette/mori/issues/173
 moriSortedSet[Symbol.iterator] = moriSortedSet.__proto__['undefined'];
 
-const getSuite = new Benchmark.Suite('Sorted set has')
+const getSuite = new Bench({name: 'Sorted set has', time: 100})
   .add('weight-balanced-tree (findBy)', function () {
     for (const i of setData) {
       wbt.findBy(
@@ -97,7 +97,7 @@ const getSuite = new Benchmark.Suite('Sorted set has')
     }
   });
 
-const removeSuite = new Benchmark.Suite('Sorted set remove')
+const removeSuite = new Bench({name: 'Sorted set remove', time: 100})
   .add('weight-balanced-tree (remove)', function () {
     let set = weightBalancedTree;
     for (const i of setData) {
@@ -124,7 +124,7 @@ const immutableJsSetHalf2 = buildImmutableJsSet(setDataHalf2);
 const moriSortedSetHalf1 = buildMoriSortedSet(setDataHalf1);
 const moriSortedSetHalf2 = buildMoriSortedSet(setDataHalf2);
 
-const mergeSuite = new Benchmark.Suite('Sorted set union')
+const mergeSuite = new Bench({name: 'Sorted set union', time: 100})
   .add('weight-balanced-tree (union)', function () {
     wbt.union(weightBalancedTreeHalf1, weightBalancedTreeHalf2, compareIntegers);
   })
@@ -139,7 +139,7 @@ const weightBalancedTree2 = buildWeightBalancedTree(setData);
 const immutableJsSet2 = buildImmutableJsSet(setData);
 const moriSortedSet2 = buildMoriSortedSet(setData);
 
-const equalsSuite = new Benchmark.Suite('Sorted set equals')
+const equalsSuite = new Bench({name: 'Sorted set equals', time: 100})
   .add('weight-balanced-tree (equals)', function () {
     wbt.equals(weightBalancedTree, weightBalancedTree2);
   })
@@ -150,7 +150,7 @@ const equalsSuite = new Benchmark.Suite('Sorted set equals')
     mori.equals(moriSortedSet, moriSortedSet2);
   });
 
-const iterationSuite = new Benchmark.Suite('Sorted set iteration')
+const iterationSuite = new Bench({name: 'Sorted set iteration', time: 100})
   .add('weight-balanced-tree (iterate, Iterator protocol)', function () {
     // eslint-disable-next-line no-unused-vars
     for (const _ of wbt.iterate(weightBalancedTree));
@@ -165,20 +165,18 @@ const iterationSuite = new Benchmark.Suite('Sorted set iteration')
     for (const _ of moriSortedSet);
   });
 
-[
-  createSuite,
-  setSuite,
-  getSuite,
-  removeSuite,
-  mergeSuite,
-  equalsSuite,
-  iterationSuite,
-].forEach(function (suite) {
-  suite
-    .on('start', () => console.log(suite.name))
-    .on('cycle', (event) => console.log('\t' + String(event.target)))
-    .on('complete', function () {
-      console.log('\tFastest is ' + this.filter('fastest').map('name'));
-    })
-    .run({async: false});
-});
+(async () => {
+  for (const bench of [
+    createSuite,
+    setSuite,
+    getSuite,
+    removeSuite,
+    mergeSuite,
+    equalsSuite,
+    iterationSuite,
+  ]) {
+    await bench.run()
+    console.log(bench.name)
+    console.table(bench.table());
+  }
+})();

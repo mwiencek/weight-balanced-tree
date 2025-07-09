@@ -1,4 +1,4 @@
-import Benchmark from 'benchmark';
+import {Bench} from 'tinybench'
 import * as Immutable from 'immutable';
 import mori from 'mori';
 
@@ -55,7 +55,7 @@ function buildMoriHashMap(data) {
 
 const mapDataCopy1 = mapData.slice(0);
 
-const createSuite = new Benchmark.Suite('Map create')
+const createSuite = new Bench({name: 'Map create', time: 100})
   .add('weight-balanced-tree (fromDistinctAscArray)', function () {
     mapDataCopy1.sort(treeMap.cmp);
     wbt.fromDistinctAscArray(mapDataCopy1);
@@ -67,7 +67,7 @@ const createSuite = new Benchmark.Suite('Map create')
     mori.hashMap(...mapData);
   });
 
-const setSuite = new Benchmark.Suite('Map set')
+const setSuite = new Bench({name: 'Map set', time: 100})
   .add('weight-balanced-tree (insert)', function () {
     buildWeightBalancedTree(mapData);
   })
@@ -82,7 +82,7 @@ const weightBalancedTree = buildWeightBalancedTree(mapData);
 const immutableJsMap = buildImmutableJsMap(mapData);
 const moriHashMap = buildMoriHashMap(mapData);
 
-const getSuite = new Benchmark.Suite('Map get')
+const getSuite = new Bench({name: 'Map get', time: 100})
   .add('weight-balanced-tree (findBy)', function () {
     for (const [key] of mapData) {
       treeMap.find(weightBalancedTree, key);
@@ -99,7 +99,7 @@ const getSuite = new Benchmark.Suite('Map get')
     }
   });
 
-const removeSuite = new Benchmark.Suite('Map remove')
+const removeSuite = new Bench({name: 'Map remove', time: 100})
   .add('weight-balanced-tree (remove)', function () {
     let map = weightBalancedTree;
     for (const [key] of mapData) {
@@ -126,7 +126,7 @@ const immutableJsMapHalf2 = buildImmutableJsMap(mapDataHalf2);
 const moriHashMapHalf1 = buildMoriHashMap(mapDataHalf1);
 const moriHashMapHalf2 = buildMoriHashMap(mapDataHalf2);
 
-const mergeSuite = new Benchmark.Suite('Map merge')
+const mergeSuite = new Bench({name: 'Map merge', time: 100})
   .add('weight-balanced-tree (union)', function () {
     treeMap.union(weightBalancedTreeHalf1, weightBalancedTreeHalf2);
   })
@@ -141,7 +141,7 @@ const weightBalancedTree2 = buildWeightBalancedTree(mapData);
 const immutableJsMap2 = buildImmutableJsMap(mapData);
 const moriHashMap2 = buildMoriHashMap(mapData);
 
-const equalsSuite = new Benchmark.Suite('Map equals')
+const equalsSuite = new Bench({name: 'Map equals', time: 100})
   .add('weight-balanced-tree (equals)', function () {
     wbt.equals(weightBalancedTree, weightBalancedTree2);
   })
@@ -152,19 +152,17 @@ const equalsSuite = new Benchmark.Suite('Map equals')
     mori.equals(moriHashMap, moriHashMap2);
   });
 
-[
-  createSuite,
-  setSuite,
-  getSuite,
-  removeSuite,
-  mergeSuite,
-  equalsSuite,
-].forEach(function (suite) {
-  suite
-    .on('start', () => console.log(suite.name))
-    .on('cycle', (event) => console.log('\t' + String(event.target)))
-    .on('complete', function () {
-      console.log('\tFastest is ' + this.filter('fastest').map('name'));
-    })
-    .run({async: false});
-});
+(async () => {
+  for (const bench of [
+    createSuite,
+    setSuite,
+    getSuite,
+    removeSuite,
+    mergeSuite,
+    equalsSuite,
+  ]) {
+    await bench.run()
+    console.log(bench.name)
+    console.table(bench.table());
+  }
+})();
