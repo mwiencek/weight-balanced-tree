@@ -2,6 +2,7 @@
 
 ## v0.11.1 (2025-07-08)
 
+  * Fixed the type of `REMOVE_VALUE` in types/update.d.ts.
   * Added the date for the v0.11.0 release to CHANGELOG.md.
 
 ## v0.11.0 (2025-07-08)

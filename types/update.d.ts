@@ -10,7 +10,7 @@ declare class RemoveValue {
 }
 
 export const DO_NOTHING: DoNothing;
-export const REMOVE_VALUE: DoNothing;
+export const REMOVE_VALUE: RemoveValue;
 
 export type InsertConflictHandler<T, K> =
   (existingTreeValue: T, key: K) => T | RemoveValue;
