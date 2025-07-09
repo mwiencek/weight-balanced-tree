@@ -41,7 +41,7 @@ jobs:
         run: ./node_modules/.bin/flow
 
       - name: Check TypeScript types with tsd
-        run: ./node_modules/.bin/tsd src
+        run: ./node_modules/.bin/tsd
 
       - name: Upload coverage artifact
         if: always()

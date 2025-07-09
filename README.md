@@ -804,7 +804,7 @@ and [mori](https://swannodette.github.io/mori/).
 node --test test/monkey.js
 
 # TypeScript tests
-./node_modules/.bin/tsd src
+./node_modules/.bin/tsd
 ```
 
 ## Changelog
