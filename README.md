@@ -48,10 +48,6 @@ same way as the [comparator passed to `Array.prototype.sort`](https://developer.
 Obviously, the comparator should be idempotent and behave consistently for a
 particular tree, otherwise the tree can become invalid.
 
-Having to pass `cmp` to many functions can be repetitive, so an (optional)
-[withKeyComparator()](#withKeyComparator) utility exists to create a wrapper
-around many API functions.
-
 ### empty
 
 ```TypeScript
@@ -758,33 +754,6 @@ Zips two trees together, returning an iterable of tuples: the first tuple
 contains the first values of both trees, the second tuple contains the second
 values of both trees, and so on. If the trees are of different sizes,
 `undefined` is used within a tuple where a corresponding value is missing.
-
-### withKeyComparator()
-
-Returns an object with methods that have the passed `comparator` pre-bound.
-
-The second argument is invoked on tree values before passing them to the
-comparator.
-
-```TypeScript
-const integerTree = withKeyComparator(
-  compareIntegers,
-  identity,
-);
-
-let node = integerTree.insert(tree.create(1), 2);
-node = integerTree.remove(node, 1);
-
-const map = withKeyComparator(
-  compareIntegers,
-  ([key]) => key,
-);
-
-let node = map.insert(tree.empty, [1, 'A']);
-node = map.find(node, 1);
-```
-
-Any function above that accepts a `cmp` argument is available.
 
 ## Performance
 

@@ -10,6 +10,7 @@
     run to determine if the value returned from `onConflict` is equal to the
     existing value in the tree. It defaults to `Object.is`, which matches the
     previous behavior.
+  * `withKeyComparator` has been removed.
   * `remove` now takes a type parameter `K` and a `key` argument of type `K`,
     instead of the previous `value` argument. `key` may differ from the tree
     value type, similar to how `update` works.

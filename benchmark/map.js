@@ -16,23 +16,18 @@ shuffle(mapData);
 const mapDataHalf1 = mapData.slice(0, mapData.length / 2);
 const mapDataHalf2 = mapData.slice(mapData.length / 2, mapData.length);
 
-const compareKeys = (a, b) => {
+const compareKeys = ([a], [b]) => {
   return a === b ? 0 : (a < b ? -1 : 1);
 };
 
-const getKeyFromTuple = (keyValuePair) => {
-  return keyValuePair[0];
+const compareKeyWithEntry = (key, [entryKey]) => {
+  return key === entryKey ? 0 : (key < entryKey ? -1 : 1);
 };
-
-const treeMap = wbt.withKeyComparator(
-  compareKeys,
-  getKeyFromTuple,
-);
 
 function buildWeightBalancedTree(data) {
   let map = wbt.empty;
   for (const keyValuePair of data) {
-    map = treeMap.insert(map, keyValuePair);
+    map = wbt.insert(map, keyValuePair, compareKeys);
   }
   return map;
 }
@@ -57,7 +52,7 @@ const mapDataCopy1 = mapData.slice(0);
 
 const createSuite = new Bench({name: 'Map create', time: 100})
   .add('weight-balanced-tree (fromDistinctAscArray)', function () {
-    mapDataCopy1.sort(treeMap.cmp);
+    mapDataCopy1.sort(compareKeys);
     wbt.fromDistinctAscArray(mapDataCopy1);
   })
   .add('Immutable.Map (constructor)', function () {
@@ -85,7 +80,7 @@ const moriHashMap = buildMoriHashMap(mapData);
 const getSuite = new Bench({name: 'Map get', time: 100})
   .add('weight-balanced-tree (find)', function () {
     for (const [key] of mapData) {
-      treeMap.find(weightBalancedTree, key);
+      wbt.find(weightBalancedTree, key, compareKeyWithEntry);
     }
   })
   .add('Immutable.Map (get)', function () {
@@ -103,7 +98,7 @@ const removeSuite = new Bench({name: 'Map remove', time: 100})
   .add('weight-balanced-tree (remove)', function () {
     let map = weightBalancedTree;
     for (const [key] of mapData) {
-      map = wbt.remove(map, key, (treeValue) => compareKeys(key, treeValue[0]));
+      map = wbt.remove(map, key, compareKeyWithEntry);
     }
   })
   .add('Immutable.Map (delete)', function () {
@@ -128,7 +123,7 @@ const moriHashMapHalf2 = buildMoriHashMap(mapDataHalf2);
 
 const mergeSuite = new Bench({name: 'Map merge', time: 100})
   .add('weight-balanced-tree (union)', function () {
-    treeMap.union(weightBalancedTreeHalf1, weightBalancedTreeHalf2);
+    wbt.union(weightBalancedTreeHalf1, weightBalancedTreeHalf2);
   })
   .add('Immutable.Map (merge)', function () {
     immutableJsMapHalf1.merge(immutableJsMapHalf2);

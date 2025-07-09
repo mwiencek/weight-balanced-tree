@@ -157,10 +157,6 @@
       "types": "./types/update.d.ts",
       "default": "./src/update.js"
     },
-    "./withKeyComparator": {
-      "types": "./types/withKeyComparator.d.ts",
-      "default": "./src/withKeyComparator.js"
-    },
     "./zip": {
       "types": "./types/zip.d.ts",
       "default": "./src/zip.js"

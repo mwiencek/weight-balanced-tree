@@ -46,7 +46,6 @@ export {default as toArray} from './toArray.js';
 export {default as union} from './union.js';
 export {default as update} from './update.js';
 export {default as validate} from './validate.js';
-export {default as withKeyComparator} from './withKeyComparator.js';
 export {default as zip} from './zip.js';
 /*::
 export * from './types.js';
