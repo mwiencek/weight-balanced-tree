@@ -6,6 +6,7 @@
 benchmark/
 CHANGELOG.md
 coverage/
+eslint.config.js
 flow-typed.config.json
 flow-typed/
 src/index.test-d.ts
