@@ -1,6 +1,10 @@
 # Changelog
 
-## v0.11.0 (unreleased)
+## v0.11.1 (2025-07-08)
+
+  * Added the date for the v0.11.0 release to CHANGELOG.md.
+
+## v0.11.0 (2025-07-08)
 
   * `update` now takes a single options object as its second argument, with
      required properties `key`, `cmp`, `onConflict`, and `onNotFound`, and
