@@ -10,26 +10,6 @@ import type {
 } from './types.js';
 */
 
-function getRootIndex(
-  root/*: NonEmptyImmutableTree<mixed> */,
-)/*: number */ {
-  return root.left === null ? 0 : root.left.size;
-}
-
-function getLeftIndex(
-  thisIndex/*: number */,
-  left/*: NonEmptyImmutableTree<mixed> */
-)/*: number */ {
-  return thisIndex - (left.right === null ? 0 : left.right.size) - 1;
-}
-
-function getRightIndex(
-  thisIndex/*: number */,
-  right/*: NonEmptyImmutableTree<mixed> */,
-)/*: number */ {
-  return thisIndex + (right.left === null ? 0 : right.left.size) + 1;
-}
-
 function _setIndex/*:: <T> */(
   tree/*: NonEmptyImmutableTree<T> */,
   index/*: number */,
@@ -46,10 +26,10 @@ function _setIndex/*:: <T> */(
     return node(left, value, right);
   } else if (order < 0) {
     /*:: invariant(left.size !== 0); */
-    return updateLeft(tree, _setIndex(left, index, value, getLeftIndex(thisIndex, left)));
+    return updateLeft(tree, _setIndex(left, index, value, thisIndex - left.right.size - 1));
   } else {
     /*:: invariant(right.size !== 0); */
-    return updateRight(tree, _setIndex(right, index, value, getRightIndex(thisIndex, right)));
+    return updateRight(tree, _setIndex(right, index, value, thisIndex + right.left.size + 1));
   }
 }
 
@@ -63,5 +43,5 @@ export default function setIndex/*:: <T> */(
     return tree;
   }
   /*:: invariant(tree.size !== 0); */
-  return _setIndex(tree, adjustedIndex, value, getRootIndex(tree));
+  return _setIndex(tree, adjustedIndex, value, tree.left.size);
 }
