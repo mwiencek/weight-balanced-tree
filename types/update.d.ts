@@ -18,6 +18,14 @@ export type InsertConflictHandler<T, K> =
 export type InsertNotFoundHandler<T, K> =
   (key: K) => T | DoNothing;
 
+export type UpdateOptions<T, K> = {
+  key: K;
+  cmp: (key: K, treeValue: T) => number;
+  isEqual?: (a: T, b: T) => boolean;
+  onConflict: InsertConflictHandler<T, K>;
+  onNotFound: InsertNotFoundHandler<T, K>;
+};
+
 export function onConflictThrowError(): never;
 
 export function onConflictKeepTreeValue<T, K>(
@@ -40,8 +48,5 @@ export function onNotFoundUseGivenValue<T>(givenValue: T): T;
 
 export default function update<T, K>(
   tree: ImmutableTree<T>,
-  key: K,
-  cmp: (key: K, treeValue: T) => number,
-  onConflict: InsertConflictHandler<T, K>,
-  onNotFound: InsertNotFoundHandler<T, K>,
+  options: UpdateOptions<T, K>,
 ): ImmutableTree<T>;

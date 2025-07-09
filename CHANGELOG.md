@@ -2,6 +2,8 @@
 
 ## v0.11.1 (2025-07-08)
 
+  * Updated the TypeScript definitions and README.md for the `update` options
+    argument changes in v0.11.0.
   * Fixed the type of `REMOVE_VALUE` in types/update.d.ts.
   * Added the date for the v0.11.0 release to CHANGELOG.md.
 

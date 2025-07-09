@@ -93,12 +93,17 @@ type InsertConflictHandler<T, K> =
 type InsertNotFoundHandler<T, K> =
   (key: K) => T;
 
+type UpdateOptions<T, K> = {
+  key: K,
+  cmp: (key: K, treeValue: T) => number,
+  isEqual?: (a: T, b: T) => boolean,
+  onConflict: InsertConflictHandler<T, K>,
+  onNotFound: InsertNotFoundHandler<T, K>,
+};
+
 function update<T, K>(
     tree: ImmutableTree<T>,
-    key: K,
-    cmp: (key: K, treeValue: T) => number,
-    onConflict: InsertConflictHandler<T, K>,
-    onNotFound: InsertNotFoundHandler<T, K>,
+    options: UpdateOptions<T, K>,
 ): ImmutableTree<T>;
 ```
 
@@ -155,10 +160,12 @@ const cmp = (key1, [key2]) => key1 - key2;
 let node = tree.create([1, 0]);
 
 // increments the value stored at key 1, or initializes it to 0
-node = tree.update(node, 1, cmp,
-  /* onConflict: */ (currentValue, key) => [key, currentValue + 1],
-  /* onNotFound: */ (key) => [key, 0],
-);
+node = tree.update(node, {
+  key: 1,
+  cmp,
+  onConflict: ([, value], key) => [key, value + 1],
+  onNotFound: (key) => [key, 0],
+});
 ```
 
 And here's a "find or insert" implementation:
@@ -175,18 +182,18 @@ function compareKeyWithItemKey(key: number, item: Item): number {
 
 function findOrInsert(tree, key) {
   let item;
-  const newTree = update<Item, number>(
-    tree, key,
-    compareKeyWithItemKey,
-    (existingItem: Item) => {
+  const newTree = update<Item, number>(tree, {
+    key,
+    cmp: compareKeyWithItemKey,
+    onConflict: (existingItem: Item) => {
       item = existingItem;
       return existingItem;
     },
-    function onNotFound(key: number) {
+    onNotFound: (key: number) => {
       item = {key, value: 'initialValue'};
       return item;
     },
-  );
+  });
   return [newTree, item];
 }
 ```
