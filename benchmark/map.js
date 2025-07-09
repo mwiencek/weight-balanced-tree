@@ -10,7 +10,7 @@ for (let i = 0; i < 32768; i++) {
   mapData.push([
     /* key:   */ String.fromCharCode(i).repeat(7),
     /* value: */ i * 7,
-  ])
+  ]);
 }
 shuffle(mapData);
 const mapDataHalf1 = mapData.slice(0, mapData.length / 2);
