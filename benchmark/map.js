@@ -6,7 +6,7 @@ import * as wbt from '../src/index.js';
 import shuffle from '../test/shuffle.js';
 
 const mapData = [];
-for (let i = 0; i < 32768; i++) {
+for (let i = 0; i < 8192; i++) {
   mapData.push([
     /* key:   */ String.fromCharCode(i).repeat(7),
     /* value: */ i * 7,
