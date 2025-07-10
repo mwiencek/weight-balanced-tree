@@ -730,6 +730,19 @@ function difference<T>(
 Returns a new tree with values in `t1` that aren't in `t2`, using the
 comparator `cmp`.
 
+### symmetricDifference()
+
+```TypeScript
+function symmetricDifference<T>(
+  t1: ImmutableTree<T>,
+  t2: ImmutableTree<T>,
+  cmp: (a: T, b: T) => number,
+): ImmutableTree<T>;
+```
+
+Returns a new tree with values that are in either `t1` or `t2`, but not
+in both, using the comparator `cmp`.
+
 ### intersection()
 
 ```TypeScript

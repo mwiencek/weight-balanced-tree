@@ -51,6 +51,7 @@ import split, {type SplitResult} from './split';
 import splitFirst from './splitFirst';
 import splitIndex from './splitIndex';
 import splitLast from './splitLast';
+import symmetricDifference from './symmetricDifference';
 import toArray from './toArray';
 import union from './union';
 import update, {
@@ -136,6 +137,7 @@ expectType<types.ImmutableTree<string>>(union(stringTree, stringTree, cmpStrings
 expectType<types.ImmutableTree<string>>(union(stringTree, stringTree, cmpStrings, (v1, v2) => v2));
 expectType<types.ImmutableTree<string>>(difference(stringTree, stringTree, cmpStrings));
 expectType<types.ImmutableTree<string>>(intersection(stringTree, stringTree, cmpStrings));
+expectType<types.ImmutableTree<number>>(symmetricDifference<number>(numberTree, numberTree, cmpNumbers));
 expectType<Generator<[string | undefined, number | undefined], undefined, undefined>>(zip(stringTree, numberTree));
 expectType<ValidateResult<string>>(validate(stringTree, cmpStrings));
 expectType<undefined>(setDelta(3));
@@ -184,6 +186,7 @@ expectError<ReadonlyArray<string>>(toArray<string>(numberTree));
 expectError<types.ImmutableTree<number>>(union<number>(stringTree, stringTree, cmpNumbers));
 expectError<types.ImmutableTree<number>>(difference<number>(stringTree, stringTree, cmpNumbers));
 expectError<types.ImmutableTree<number>>(intersection<number>(stringTree, stringTree, cmpNumbers));
+expectError<types.ImmutableTree<number>>(symmetricDifference<number>(stringTree, stringTree, cmpNumbers));
 expectError<Generator<[string | undefined, number | undefined], undefined, undefined>>(zip(numberTree, stringTree));
 
 // Wrong comparator function type
@@ -203,6 +206,7 @@ expectError<SplitResult<string>>(split<string>(stringTree, '', cmpNumbers));
 expectError<types.ImmutableTree<string>>(union<string>(stringTree, stringTree, cmpNumbers));
 expectError<types.ImmutableTree<string>>(difference<string>(stringTree, stringTree, cmpNumbers));
 expectError<types.ImmutableTree<string>>(intersection<number>(stringTree, stringTree, cmpNumbers));
+expectError<types.ImmutableTree<string>>(symmetricDifference<string>(stringTree, stringTree, cmpNumbers));
 
 // Wrong 'mapper' function type.
 expectError<types.ImmutableTree<string>>(map<number, string>(numberTree, (x: string) => parseInt(x, 10)));
@@ -272,6 +276,7 @@ expectType<typeof split>(wbt.split);
 expectType<typeof splitFirst>(wbt.splitFirst);
 expectType<typeof splitIndex>(wbt.splitIndex);
 expectType<typeof splitLast>(wbt.splitLast);
+expectType<typeof symmetricDifference>(wbt.symmetricDifference);
 expectType<typeof toArray>(wbt.toArray);
 expectType<typeof union>(wbt.union);
 expectType<typeof update>(wbt.update);

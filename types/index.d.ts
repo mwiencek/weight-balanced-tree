@@ -39,6 +39,7 @@ export {default as split} from './split';
 export {default as splitFirst} from './splitFirst';
 export {default as splitIndex} from './splitIndex';
 export {default as splitLast} from './splitLast';
+export {default as symmetricDifference} from './symmetricDifference';
 export {default as toArray} from './toArray';
 export {default as union} from './union';
 export {default as update} from './update';

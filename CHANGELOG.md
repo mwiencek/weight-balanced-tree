@@ -6,6 +6,8 @@
     `key`.
   * Added `exists`, a convenience function that returns `true` if a value
     matching `key` exists in the tree, or `false` otherwise.
+  * Added `symmetricDifference` to calculate the symmetric difference between
+    two trees.
 
 ## v0.11.1 (2025-07-08)
 

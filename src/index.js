@@ -44,6 +44,7 @@ export {default as split} from './split.js';
 export {default as splitFirst} from './splitFirst.js';
 export {default as splitIndex} from './splitIndex.js';
 export {default as splitLast} from './splitLast.js';
+export {default as symmetricDifference} from './symmetricDifference.js';
 export {default as toArray} from './toArray.js';
 export {default as union} from './union.js';
 export {default as update} from './update.js';

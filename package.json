@@ -149,6 +149,10 @@
       "types": "./types/splitLast.d.ts",
       "default": "./src/splitLast.js"
     },
+    "./symmetricDifference": {
+      "types": "./types/symmetricDifference.d.ts",
+      "default": "./src/symmetricDifference.js"
+    },
     "./toArray": {
       "types": "./types/toArray.d.ts",
       "default": "./src/toArray.js"

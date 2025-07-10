@@ -175,6 +175,36 @@ class IntersectionCmd {
   }
 }
 
+class SymmetricDifferenceCmd {
+  constructor(keys) {
+    this.keys = uniqueIntegers(keys);
+  }
+  toString() {
+    return `symmetricDifference(${this.keys})`;
+  }
+  check() {
+    return true;
+  }
+  run(model, real) {
+    const keySet = new Set(this.keys);
+    const modelKeySet = new Set(model.array);
+
+    model.array = (
+      model.array
+        .filter((key) => !keySet.has(key))
+        .concat(this.keys.filter((key) => !modelKeySet.has(key)))
+    ).sort(compareIntegers);
+
+    real.tree = wbt.symmetricDifference(
+      real.tree,
+      wbt.fromDistinctAscArray(this.keys),
+      compareIntegers,
+    );
+    assert.ok(checkTreeInvariants(real.tree, compareIntegers));
+    compareModelToReal(model, real);
+  }
+}
+
 class SpliceCmd {
   constructor(args) {
     this.start = args.start;
@@ -301,6 +331,7 @@ const commandArb = [
   fc.array(keyArb, {maxLength: 50}).map(keys => new UnionCmd(keys)),
   fc.array(keyArb, {maxLength: 50}).map(keys => new DifferenceCmd(keys)),
   fc.array(keyArb, {maxLength: 50}).map(keys => new IntersectionCmd(keys)),
+  fc.array(keyArb, {maxLength: 50}).map(keys => new SymmetricDifferenceCmd(keys)),
   fc.record({
     start: fc.integer({min: -1_000, max: 1_000}),
     deleteCount: fc.integer({min: -100, max: 100}),

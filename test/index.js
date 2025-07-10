@@ -1168,6 +1168,114 @@ test('splitLast', () => {
   assert.ok(tree.equals(result.tree, tree.fromDistinctAscArray([1, 2])));
 });
 
+test('symmetricDifference', function (t) {
+  assert.equal(tree.symmetricDifference(tree.empty, tree.empty, compareIntegers), tree.empty);
+  assert.deepEqual(
+    tree.symmetricDifference(tree.create(1), tree.empty, compareIntegers),
+    tree.create(1),
+  );
+  assert.deepEqual(
+    tree.symmetricDifference(tree.empty, tree.create(1), compareIntegers),
+    tree.create(1),
+  );
+  assert.equal(
+    tree.symmetricDifference(
+      tree.fromDistinctAscArray([1, 2, 3]),
+      tree.fromDistinctAscArray([1, 2, 3]),
+      compareIntegers,
+    ),
+    tree.empty,
+  );
+  assert.ok(
+    tree.equals(
+      tree.symmetricDifference(
+        tree.fromDistinctAscArray([1, 2, 3, 4]),
+        tree.fromDistinctAscArray([2, 3, 4, 5]),
+        compareIntegers,
+      ),
+      tree.fromDistinctAscArray([1, 5]),
+    ),
+  );
+  assert.ok(
+    tree.equals(
+      tree.symmetricDifference(
+        tree.fromDistinctAscArray([2, 3, 4, 5]),
+        tree.fromDistinctAscArray([1, 2, 3, 4]),
+        compareIntegers,
+      ),
+      tree.fromDistinctAscArray([1, 5]),
+    ),
+  );
+  assert.ok(
+    tree.equals(
+      tree.symmetricDifference(
+        tree.fromDistinctAscArray([1, 4]),
+        tree.fromDistinctAscArray([1, 2, 3]),
+        compareIntegers,
+      ),
+      tree.fromDistinctAscArray([2, 3, 4]),
+    ),
+  );
+  assert.ok(
+    tree.equals(
+      tree.symmetricDifference(
+        tree.fromDistinctAscArray([1, 2, 3]),
+        tree.fromDistinctAscArray([1, 4]),
+        compareIntegers,
+      ),
+      tree.fromDistinctAscArray([2, 3, 4]),
+    ),
+  );
+  const oneToThirtyOneOdds =
+    tree.fromDistinctAscArray(oneToThirtyOne.filter(x => x % 2));
+  const oneToThirtyOneEvens =
+    tree.fromDistinctAscArray(oneToThirtyOne.filter(x => !(x % 2)));
+  assert.ok(
+    tree.equals(
+      tree.symmetricDifference(
+        oneToThirtyOneTree,
+        oneToThirtyOneOdds,
+        compareIntegers,
+      ),
+      oneToThirtyOneEvens,
+    ),
+  );
+  assert.ok(
+    tree.equals(
+      tree.symmetricDifference(
+        oneToThirtyOneTree,
+        oneToThirtyOneEvens,
+        compareIntegers,
+      ),
+      oneToThirtyOneOdds,
+    ),
+  );
+
+  t.test('left node reference is reused', () => {
+    const leftNode = newNode(tree.empty, 0, tree.empty);
+    assert.equal(
+      tree.symmetricDifference(
+        newNode(leftNode, 1, tree.empty),
+        tree.create(1),
+        compareIntegers,
+      ),
+      leftNode,
+    );
+  });
+
+  t.test('right node reference is reused', () => {
+    const rightNode = newNode(tree.empty, 1, tree.empty);
+    assert.equal(
+      tree.symmetricDifference(
+        newNode(tree.empty, 0, rightNode),
+        tree.create(0),
+        compareIntegers,
+      ),
+      rightNode,
+    );
+  });
+});
+
 test('union', function (t) {
   assert.equal(tree.union(tree.empty, tree.empty, compareIntegers), tree.empty);
   assert.deepEqual(
