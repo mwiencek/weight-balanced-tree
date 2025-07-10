@@ -52,11 +52,9 @@ const createSuite = new Bench({name: 'Sorted set create', time: 100})
     wbt.fromDistinctAscArray(setDataCopy1);
   })
   .add('Immutable.Set (constructor)', function () {
-    setDataCopy1.sort(compareIntegers);
     new Immutable.Set(setDataCopy1);
   })
   .add('mori (sortedSet)', function () {
-    setDataCopy1.sort(compareIntegers);
     mori.sortedSet(...setDataCopy1);
   });
 
@@ -78,12 +76,9 @@ const moriSortedSet = buildMoriSortedSet(setData);
 moriSortedSet[Symbol.iterator] = moriSortedSet.__proto__['undefined'];
 
 const getSuite = new Bench({name: 'Sorted set has', time: 100})
-  .add('weight-balanced-tree (findBy)', function () {
+  .add('weight-balanced-tree (exists)', function () {
     for (const i of setData) {
-      wbt.findBy(
-        weightBalancedTree,
-        (treeValue) => compareIntegers(i, treeValue),
-      );
+      wbt.exists(weightBalancedTree, i, compareIntegers);
     }
   })
   .add('Immutable.Set (has)', function () {
@@ -101,7 +96,7 @@ const removeSuite = new Bench({name: 'Sorted set remove', time: 100})
   .add('weight-balanced-tree (remove)', function () {
     let set = weightBalancedTree;
     for (const i of setData) {
-      set = wbt.remove(set, i, (treeValue) => compareIntegers(i, treeValue));
+      set = wbt.remove(set, i, compareIntegers);
     }
   })
   .add('Immutable.Set (delete)', function () {
