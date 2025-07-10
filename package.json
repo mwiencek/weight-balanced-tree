@@ -61,6 +61,10 @@
       "types": "./types/findNext.d.ts",
       "default": "./src/findNext.js"
     },
+    "./findNode": {
+      "types": "./types/findNode.d.ts",
+      "default": "./src/findNode.js"
+    },
     "./findPrev": {
       "types": "./types/findPrev.d.ts",
       "default": "./src/findPrev.js"

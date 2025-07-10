@@ -461,6 +461,23 @@ test('findNext', function () {
   }
 });
 
+test('findNode', function () {
+  const node = oneToThirtyOneKeyTree;
+  let foundNode;
+
+  for (const num of oneToThirtyOne) {
+    foundNode = tree.findNode(node, {key: num}, compareObjectKeys);
+    assert.equal(foundNode?.value?.key, num);
+    foundNode = tree.findNode(node, num, compareNumberWithObjectKey);
+    assert.equal(foundNode?.value?.key, num);
+  }
+
+  foundNode = tree.findNode(node, {key: 32}, compareObjectKeys);
+  assert.equal(foundNode, null);
+  foundNode = tree.findNode(node, 32, compareNumberWithObjectKey);
+  assert.equal(foundNode, null);
+});
+
 test('findPrev', function () {
   const node = oneToThirtyOneKeyTree;
 

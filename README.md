@@ -378,6 +378,19 @@ immediately after it, or `defaultValue` if there is no such value.
 `key` does not have to be found in the tree: if a set has 1 & 3, the next
 value from 2 is 3.
 
+## findNode()
+
+```TypeScript
+function findNode<T, K = T>(
+  tree: ImmutableTree<T>,
+  key: K,
+  cmp: (a: K, b: T) => number,
+): ImmutableTree<T> | null;
+```
+
+This is similar to [`find()`](#find), but returns the entire tree node rather
+than just the value.
+
 ### findPrev()
 
 ```TypeScript

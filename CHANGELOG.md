@@ -1,5 +1,10 @@
 # Changelog
 
+## v0.12.0 (unreleased)
+
+  * Added `findNode`, which returns the node in `tree` matching the given
+    `key`.
+
 ## v0.11.1 (2025-07-08)
 
   * Updated the TypeScript definitions and README.md for the `update` options

@@ -9,6 +9,7 @@ export {default as find} from './find';
 export {default as findAll} from './findAll';
 export {default as findBy} from './findBy';
 export {default as findNext} from './findNext';
+export {default as findNode} from './findNode';
 export {default as findPrev} from './findPrev';
 export {default as findWithIndex} from './findWithIndex';
 export {default as fromDistinctAscArray} from './fromDistinctAscArray';

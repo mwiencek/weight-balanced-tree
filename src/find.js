@@ -1,5 +1,6 @@
 // @flow strict
 
+import findNode from './findNode.js';
 /*::
 import type {ImmutableTree} from './types.js';
 */
@@ -10,16 +11,9 @@ export default function find/*:: <T, K = T, D = T> */(
   cmp/*: (a: K, b: T) => number */,
   defaultValue/*: D */,
 )/*: T | D */ {
-  let cursor = tree;
-  while (cursor.size !== 0) {
-    const order = cmp(key, cursor.value);
-    if (order === 0) {
-      return cursor.value;
-    } else if (order < 0) {
-      cursor = cursor.left;
-    } else {
-      cursor = cursor.right;
-    }
+  const node = findNode(tree, key, cmp);
+  if (node !== null && node.size !== 0) {
+    return node.value;
   }
   return defaultValue;
 }
