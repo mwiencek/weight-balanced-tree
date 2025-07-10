@@ -16,6 +16,10 @@ shuffle(mapData);
 const mapDataHalf1 = mapData.slice(0, mapData.length / 2);
 const mapDataHalf2 = mapData.slice(mapData.length / 2, mapData.length);
 
+const areMapEntriesEqual = (a, b) => {
+  return a[0] === b[0] && a[1] === b[1];
+};
+
 const compareKeys = ([a], [b]) => {
   return a === b ? 0 : (a < b ? -1 : 1);
 };
@@ -123,7 +127,7 @@ const moriHashMapHalf2 = buildMoriHashMap(mapDataHalf2);
 
 const mergeSuite = new Bench({name: 'Map merge', time: 100})
   .add('weight-balanced-tree (union)', function () {
-    wbt.union(weightBalancedTreeHalf1, weightBalancedTreeHalf2);
+    wbt.union(weightBalancedTreeHalf1, weightBalancedTreeHalf2, compareKeys);
   })
   .add('Immutable.Map (merge)', function () {
     immutableJsMapHalf1.merge(immutableJsMapHalf2);
@@ -138,7 +142,7 @@ const moriHashMap2 = buildMoriHashMap(mapData);
 
 const equalsSuite = new Bench({name: 'Map equals', time: 100})
   .add('weight-balanced-tree (equals)', function () {
-    wbt.equals(weightBalancedTree, weightBalancedTree2);
+    wbt.equals(weightBalancedTree, weightBalancedTree2, areMapEntriesEqual);
   })
   .add('Immutable.Map (equals)', function () {
     immutableJsMap.equals(immutableJsMap2);
