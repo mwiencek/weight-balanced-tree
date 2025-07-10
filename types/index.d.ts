@@ -34,6 +34,7 @@ export {
 } from './remove';
 export {default as reverseIterate} from './reverseIterate';
 export {default as setIndex} from './setIndex';
+export {default as slice} from './slice';
 export {default as splice} from './splice';
 export {default as split} from './split';
 export {default as splitFirst} from './splitFirst';

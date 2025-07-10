@@ -578,6 +578,28 @@ If `value` is identical to the existing value at `index` (according to
 
 Time complexity: `O(log n)`.
 
+### slice()
+
+```TypeScript
+function slice<T>(
+  tree: ImmutableTree<T>,
+  start?: number,
+  end?: number,
+): ImmutableTree<T>;
+```
+
+Has the same arguments as [Array.prototype.slice](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Array/slice).
+
+Example:
+
+```TypeScript
+const tree = fromDistinctAscArray([1, 2, 3, 4, 5]);
+const newTree = slice(tree, 1, 3);
+// newTree: [2, 3]
+```
+
+Time complexity: `O(log n)`.
+
 ### splice()
 
 ```TypeScript

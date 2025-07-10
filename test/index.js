@@ -1042,6 +1042,24 @@ test('setIndex', function () {
   assert.equal(tree.setIndex(node, -4, 10), node);
 });
 
+test('slice', function () {
+  assert.equal(tree.slice(tree.empty), tree.empty);
+  assert.equal(tree.slice(tree.empty, -100, 100), tree.empty);
+  assert.equal(tree.slice(oneToThirtyOneTree, 0, 0), tree.empty);
+  // $FlowIgnore[incompatible-call]
+  assert.equal(tree.slice(oneToThirtyOneTree, null, null), tree.empty);
+  assert.equal(tree.slice(oneToThirtyOneTree, NaN, NaN), tree.empty);
+  assert.equal(tree.slice(oneToThirtyOneTree, undefined, undefined), oneToThirtyOneTree);
+  assert.equal(tree.slice(oneToThirtyOneTree), oneToThirtyOneTree);
+  assert.equal(tree.slice(oneToThirtyOneTree, 0, 31), oneToThirtyOneTree);
+  assert.equal(tree.slice(oneToThirtyOneTree, -100, 100), oneToThirtyOneTree);
+  assert.deepEqual(tree.toArray(tree.slice(oneToThirtyOneTree, 1, 3)), [2, 3]);
+  assert.deepEqual(tree.toArray(tree.slice(oneToThirtyOneTree, -3, -1)), [29, 30]);
+  assert.deepEqual(tree.toArray(tree.slice(oneToThirtyOneTree, 3, 1)), []);
+  assert.deepEqual(tree.toArray(tree.slice(oneToThirtyOneTree, undefined, 1)), [1]);
+  assert.deepEqual(tree.toArray(tree.slice(oneToThirtyOneTree, 30, undefined)), [31]);
+});
+
 test('splice', () => {
   const node = buildAscIntegerTree(1, 10);
 

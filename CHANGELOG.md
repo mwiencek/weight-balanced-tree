@@ -1,5 +1,9 @@
 # Changelog
 
+## v0.13.0 (unreleased)
+
+  * Added `slice`, which works like `Array.prototype.slice`.
+
 ## v0.12.0 (2025-07-10)
 
   * Added `findNode`, which returns the node in `tree` matching the given

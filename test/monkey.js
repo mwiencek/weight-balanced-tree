@@ -205,6 +205,25 @@ class SymmetricDifferenceCmd {
   }
 }
 
+class SliceCmd {
+  constructor(args) {
+    this.start = args.start;
+    this.end = args.end;
+  }
+  toString() {
+    return `slice(${this.start}, ${this.end})`;
+  }
+  check() {
+    return true;
+  }
+  run(model, real) {
+    model.array = model.array.slice(this.start, this.end);
+    real.tree = wbt.slice(real.tree, this.start, this.end);
+    assert.ok(checkTreeInvariants(real.tree, compareIntegers));
+    compareModelToReal(model, real);
+  }
+}
+
 class SpliceCmd {
   constructor(args) {
     this.start = args.start;
@@ -332,6 +351,10 @@ const commandArb = [
   fc.array(keyArb, {maxLength: 50}).map(keys => new DifferenceCmd(keys)),
   fc.array(keyArb, {maxLength: 50}).map(keys => new IntersectionCmd(keys)),
   fc.array(keyArb, {maxLength: 50}).map(keys => new SymmetricDifferenceCmd(keys)),
+  fc.record({
+    start: fc.integer({min: -1_000, max: 1_000}),
+    end: fc.integer({min: -1_000, max: 1_000}),
+  }).map(args => new SliceCmd(args)),
   fc.record({
     start: fc.integer({min: -1_000, max: 1_000}),
     deleteCount: fc.integer({min: -100, max: 100}),

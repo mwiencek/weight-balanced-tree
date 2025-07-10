@@ -39,6 +39,7 @@ export {
 } from './remove.js';
 export {default as reverseIterate} from './reverseIterate.js';
 export {default as setIndex} from './setIndex.js';
+export {default as slice} from './slice.js';
 export {default as splice} from './splice.js';
 export {default as split} from './split.js';
 export {default as splitFirst} from './splitFirst.js';
