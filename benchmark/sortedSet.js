@@ -4,13 +4,11 @@ import mori from 'mori';
 
 import * as wbt from '../src/index.js';
 import compareIntegers from '../test/compareIntegers.js';
-import shuffle from '../test/shuffle.js';
 
 const setData = [];
 for (let i = 0; i < 32768; i++) {
   setData.push(i);
 }
-shuffle(setData);
 const setDataHalf1 = setData.slice(0, setData.length / 2);
 const setDataHalf2 = setData.slice(setData.length / 2, setData.length);
 
@@ -44,18 +42,16 @@ function buildMoriSortedSet(data) {
   return set;
 }
 
-const setDataCopy1 = setData.slice(0);
-
 const createSuite = new Bench({name: 'Sorted set create', time: 100})
   .add('weight-balanced-tree (fromDistinctAscArray)', function () {
-    setDataCopy1.sort(compareIntegers);
-    wbt.fromDistinctAscArray(setDataCopy1);
+    setData.sort(compareIntegers);
+    wbt.fromDistinctAscArray(setData);
   })
   .add('Immutable.Set (constructor)', function () {
-    new Immutable.Set(setDataCopy1);
+    new Immutable.Set(setData);
   })
   .add('mori (sortedSet)', function () {
-    mori.sortedSet(...setDataCopy1);
+    mori.sortedSet(...setData);
   });
 
 const setSuite = new Bench({name: 'Sorted set add', time: 100})
