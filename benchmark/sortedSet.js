@@ -130,6 +130,44 @@ const mergeSuite = new Bench({name: 'Sorted set union', time: 100})
     mori.into(moriSortedSetHalf1, moriSortedSetHalf2);
   });
 
+const intersectionSuite = new Bench({name: 'Sorted set intersection', time: 100})
+  .add('weight-balanced-tree (intersection)', function () {
+    wbt.intersection(weightBalancedTree, weightBalancedTreeHalf1, compareIntegers);
+  })
+  .add('Immutable.Set (intersection)', function () {
+    immutableJsSet.intersect(immutableJsSetHalf1);
+  })
+  .add('mori (intersection)', function () {
+    mori.intersection(moriSortedSet, moriSortedSetHalf1);
+  });
+
+const differenceSuite = new Bench({name: 'Sorted set difference', time: 100})
+  .add('weight-balanced-tree (difference)', function () {
+    wbt.difference(weightBalancedTree, weightBalancedTreeHalf1, compareIntegers);
+  })
+  .add('Immutable.Set (subtract)', function () {
+    immutableJsSet.subtract(immutableJsSetHalf1);
+  })
+  .add('mori (difference)', function () {
+    mori.difference(moriSortedSet, moriSortedSetHalf1);
+  });
+
+const symmetricDifferenceSuite = new Bench({name: 'Sorted set symmetric difference', time: 100})
+  .add('weight-balanced-tree (symmetricDifference)', function () {
+    wbt.symmetricDifference(weightBalancedTreeHalf1, weightBalancedTreeHalf2, compareIntegers);
+  })
+  .add('Immutable.Set (union, subtract, intersection)', function () {
+    immutableJsSetHalf1.union(immutableJsSetHalf2).subtract(
+      immutableJsSetHalf1.intersect(immutableJsSetHalf2)
+    );
+  })
+  .add('mori (difference, into, intersection)', function () {
+    mori.difference(
+      mori.into(moriSortedSetHalf1, moriSortedSetHalf2),
+      mori.intersection(moriSortedSetHalf1, moriSortedSetHalf2),
+    );
+  });
+
 const weightBalancedTree2 = buildWeightBalancedTree(setData);
 const immutableJsSet2 = buildImmutableJsSet(setData);
 const moriSortedSet2 = buildMoriSortedSet(setData);
@@ -168,6 +206,9 @@ const iterationSuite = new Bench({name: 'Sorted set iteration', time: 100})
     removeSuite,
     mergeSuite,
     equalsSuite,
+    intersectionSuite,
+    differenceSuite,
+    symmetricDifferenceSuite,
     iterationSuite,
   ]) {
     await bench.run()
