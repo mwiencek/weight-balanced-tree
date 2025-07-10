@@ -152,16 +152,23 @@ const equalsSuite = new Bench({name: 'Map equals', time: 100})
   });
 
 (async () => {
-  for (const bench of [
+  const suites = [
     createSuite,
     setSuite,
     getSuite,
     removeSuite,
     mergeSuite,
     equalsSuite,
-  ]) {
-    await bench.run()
+  ];
+
+  await Promise.all(suites.map(s => s.run()));
+
+  for (const bench of suites) {
     console.log(bench.name)
-    console.table(bench.table());
+    console.table(bench.table.call({
+      tasks: bench.tasks.sort((a, b) => (
+        (b.result?.throughput?.mean ?? 0) - (a.result?.throughput?.mean ?? 0)
+      )),
+    }));
   }
 })();
