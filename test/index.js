@@ -479,9 +479,9 @@ test('findNode', function () {
 
   for (const num of oneToThirtyOne) {
     foundNode = tree.findNode(node, {key: num}, compareObjectKeys);
-    assert.equal(foundNode?.value?.key, num);
+    assert.equal(foundNode?.value.key, num);
     foundNode = tree.findNode(node, num, compareNumberWithObjectKey);
-    assert.equal(foundNode?.value?.key, num);
+    assert.equal(foundNode?.value.key, num);
   }
 
   foundNode = tree.findNode(node, {key: 32}, compareObjectKeys);

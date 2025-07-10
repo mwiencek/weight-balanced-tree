@@ -116,7 +116,7 @@ expectType<string>(find<string>(stringTree, '', cmpStrings, ''));
 expectType<Generator<string, undefined, undefined>>(findAll<string>(stringTree, '', cmpStrings));
 expectType<string>(findBy<string>(stringTree, (treeValue: string) => cmpStrings(treeValue, ''), ''));
 expectType<string>(findNext<string>(stringTree, '', cmpStrings, ''));
-expectType<types.ImmutableTree<string> | null>(findNode<string>(stringTree, '', cmpStrings));
+expectType<types.NonEmptyImmutableTree<string> | null>(findNode<string>(stringTree, '', cmpStrings));
 expectType<string>(findPrev<string>(stringTree, '', cmpStrings, ''));
 expectType<[string, number]>(findWithIndex<string>(stringTree, '', cmpStrings, ''));
 expectType<types.ImmutableTree<string>>(fromDistinctAscArray<string>(['']));
