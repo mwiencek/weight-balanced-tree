@@ -6,16 +6,16 @@ import * as wbt from '../src/index.js';
 import compareIntegers from '../test/compareIntegers.js';
 
 const setData = [];
-for (let i = 0; i < 32768; i++) {
+for (let i = 0; i < 8192; i++) {
   setData.push(i);
 }
 const setDataHalf1 = setData.slice(0, setData.length / 2);
 const setDataHalf2 = setData.slice(setData.length / 2, setData.length);
 
 /*
- * NOTE: Immutable.js doesn't have a value-sorted set. We use a regular Set,
- * and factor in the cost of sorting the values manually in the iteration
- * test.
+ * NOTE: Immutable.js and JavaScript don't have a value-sorted set. We use
+ * the normal `Set`s available from their APIs, and factor in the cost of
+ * sorting the values manually in the iteration tests.
  */
 
 function buildWeightBalancedTree(data) {
@@ -42,6 +42,15 @@ function buildMoriSortedSet(data) {
   return set;
 }
 
+function buildJsSortedSet(data) {
+  let set = new Set();
+  for (const i of data) {
+    set = new Set(set);
+    set.add(i);
+  }
+  return set;
+}
+
 const createSuite = new Bench({name: 'Sorted set create', time: 100})
   .add('weight-balanced-tree (fromDistinctAscArray)', function () {
     setData.sort(compareIntegers);
@@ -52,6 +61,9 @@ const createSuite = new Bench({name: 'Sorted set create', time: 100})
   })
   .add('mori (sortedSet)', function () {
     mori.sortedSet(...setData);
+  })
+  .add('JavaScript Set (constructor)', function () {
+    new Set(setData);
   });
 
 const setSuite = new Bench({name: 'Sorted set add', time: 100})
@@ -63,6 +75,9 @@ const setSuite = new Bench({name: 'Sorted set add', time: 100})
   })
   .add('mori (conj)', function () {
     buildMoriSortedSet(setData);
+  })
+  .add('JavaScript Set (add)', function () {
+    buildJsSortedSet(setData);
   });
 
 const weightBalancedTree = buildWeightBalancedTree(setData);
@@ -70,6 +85,7 @@ const immutableJsSet = buildImmutableJsSet(setData);
 const moriSortedSet = buildMoriSortedSet(setData);
 // XXX https://github.com/swannodette/mori/issues/173
 moriSortedSet[Symbol.iterator] = moriSortedSet.__proto__['undefined'];
+const jsSortedSet = new Set(setData);
 
 const getSuite = new Bench({name: 'Sorted set has', time: 100})
   .add('weight-balanced-tree (exists)', function () {
@@ -85,6 +101,11 @@ const getSuite = new Bench({name: 'Sorted set has', time: 100})
   .add('mori (hasKey)', function () {
     for (const i of setData) {
       mori.hasKey(moriSortedSet, i);
+    }
+  })
+  .add('JavaScript Set (has)', function () {
+    for (const i of setData) {
+      jsSortedSet.has(i);
     }
   });
 
@@ -106,6 +127,13 @@ const removeSuite = new Bench({name: 'Sorted set remove', time: 100})
     for (const i of setData) {
       set = mori.disj(set, i);
     }
+  })
+  .add('JavaScript Set (delete)', function () {
+    let set = jsSortedSet;
+    for (const i of setData) {
+      set = new Set(set);
+      set.delete(i);
+    }
   });
 
 const weightBalancedTreeHalf1 = buildWeightBalancedTree(setDataHalf1);
@@ -114,6 +142,8 @@ const immutableJsSetHalf1 = buildImmutableJsSet(setDataHalf1);
 const immutableJsSetHalf2 = buildImmutableJsSet(setDataHalf2);
 const moriSortedSetHalf1 = buildMoriSortedSet(setDataHalf1);
 const moriSortedSetHalf2 = buildMoriSortedSet(setDataHalf2);
+const jsSortedSetHalf1 = new Set(setDataHalf1);
+const jsSortedSetHalf2 = new Set(setDataHalf2);
 
 const mergeSuite = new Bench({name: 'Sorted set union', time: 100})
   .add('weight-balanced-tree (union)', function () {
@@ -124,6 +154,9 @@ const mergeSuite = new Bench({name: 'Sorted set union', time: 100})
   })
   .add('mori (into)', function () {
     mori.into(moriSortedSetHalf1, moriSortedSetHalf2);
+  })
+  .add('JavaScript Set (union)', function () {
+    jsSortedSetHalf1.union(jsSortedSetHalf2);
   });
 
 const intersectionSuite = new Bench({name: 'Sorted set intersection', time: 100})
@@ -135,6 +168,9 @@ const intersectionSuite = new Bench({name: 'Sorted set intersection', time: 100}
   })
   .add('mori (intersection)', function () {
     mori.intersection(moriSortedSet, moriSortedSetHalf1);
+  })
+  .add('JavaScript Set (intersection)', function () {
+    jsSortedSet.intersection(jsSortedSetHalf1);
   });
 
 const differenceSuite = new Bench({name: 'Sorted set difference', time: 100})
@@ -146,6 +182,9 @@ const differenceSuite = new Bench({name: 'Sorted set difference', time: 100})
   })
   .add('mori (difference)', function () {
     mori.difference(moriSortedSet, moriSortedSetHalf1);
+  })
+  .add('JavaScript Set (difference)', function () {
+    jsSortedSet.difference(jsSortedSetHalf1);
   });
 
 const symmetricDifferenceSuite = new Bench({name: 'Sorted set symmetric difference', time: 100})
@@ -162,6 +201,9 @@ const symmetricDifferenceSuite = new Bench({name: 'Sorted set symmetric differen
       mori.into(moriSortedSetHalf1, moriSortedSetHalf2),
       mori.intersection(moriSortedSetHalf1, moriSortedSetHalf2),
     );
+  })
+  .add('JavaScript Set (symmetricDifference)', function () {
+    jsSortedSet.symmetricDifference(jsSortedSetHalf1);
   });
 
 const weightBalancedTree2 = buildWeightBalancedTree(setData);
@@ -177,6 +219,10 @@ const equalsSuite = new Bench({name: 'Sorted set equals', time: 100})
   })
   .add('mori (equals)', function () {
     mori.equals(moriSortedSet, moriSortedSet2);
+  })
+  .add('JavaScript Set (isSubsetOf, isSupersetOf)', function () {
+    jsSortedSet.isSubsetOf(jsSortedSetHalf1);
+    jsSortedSet.isSupersetOf(jsSortedSetHalf1);
   });
 
 const iterationSuite = new Bench({name: 'Sorted set iteration', time: 100})
@@ -192,6 +238,11 @@ const iterationSuite = new Bench({name: 'Sorted set iteration', time: 100})
   .add('mori (Iterator protocol)', function () {
     // eslint-disable-next-line no-unused-vars
     for (const _ of moriSortedSet);
+  })
+  .add('JavaScript Set (Iterator protocol)', function () {
+    const sortedValues = Array.from(jsSortedSet).sort(compareIntegers);
+    // eslint-disable-next-line no-unused-vars
+    for (const _ of sortedValues);
   });
 
 (async () => {
