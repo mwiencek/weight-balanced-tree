@@ -1,6 +1,6 @@
 # Changelog
 
-## v0.12.0 (unreleased)
+## v0.12.0 (2025-07-10)
 
   * Added `findNode`, which returns the node in `tree` matching the given
     `key`.
