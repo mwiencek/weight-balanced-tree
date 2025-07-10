@@ -783,6 +783,18 @@ comparator `cmp`.
 from the first tree, `t1`. If you return a different value, then the
 relative sort order must be preserved; otherwise `ValueOrderError` is thrown.
 
+### isSubsetOf()
+
+```TypeScript
+function isSubsetOf<T>(
+  tree: ImmutableTree<T>,
+  other: ImmutableTree<T>,
+  cmp: (a: T, b: T) => number,
+): boolean;
+```
+
+Returns `true` if all values in `tree` are in `other`, or `false` otherwise.
+
 ### join()
 
 ```TypeScript

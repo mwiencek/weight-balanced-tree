@@ -881,6 +881,27 @@ test('intersection', function (t) {
   });
 });
 
+test('isSubsetOf', function () {
+  assert.ok(tree.isSubsetOf(tree.empty, tree.empty, compareIntegers));
+  assert.ok(!tree.isSubsetOf(tree.create(1), tree.empty, compareIntegers));
+
+  const testSubset = (start/*: number */, stop/*: number */) => {
+    return tree.isSubsetOf(
+      buildAscIntegerTree(start, stop),
+      oneToThirtyOneTree,
+      compareIntegers,
+    );
+  };
+
+  assert.ok(testSubset(1, 31));
+  assert.ok(testSubset(11, 21));
+  assert.ok(testSubset(16, 21));
+  assert.ok(!testSubset(0, 1));
+  assert.ok(!testSubset(31, 32));
+  assert.ok(!testSubset(-10, 0));
+  assert.ok(!testSubset(32, 42));
+});
+
 test('iterate', function () {
   assert.deepEqual(
     Array.from(tree.iterate(oneToThirtyOneTree)),

@@ -218,8 +218,10 @@ class SliceCmd {
   }
   run(model, real) {
     model.array = model.array.slice(this.start, this.end);
-    real.tree = wbt.slice(real.tree, this.start, this.end);
+    const origTree = real.tree;
+    real.tree = wbt.slice(origTree, this.start, this.end);
     assert.ok(checkTreeInvariants(real.tree, compareIntegers));
+    assert.ok(wbt.isSubsetOf(real.tree, origTree, compareIntegers));
     compareModelToReal(model, real);
   }
 }

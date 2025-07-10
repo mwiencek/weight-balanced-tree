@@ -206,6 +206,20 @@ const symmetricDifferenceSuite = new Bench({name: 'Sorted set symmetric differen
     jsSortedSet.symmetricDifference(jsSortedSetHalf1);
   });
 
+const subsetSuite = new Bench({name: 'Sorted set subset', time: 100})
+  .add('weight-balanced-tree (isSubsetOf)', function () {
+    wbt.isSubsetOf(weightBalancedTreeHalf1, weightBalancedTree, compareIntegers);
+  })
+  .add('Immutable.Set (isSubset)', function () {
+    immutableJsSetHalf1.isSubset(immutableJsSet);
+  })
+  .add('mori (isSubset)', function () {
+    mori.isSubset(moriSortedSetHalf1, moriSortedSet);
+  })
+  .add('JavaScript Set (isSubsetOf)', function () {
+    jsSortedSetHalf1.isSubsetOf(jsSortedSet);
+  });
+
 const weightBalancedTree2 = buildWeightBalancedTree(setData);
 const immutableJsSet2 = buildImmutableJsSet(setData);
 const moriSortedSet2 = buildMoriSortedSet(setData);
@@ -256,6 +270,7 @@ const iterationSuite = new Bench({name: 'Sorted set iteration', time: 100})
     intersectionSuite,
     differenceSuite,
     symmetricDifferenceSuite,
+    subsetSuite,
     iterationSuite,
   ];
 

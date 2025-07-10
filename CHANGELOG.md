@@ -3,6 +3,7 @@
 ## v0.13.0 (unreleased)
 
   * Added `slice`, which works like `Array.prototype.slice`.
+  * Added `isSubsetOf`, which checks if `tree` is a subset of `other`.
   * Fixed the return type of `findNode` to use `NonEmptyImmutableTree`.
 
 ## v0.12.0 (2025-07-10)

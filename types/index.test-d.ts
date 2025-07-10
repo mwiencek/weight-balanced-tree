@@ -34,6 +34,7 @@ import insert, {
   insertOrThrowIfExists,
 } from './insert';
 import intersection from './intersection';
+import isSubsetOf from './isSubsetOf';
 import iterate from './iterate';
 import join from './join';
 import join2 from './join2';
@@ -121,6 +122,7 @@ expectType<string>(findPrev<string>(stringTree, '', cmpStrings, ''));
 expectType<[string, number]>(findWithIndex<string>(stringTree, '', cmpStrings, ''));
 expectType<types.ImmutableTree<string>>(fromDistinctAscArray<string>(['']));
 expectType<number>(indexOf<number>(numberTree, 1, cmpNumbers));
+expectType<boolean>(isSubsetOf(stringTree, stringTree, cmpStrings));
 expectType<types.NonEmptyImmutableTree<number>>(join(numberTree, 0, numberTree));
 expectType<types.ImmutableTree<number>>(join2(numberTree, numberTree));
 expectType<types.ImmutableTree<string>>(map<number, string>(numberTree, toString));
@@ -173,6 +175,7 @@ expectError<number>(findBy<number>(stringTree, (treeValue: number) => cmpStrings
 expectError<types.ImmutableTree<string> | null>(findNode<number>(stringTree, '', cmpStrings));
 expectError<[number, number]>(findWithIndex<number>(stringTree, 0, cmpNumbers, 0));
 expectError<types.ImmutableTree<number>>(fromDistinctAscArray<number>(['']));
+expectError<boolean>(isSubsetOf(stringTree, numberTree, cmpStrings));
 expectError<types.NonEmptyImmutableTree<number>>(join<number>(stringTree, 0, stringTree));
 expectError<types.ImmutableTree<number>>(join2<number>(stringTree, stringTree));
 expectError<types.ImmutableTree<string>>(map<number, string>(stringTree, toString));
@@ -204,6 +207,7 @@ expectError<types.ImmutableTree<string> | null>(findNode<string>(stringTree, '',
 expectError<string>(findPrev<string>(stringTree, '', cmpNumbers, ''));
 expectError<[string, number]>(findWithIndex<string>(stringTree, '', cmpNumbers, ''));
 expectError<types.ImmutableTree<string>>(insert<string>(stringTree, '', cmpNumbers));
+expectError<boolean>(isSubsetOf(stringTree, stringTree, cmpNumbers));
 expectError<types.ImmutableTree<string>>(remove<string, string>(stringTree, '', cmpNumbers));
 expectError<types.ImmutableTree<string>>(removeIfExists<string, string>(stringTree, '', cmpNumbers));
 expectError<types.ImmutableTree<string>>(removeOrThrowIfNotExists<string, string>(stringTree, '', cmpNumbers));
@@ -264,6 +268,7 @@ expectType<typeof insertIfNotExists>(wbt.insertIfNotExists);
 expectType<typeof insertOrReplaceIfExists>(wbt.insertOrReplaceIfExists);
 expectType<typeof insertOrThrowIfExists>(wbt.insertOrThrowIfExists);
 expectType<typeof intersection>(wbt.intersection);
+expectType<typeof isSubsetOf>(wbt.isSubsetOf);
 expectType<typeof iterate>(wbt.iterate);
 expectType<typeof join>(wbt.join);
 expectType<typeof join2>(wbt.join2);
