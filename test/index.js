@@ -322,6 +322,18 @@ test('equals', function () {
   ));
 });
 
+test('exists', function () {
+  const node = oneToThirtyOneKeyTree;
+
+  for (const num of oneToThirtyOne) {
+    assert.equal(tree.exists(node, {key: num}, compareObjectKeys), true);
+    assert.equal(tree.exists(node, num, compareNumberWithObjectKey), true);
+  }
+
+  assert.equal(tree.exists(node, {key: 32}, compareObjectKeys), false);
+  assert.equal(tree.exists(node, 32, compareNumberWithObjectKey), false);
+});
+
 test('filter', function (t) {
   const predicate = (x/*: number */) => x > 5 && x < 10;
   assert.equal(tree.filter(tree.empty, predicate), tree.empty);

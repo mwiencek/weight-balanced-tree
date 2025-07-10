@@ -6,6 +6,7 @@ export {default as create} from './create.js';
 export {default as difference} from './difference.js';
 export {default as empty} from './empty.js';
 export {default as equals} from './equals.js';
+export {default as exists} from './exists.js';
 export {default as filter} from './filter.js';
 export {default as find} from './find.js';
 export {default as findAll} from './findAll.js';

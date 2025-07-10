@@ -41,6 +41,10 @@
       "types": "./types/errors.d.ts",
       "default": "./src/errors.js"
     },
+    "./exists": {
+      "types": "./types/exists.d.ts",
+      "default": "./src/exists.js"
+    },
     "./filter": {
       "types": "./types/filter.d.ts",
       "default": "./src/filter.js"

@@ -278,6 +278,22 @@ values to `isEqual`.
 `isEqual` is optional. If not provided, it defaults to
 [`Object.is`](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object/is).
 
+### exists()
+
+```TypeScript
+function exists<T, K = T>(
+  tree: ImmutableTree<T>,
+  key: K,
+  cmp: (a: K, b: T) => number,
+): boolean;
+```
+
+Returns `true` if a value matching `key` exists in `tree`, or `false`
+otherwise.
+
+This is a convenience function that just checks if [`findNode()`](#findNode)
+returns `null`.
+
 ### filter()
 
 ```TypeScript

@@ -4,6 +4,8 @@
 
   * Added `findNode`, which returns the node in `tree` matching the given
     `key`.
+  * Added `exists`, a convenience function that returns `true` if a value
+    matching `key` exists in the tree, or `false` otherwise.
 
 ## v0.11.1 (2025-07-08)
 

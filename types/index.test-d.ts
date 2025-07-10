@@ -17,6 +17,7 @@ import {
   ValueOrderError,
 } from './errors';
 import equals from './equals';
+import exists from './exists';
 import filter from './filter';
 import find from './find';
 import findAll from './findAll';
@@ -107,6 +108,7 @@ expectType<Generator<string, undefined, undefined>>(reverseIterate<string>(strin
 expectType<boolean>(equals<string>(stringTree, stringTree));
 expectType<boolean>(equals<string>(stringTree, stringTree, areStringsEqual));
 expectType<boolean>(equals<number, string>(numberTree, stringTree, areNumberAndStringEqual));
+expectType<boolean>(exists<string>(stringTree, '', cmpStrings));
 expectType<types.ImmutableTree<string>>(filter(stringTree, (x: string) => x.startsWith('foo')));
 expectType<string>(find<string>(stringTree, '', cmpStrings, ''));
 expectType<Generator<string, undefined, undefined>>(findAll<string>(stringTree, '', cmpStrings));
@@ -139,6 +141,7 @@ expectType<ValidateResult<string>>(validate(stringTree, cmpStrings));
 expectType<undefined>(setDelta(3));
 
 // Value type override
+expectType<boolean>(exists<string, number>(stringTree, 0, cmpNumberAndString));
 expectType<string | null>(find<string, number, null>(stringTree, 0, cmpNumberAndString, null));
 expectType<Generator<string, undefined, undefined>>(findAll<string, number>(stringTree, 0, cmpNumberAndString));
 expectType<string | null>(findBy<string, null>(stringTree, (treeValue: string) => cmpStrings(treeValue, ''), null));
@@ -157,6 +160,7 @@ expectError<types.ImmutableTree<number>>(insertOrThrowIfExists<number>(stringTre
 expectError<Generator<number, undefined, undefined>>(iterate<number>(stringTree));
 expectError<Generator<number, undefined, undefined>>(reverseIterate<number>(stringTree));
 expectError<boolean>(equals<number>(stringTree, stringTree, areStringsEqual));
+expectError<boolean>(exists<string>(numberTree, '', cmpStrings));
 expectError<number>(find<number>(stringTree, 0, cmpNumbers, 0));
 expectError<Generator<number, undefined, undefined>>(findAll<number>(stringTree, 0, cmpNumbers));
 expectError<number>(findBy<number>(stringTree, (treeValue: number) => cmpStrings(treeValue, 0), 0));
@@ -184,6 +188,7 @@ expectError<Generator<[string | undefined, number | undefined], undefined, undef
 
 // Wrong comparator function type
 expectError<types.ImmutableTree<string>>(equals<string>(stringTree, stringTree, areNumbersEqual));
+expectError<boolean>(exists<string>(stringTree, '', cmpNumbers));
 expectError<string>(find<string>(stringTree, '', cmpNumbers, ''));
 expectError<Generator<string, undefined, undefined>>(findAll<string>(stringTree, '', cmpNumbers));
 expectError<string>(findNext<string>(stringTree, '', cmpNumbers, ''));
@@ -234,6 +239,7 @@ expectType<typeof create>(wbt.create);
 expectType<typeof difference>(wbt.difference);
 expectType<typeof empty>(wbt.empty);
 expectType<typeof equals>(wbt.equals);
+expectType<typeof exists>(wbt.exists);
 expectType<typeof filter>(wbt.filter);
 expectType<typeof find>(wbt.find);
 expectType<typeof findAll>(wbt.findAll);
