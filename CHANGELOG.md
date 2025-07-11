@@ -1,5 +1,9 @@
 # Changelog
 
+## v0.14.1 (2025-07-11)
+
+  * Added missing exports to package.json.
+
 ## v0.14.0 (2025-07-10)
 
   * Added `isDisjointFrom`, which checks if `tree` is disjoint from `other`.

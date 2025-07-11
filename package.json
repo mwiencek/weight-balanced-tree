@@ -1,6 +1,6 @@
 {
   "name": "weight-balanced-tree",
-  "version": "0.14.0",
+  "version": "0.14.1",
   "description": "A persistent weight-balanced (bounded balance) tree.",
   "keywords": [
     "weight balanced tree",
@@ -89,6 +89,18 @@
       "types": "./types/intersection.d.ts",
       "default": "./src/intersection.js"
     },
+    "./isDisjointFrom": {
+      "types": "./types/isDisjointFrom.d.ts",
+      "default": "./src/isDisjointFrom.js"
+    },
+    "./isSubsetOf": {
+      "types": "./types/isSubsetOf.d.ts",
+      "default": "./src/isSubsetOf.js"
+    },
+    "./isSupersetOf": {
+      "types": "./types/isSupersetOf.d.ts",
+      "default": "./src/isSupersetOf.js"
+    },
     "./iterate": {
       "types": "./types/iterate.d.ts",
       "default": "./src/iterate.js"
@@ -128,6 +140,10 @@
     "./setIndex": {
       "types": "./types/setIndex.d.ts",
       "default": "./src/setIndex.js"
+    },
+    "./slice": {
+      "types": "./types/slice.d.ts",
+      "default": "./src/slice.js"
     },
     "./splice": {
       "types": "./types/splice.d.ts",
