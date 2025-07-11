@@ -1,6 +1,6 @@
 # Changelog
 
-## v0.13.0 (unreleased)
+## v0.13.0 (2025-07-10)
 
   * Added `slice`, which works like `Array.prototype.slice`.
   * Added `isSubsetOf`, which checks if `tree` is a subset of `other`.
