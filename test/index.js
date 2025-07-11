@@ -923,6 +923,43 @@ test('isSupersetOf', function () {
   assert.ok(!testSuperset(32, 42));
 });
 
+test('isDisjointFrom', function () {
+  assert.ok(tree.isDisjointFrom(tree.empty, tree.empty, compareIntegers));
+  assert.ok(tree.isDisjointFrom(tree.create(1), tree.empty, compareIntegers));
+  assert.ok(tree.isDisjointFrom(tree.empty, tree.create(1), compareIntegers));
+  assert.ok(
+    !tree.isDisjointFrom(
+      oneToThirtyOneTree,
+      oneToThirtyOneTree,
+      compareIntegers,
+    ),
+  );
+
+  const testDisjoint = (
+    start1/*: number */,
+    stop1/*: number */,
+    start2/*: number */,
+    stop2/*: number */,
+  ) => {
+    return tree.isDisjointFrom(
+      buildAscIntegerTree(start1, stop1),
+      buildAscIntegerTree(start2, stop2),
+      compareIntegers,
+    );
+  };
+
+  assert.ok(testDisjoint(1, 10, 11, 20));
+  assert.ok(testDisjoint(11, 20, 1, 10));
+  assert.ok(!testDisjoint(1, 10, 10, 20));
+  assert.ok(!testDisjoint(10, 20, 1, 10));
+  assert.ok(!testDisjoint(1, 10, 5, 15));
+  assert.ok(!testDisjoint(5, 15, 1, 10));
+  assert.ok(testDisjoint(1, 2, 100, 200));
+  assert.ok(!testDisjoint(1, 2, 2, 200));
+  assert.ok(testDisjoint(100, 200, 1, 2));
+  assert.ok(!testDisjoint(2, 200, 1, 2));
+});
+
 test('iterate', function () {
   assert.deepEqual(
     Array.from(tree.iterate(oneToThirtyOneTree)),

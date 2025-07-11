@@ -24,6 +24,7 @@ export {
   insertOrThrowIfExists,
 } from './insert.js';
 export {default as intersection} from './intersection.js';
+export {default as isDisjointFrom} from './isDisjointFrom.js';
 export {default as isSubsetOf} from './isSubsetOf.js';
 export {default as isSupersetOf} from './isSupersetOf.js';
 export {default as iterate} from './iterate.js';

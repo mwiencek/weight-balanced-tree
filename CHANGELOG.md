@@ -1,5 +1,9 @@
 # Changelog
 
+## v0.14.0 (unreleased)
+
+  * Added `isDisjointFrom`, which checks if `tree` is disjoint from `other`.
+
 ## v0.13.0 (2025-07-10)
 
   * Added `slice`, which works like `Array.prototype.slice`.

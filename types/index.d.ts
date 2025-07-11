@@ -21,6 +21,7 @@ export {
   insertOrThrowIfExists,
 } from './insert';
 export {default as intersection} from './intersection';
+export {default as isDisjointFrom} from './isDisjointFrom';
 export {default as isSubsetOf} from './isSubsetOf';
 export {default as isSupersetOf} from './isSupersetOf';
 export {default as iterate} from './iterate';

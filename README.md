@@ -783,6 +783,19 @@ comparator `cmp`.
 from the first tree, `t1`. If you return a different value, then the
 relative sort order must be preserved; otherwise `ValueOrderError` is thrown.
 
+### isDisjointFrom()
+
+```TypeScript
+function isDisjointFrom<T>(
+  tree: ImmutableTree<T>,
+  other: ImmutableTree<T>,
+  cmp: (a: T, b: T) => number,
+): boolean;
+```
+
+Returns `true` if `tree` and `other` have no values in common, or `false`
+otherwise.
+
 ### isSubsetOf()
 
 ```TypeScript

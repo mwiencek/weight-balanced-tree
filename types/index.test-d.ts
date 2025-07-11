@@ -34,6 +34,7 @@ import insert, {
   insertOrThrowIfExists,
 } from './insert';
 import intersection from './intersection';
+import isDisjointFrom from './isDisjointFrom';
 import isSubsetOf from './isSubsetOf';
 import isSupersetOf from './isSupersetOf';
 import iterate from './iterate';
@@ -123,6 +124,7 @@ expectType<string>(findPrev<string>(stringTree, '', cmpStrings, ''));
 expectType<[string, number]>(findWithIndex<string>(stringTree, '', cmpStrings, ''));
 expectType<types.ImmutableTree<string>>(fromDistinctAscArray<string>(['']));
 expectType<number>(indexOf<number>(numberTree, 1, cmpNumbers));
+expectType<boolean>(isDisjointFrom(stringTree, stringTree, cmpStrings));
 expectType<boolean>(isSubsetOf(stringTree, stringTree, cmpStrings));
 expectType<boolean>(isSupersetOf(stringTree, stringTree, cmpStrings));
 expectType<types.NonEmptyImmutableTree<number>>(join(numberTree, 0, numberTree));
@@ -177,6 +179,7 @@ expectError<number>(findBy<number>(stringTree, (treeValue: number) => cmpStrings
 expectError<types.ImmutableTree<string> | null>(findNode<number>(stringTree, '', cmpStrings));
 expectError<[number, number]>(findWithIndex<number>(stringTree, 0, cmpNumbers, 0));
 expectError<types.ImmutableTree<number>>(fromDistinctAscArray<number>(['']));
+expectError<boolean>(isDisjointFrom(stringTree, numberTree, cmpStrings));
 expectError<boolean>(isSubsetOf(stringTree, numberTree, cmpStrings));
 expectError<boolean>(isSupersetOf(stringTree, numberTree, cmpStrings));
 expectError<types.NonEmptyImmutableTree<number>>(join<number>(stringTree, 0, stringTree));
@@ -210,6 +213,7 @@ expectError<types.ImmutableTree<string> | null>(findNode<string>(stringTree, '',
 expectError<string>(findPrev<string>(stringTree, '', cmpNumbers, ''));
 expectError<[string, number]>(findWithIndex<string>(stringTree, '', cmpNumbers, ''));
 expectError<types.ImmutableTree<string>>(insert<string>(stringTree, '', cmpNumbers));
+expectError<boolean>(isDisjointFrom(stringTree, stringTree, cmpNumbers));
 expectError<boolean>(isSubsetOf(stringTree, stringTree, cmpNumbers));
 expectError<boolean>(isSupersetOf(stringTree, stringTree, cmpNumbers));
 expectError<types.ImmutableTree<string>>(remove<string, string>(stringTree, '', cmpNumbers));
@@ -272,6 +276,7 @@ expectType<typeof insertIfNotExists>(wbt.insertIfNotExists);
 expectType<typeof insertOrReplaceIfExists>(wbt.insertOrReplaceIfExists);
 expectType<typeof insertOrThrowIfExists>(wbt.insertOrThrowIfExists);
 expectType<typeof intersection>(wbt.intersection);
+expectType<typeof isDisjointFrom>(wbt.isDisjointFrom);
 expectType<typeof isSubsetOf>(wbt.isSubsetOf);
 expectType<typeof isSupersetOf>(wbt.isSupersetOf);
 expectType<typeof iterate>(wbt.iterate);

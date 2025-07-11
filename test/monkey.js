@@ -141,13 +141,10 @@ class DifferenceCmd {
       );
     }
 
-    real.tree = wbt.difference(
-      real.tree,
-      wbt.fromDistinctAscArray(this.keys),
-      compareIntegers,
-    );
-
+    const keysTree = wbt.fromDistinctAscArray(this.keys);
+    real.tree = wbt.difference(real.tree, keysTree, compareIntegers);
     assert.ok(checkTreeInvariants(real.tree, compareIntegers));
+    assert.ok(wbt.isDisjointFrom(real.tree, keysTree, compareIntegers));
     compareModelToReal(model, real);
   }
 }
@@ -165,12 +162,17 @@ class IntersectionCmd {
   run(model, real) {
     const keySet = new Set(this.keys);
     model.array = model.array.filter(keySet.has.bind(keySet));
-    real.tree = wbt.intersection(
-      real.tree,
-      wbt.fromDistinctAscArray(this.keys),
-      compareIntegers,
-    );
+    const origTree = real.tree;
+    const keysTree = wbt.fromDistinctAscArray(this.keys);
+    real.tree = wbt.intersection(origTree, keysTree, compareIntegers);
     assert.ok(checkTreeInvariants(real.tree, compareIntegers));
+    assert.ok(
+      wbt.isDisjointFrom(
+        real.tree,
+        wbt.symmetricDifference(origTree, keysTree, compareIntegers),
+        compareIntegers,
+      ),
+    );
     compareModelToReal(model, real);
   }
 }
@@ -195,12 +197,17 @@ class SymmetricDifferenceCmd {
         .concat(this.keys.filter((key) => !modelKeySet.has(key)))
     ).sort(compareIntegers);
 
-    real.tree = wbt.symmetricDifference(
-      real.tree,
-      wbt.fromDistinctAscArray(this.keys),
-      compareIntegers,
-    );
+    const origTree = real.tree;
+    const keysTree = wbt.fromDistinctAscArray(this.keys);
+    real.tree = wbt.symmetricDifference(origTree, keysTree, compareIntegers);
     assert.ok(checkTreeInvariants(real.tree, compareIntegers));
+    assert.ok(
+      wbt.isDisjointFrom(
+        real.tree,
+        wbt.intersection(origTree, keysTree, compareIntegers),
+        compareIntegers,
+      ),
+    );
     compareModelToReal(model, real);
   }
 }
