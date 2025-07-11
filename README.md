@@ -795,6 +795,18 @@ function isSubsetOf<T>(
 
 Returns `true` if all values in `tree` are in `other`, or `false` otherwise.
 
+### isSupersetOf()
+
+```TypeScript
+function isSupersetOf<T>(
+  tree: ImmutableTree<T>,
+  other: ImmutableTree<T>,
+  cmp: (a: T, b: T) => number,
+): boolean;
+```
+
+Returns `true` if all values in `other` are in `tree`, or `false` otherwise.
+
 ### join()
 
 ```TypeScript

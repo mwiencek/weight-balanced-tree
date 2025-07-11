@@ -220,6 +220,20 @@ const subsetSuite = new Bench({name: 'Sorted set subset', time: 100})
     jsSortedSetHalf1.isSubsetOf(jsSortedSet);
   });
 
+const supersetSuite = new Bench({name: 'Sorted set superset', time: 100})
+  .add('weight-balanced-tree (isSupersetOf)', function () {
+    wbt.isSupersetOf(weightBalancedTree, weightBalancedTreeHalf1, compareIntegers);
+  })
+  .add('Immutable.Set (isSuperset)', function () {
+    immutableJsSet.isSuperset(immutableJsSetHalf1);
+  })
+  .add('mori (isSuperset)', function () {
+    mori.isSuperset(moriSortedSet, moriSortedSetHalf1);
+  })
+  .add('JavaScript Set (isSupersetOf)', function () {
+    jsSortedSet.isSupersetOf(jsSortedSetHalf1);
+  });
+
 const weightBalancedTree2 = buildWeightBalancedTree(setData);
 const immutableJsSet2 = buildImmutableJsSet(setData);
 const moriSortedSet2 = buildMoriSortedSet(setData);
@@ -271,6 +285,7 @@ const iterationSuite = new Bench({name: 'Sorted set iteration', time: 100})
     differenceSuite,
     symmetricDifferenceSuite,
     subsetSuite,
+    supersetSuite,
     iterationSuite,
   ];
 

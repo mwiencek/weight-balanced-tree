@@ -25,6 +25,7 @@ export {
 } from './insert.js';
 export {default as intersection} from './intersection.js';
 export {default as isSubsetOf} from './isSubsetOf.js';
+export {default as isSupersetOf} from './isSupersetOf.js';
 export {default as iterate} from './iterate.js';
 export {default as join} from './join.js';
 export {default as join2} from './join2.js';

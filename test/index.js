@@ -902,6 +902,27 @@ test('isSubsetOf', function () {
   assert.ok(!testSubset(32, 42));
 });
 
+test('isSupersetOf', function () {
+  assert.ok(tree.isSupersetOf(tree.empty, tree.empty, compareIntegers));
+  assert.ok(!tree.isSupersetOf(tree.empty, tree.create(1), compareIntegers));
+
+  const testSuperset = (start/*: number */, stop/*: number */) => {
+    return tree.isSupersetOf(
+      oneToThirtyOneTree,
+      buildAscIntegerTree(start, stop),
+      compareIntegers,
+    );
+  };
+
+  assert.ok(testSuperset(1, 31));
+  assert.ok(testSuperset(11, 21));
+  assert.ok(testSuperset(16, 21));
+  assert.ok(!testSuperset(0, 1));
+  assert.ok(!testSuperset(31, 32));
+  assert.ok(!testSuperset(-10, 0));
+  assert.ok(!testSuperset(32, 42));
+});
+
 test('iterate', function () {
   assert.deepEqual(
     Array.from(tree.iterate(oneToThirtyOneTree)),
