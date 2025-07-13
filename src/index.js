@@ -52,6 +52,7 @@ export {default as symmetricDifference} from './symmetricDifference.js';
 export {default as toArray} from './toArray.js';
 export {default as union} from './union.js';
 export {default as update} from './update.js';
+export {default as updateIndex} from './updateIndex.js';
 export {default as validate} from './validate.js';
 export {default as zip} from './zip.js';
 /*::

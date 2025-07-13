@@ -5,16 +5,27 @@ import invariant from './invariant.js';
 import type {ImmutableTree} from './types.js';
 */
 
+export function getAdjustedIndex(
+  tree/*: ImmutableTree<mixed> */,
+  index/*: number */,
+)/*: number */ {
+  if (!Number.isInteger(index)) {
+    return -1;
+  }
+  let adjustedIndex = index < 0 ? (tree.size + index) : index;
+  if (adjustedIndex < 0 || adjustedIndex >= tree.size) {
+    return -1;
+  }
+  return adjustedIndex;
+}
+
 export default function at/*:: <T, D = T> */(
   tree/*: ImmutableTree<T> */,
   index/*: number */,
   defaultValue/*: D */,
 )/*: T | D */ {
-  if (!Number.isInteger(index)) {
-    return defaultValue;
-  }
-  let adjustedIndex = index < 0 ? (tree.size + index) : index;
-  if (adjustedIndex < 0 || adjustedIndex >= tree.size) {
+  let adjustedIndex = getAdjustedIndex(tree, index);
+  if (adjustedIndex === -1) {
     return defaultValue;
   }
   let cursor/*: ImmutableTree<T> */ = tree;

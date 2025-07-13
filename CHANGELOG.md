@@ -1,5 +1,10 @@
 # Changelog
 
+## v0.15.0 (unreleased)
+
+  * Added `updateIndex`, which updates the value at a given `index` in
+    `tree`.
+
 ## v0.14.2 (2025-07-13)
 
   * Optimized `setIndex` so that it no longer attempts to balance the tree.

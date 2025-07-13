@@ -578,6 +578,19 @@ If `value` is identical to the existing value at `index` (according to
 
 Time complexity: `O(log n)`.
 
+### updateIndex()
+
+```TypeScript
+function updateIndex<T>(
+  tree: ImmutableTree<T>,
+  index: number,
+  updater: (existingTreeValue: T) => T,
+): ImmutableTree<T>;
+```
+
+This is the same as `setIndex(tree, index, updater(at(tree, index)))`, but
+avoids having to walk the tree twice.
+
 ### slice()
 
 ```TypeScript

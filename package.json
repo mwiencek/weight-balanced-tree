@@ -185,6 +185,10 @@
       "types": "./types/update.d.ts",
       "default": "./src/update.js"
     },
+    "./updateIndex": {
+      "types": "./types/updateIndex.d.ts",
+      "default": "./src/updateIndex.js"
+    },
     "./zip": {
       "types": "./types/zip.d.ts",
       "default": "./src/zip.js"

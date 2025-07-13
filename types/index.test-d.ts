@@ -66,6 +66,7 @@ import update, {
   onNotFoundThrowError,
   onNotFoundUseGivenValue,
 } from './update';
+import updateIndex from './updateIndex';
 import validate, {
   type ValidateResult,
 } from './validate';
@@ -134,6 +135,7 @@ expectType<types.ImmutableTree<string>>(remove<string, string>(stringTree, '', c
 expectType<types.ImmutableTree<string>>(removeIfExists<string, string>(stringTree, '', cmpStrings));
 expectType<types.ImmutableTree<string>>(removeOrThrowIfNotExists<string, string>(stringTree, '', cmpStrings));
 expectType<types.ImmutableTree<string>>(setIndex(stringTree, 0, 'foo'));
+expectType<types.ImmutableTree<string>>(updateIndex(stringTree, 0, (x: string) => x + 'foo'));
 expectType<types.ImmutableTree<string>>(slice(stringTree, 1, 2));
 expectType<types.ImmutableTree<string>>(slice(stringTree, 1));
 expectType<types.ImmutableTree<string>>(slice(stringTree));
@@ -191,6 +193,7 @@ expectError<types.ImmutableTree<number>>(remove<number, number>(stringTree, 0, c
 expectError<types.ImmutableTree<number>>(removeIfExists<number, number>(stringTree, 0, cmpNumbers));
 expectError<types.ImmutableTree<number>>(removeOrThrowIfNotExists<number, number>(stringTree, 0, cmpNumbers));
 expectError<types.ImmutableTree<number>>(setIndex(stringTree, 0, 42));
+expectError<types.ImmutableTree<number>>(updateIndex(stringTree, 0, () => 42));
 expectError<types.ImmutableTree<number>>(slice(stringTree, 1, 2));
 expectError<SpliceResult<number>>(splice(stringTree, 1, 2, numberTree));
 expectError<SplitResult<number>>(split<number>(stringTree, 1, cmpNumbers));
@@ -301,5 +304,6 @@ expectType<typeof symmetricDifference>(wbt.symmetricDifference);
 expectType<typeof toArray>(wbt.toArray);
 expectType<typeof union>(wbt.union);
 expectType<typeof update>(wbt.update);
+expectType<typeof updateIndex>(wbt.updateIndex);
 expectType<typeof validate>(wbt.validate);
 expectType<typeof zip>(wbt.zip);

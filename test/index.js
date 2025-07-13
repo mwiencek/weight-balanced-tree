@@ -1131,6 +1131,36 @@ test('setIndex', function () {
   }
 });
 
+test('updateIndex', function () {
+  const node = tree.fromDistinctAscArray([1, 2, 3]);
+
+  const updater = (v/*: number */)/*: number */ => v + 6;
+  let newNode = tree.updateIndex(node, 0, updater);
+  newNode = tree.updateIndex(newNode, 1, updater);
+  newNode = tree.updateIndex(newNode, 2, updater);
+  assert.deepEqual(tree.toArray(newNode), [7, 8, 9]);
+  assert.notEqual(newNode, node);
+
+  // Set to the same value (should return the same node)
+  newNode = tree.updateIndex(node, 1, () => 2);
+  assert.deepEqual(tree.toArray(newNode), [1, 2, 3]);
+  assert.equal(newNode, node);
+
+  // Negative indexing
+  newNode = tree.updateIndex(node, -1, updater);
+  assert.deepEqual(tree.toArray(newNode), [1, 2, 9]);
+
+  // Out of range indices are no-ops
+  assert.equal(tree.updateIndex(node, 3, updater), node);
+  assert.equal(tree.updateIndex(node, -4, updater), node);
+
+  for (const badIndex of [null, undefined, NaN, '', {}, [], true, false]) {
+    // $FlowIgnore[incompatible-call]
+    newNode = tree.updateIndex(node, badIndex, updater);
+    assert.equal(newNode, node);
+  }
+});
+
 test('slice', function () {
   assert.equal(tree.slice(tree.empty), tree.empty);
   assert.equal(tree.slice(tree.empty, -100, 100), tree.empty);

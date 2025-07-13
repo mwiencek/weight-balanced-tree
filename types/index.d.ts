@@ -47,6 +47,7 @@ export {default as symmetricDifference} from './symmetricDifference';
 export {default as toArray} from './toArray';
 export {default as union} from './union';
 export {default as update} from './update';
+export {default as updateIndex} from './updateIndex';
 export {default as validate} from './validate';
 export {default as zip} from './zip';
 export {default as exists} from './exists';
