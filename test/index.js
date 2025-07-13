@@ -1181,6 +1181,13 @@ test('splice', () => {
   ({tree: newNode, deleted} = tree.splice(node, 0, 10, buildAscIntegerTree(-10, 0)));
   assert.ok(tree.equals(newNode, buildAscIntegerTree(-10, 0)));
   assert.equal(deleted, node);
+
+  for (const badInput of [null, undefined, NaN, '', {}, [], false]) {
+    // $FlowIgnore[incompatible-call]
+    ({tree: newNode, deleted} = tree.splice(node, badInput, badInput, tree.empty));
+    assert.equal(newNode, node);
+    assert.equal(deleted, tree.empty);
+  }
 });
 
 test('split', function () {
