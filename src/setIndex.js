@@ -45,7 +45,13 @@ export default function setIndex/*:: <T> */(
   index/*: number */,
   value/*: T */,
 )/*: ImmutableTree<T> */ {
-  let adjustedIndex = index < 0 ? (tree.size + index) : index;
+  if (!Number.isInteger(index)) {
+    return tree;
+  }
+  let adjustedIndex = index;
+  if (adjustedIndex < 0) {
+    adjustedIndex += tree.size;
+  }
   if (adjustedIndex < 0 || adjustedIndex >= tree.size) {
     return tree;
   }

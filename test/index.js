@@ -1119,6 +1119,12 @@ test('setIndex', function () {
   // Out of range indices are no-ops
   assert.equal(tree.setIndex(node, 3, 10), node);
   assert.equal(tree.setIndex(node, -4, 10), node);
+
+  for (const badIndex of [null, undefined, NaN, '', {}, [], true, false]) {
+    // $FlowIgnore[incompatible-call]
+    newNode = tree.setIndex(node, badIndex, 0);
+    assert.equal(newNode, node);
+  }
 });
 
 test('slice', function () {

@@ -3,6 +3,7 @@
 ## v0.14.2 (unreleased)
 
   * Optimized `setIndex` so that it no longer attempts to balance the tree.
+  * `setIndex` now returns `tree` early if `index` is not an integer.
   * `splice` now coerces `start` and `deleteCount` into integers, following
     the same behavior as `Array.prototype.splice`.
 
