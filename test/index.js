@@ -79,6 +79,10 @@ test('at', function () {
     assert.equal(tree.at(node, num - 1), num);
     assert.equal(tree.at(node, -num), oneToThirtyOne.length - (num - 1));
   }
+  for (const badIndex of [null, undefined, NaN, '', {}, [], true, false]) {
+    // $FlowIgnore[incompatible-call]
+    assert.equal(tree.at(node, badIndex, 'default'), 'default');
+  }
 });
 
 test('balanceLeft', function () {
