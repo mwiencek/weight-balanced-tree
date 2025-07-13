@@ -10,6 +10,9 @@ export default function at/*:: <T, D = T> */(
   index/*: number */,
   defaultValue/*: D */,
 )/*: T | D */ {
+  if (!Number.isInteger(index)) {
+    return defaultValue;
+  }
   let adjustedIndex = index < 0 ? (tree.size + index) : index;
   if (adjustedIndex < 0 || adjustedIndex >= tree.size) {
     return defaultValue;
