@@ -1,6 +1,6 @@
 # Changelog
 
-## v0.14.2 (unreleased)
+## v0.14.2 (2025-07-13)
 
   * Optimized `setIndex` so that it no longer attempts to balance the tree.
   * `setIndex` now returns `tree` early if `index` is not an integer.
