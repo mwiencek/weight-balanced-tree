@@ -1,7 +1,6 @@
 // @flow strict
 
 import {node} from './create.js';
-import {updateLeft, updateRight} from './update.js';
 /*::
 import invariant from './invariant.js';
 import type {
@@ -26,10 +25,18 @@ function _setIndex/*:: <T> */(
     return node(left, value, right);
   } else if (order < 0) {
     /*:: invariant(left.size !== 0); */
-    return updateLeft(tree, _setIndex(left, index, value, thisIndex - left.right.size - 1));
+    const newLeft = _setIndex(left, index, value, thisIndex - left.right.size - 1);
+    if (newLeft === left) {
+      return tree;
+    }
+    return node(newLeft, tree.value, right);
   } else {
     /*:: invariant(right.size !== 0); */
-    return updateRight(tree, _setIndex(right, index, value, thisIndex + right.left.size + 1));
+    const newRight = _setIndex(right, index, value, thisIndex + right.left.size + 1);
+    if (newRight === right) {
+      return tree;
+    }
+    return node(left, tree.value, newRight);
   }
 }
 

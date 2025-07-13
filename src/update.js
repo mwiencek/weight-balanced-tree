@@ -75,14 +75,14 @@ export function onNotFoundUseGivenValue/*:: <T> */(
   return givenValue;
 }
 
-export function updateLeft/*:: <T> */(
+function updateLeft/*:: <T> */(
   tree/*: NonEmptyImmutableTree<T> */,
   left/*: ImmutableTree<T> */,
 )/*: NonEmptyImmutableTree<T> */ {
   return left === tree.left ? tree : join(left, tree.value, tree.right);
 }
 
-export function updateRight/*:: <T> */(
+function updateRight/*:: <T> */(
   tree/*: NonEmptyImmutableTree<T> */,
   right/*: ImmutableTree<T> */,
 )/*: NonEmptyImmutableTree<T> */ {

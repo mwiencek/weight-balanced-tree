@@ -274,6 +274,34 @@ class SpliceCmd {
   }
 }
 
+class SetIndexCmd {
+  constructor(key) {
+    this.key = key;
+  }
+  toString() {
+    return `setIndex(${this.key})`;
+  }
+  check() {
+    return true;
+  }
+  run(model, real) {
+    if (Math.abs(this.key) < model.array.length) {
+      model.array.splice(
+        this.key,
+        1,
+        model.array.at(this.key) + Number.EPSILON,
+      );
+    }
+    real.tree = wbt.setIndex(
+      real.tree,
+      this.key,
+      wbt.at(real.tree, this.key) + Number.EPSILON,
+    );
+    assert.ok(checkTreeInvariants(real.tree, compareIntegers));
+    compareModelToReal(model, real);
+  }
+}
+
 class SplitCmd {
   constructor(key) {
     this.key = key;
@@ -356,6 +384,7 @@ const commandArb = [
   keyArb.map(key => new RemoveCmd(key)),
   keyArb.map(key => new SplitCmd(key)),
   keyArb.map(key => new FilterCmd(key)),
+  keyArb.map(key => new SetIndexCmd(key)),
   fc.array(keyArb, {maxLength: 50}).map(keys => new UnionCmd(keys)),
   fc.array(keyArb, {maxLength: 50}).map(keys => new DifferenceCmd(keys)),
   fc.array(keyArb, {maxLength: 50}).map(keys => new IntersectionCmd(keys)),

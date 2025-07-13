@@ -1,5 +1,9 @@
 # Changelog
 
+## v0.14.2 (unreleased)
+
+  * Optimized `setIndex` so that it no longer attempts to balance the tree.
+
 ## v0.14.1 (2025-07-11)
 
   * Added missing exports to package.json.
