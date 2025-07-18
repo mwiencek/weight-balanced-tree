@@ -229,6 +229,15 @@ class SliceCmd {
     real.tree = wbt.slice(origTree, this.start, this.end);
     assert.ok(checkTreeInvariants(real.tree, compareIntegers));
     assert.ok(wbt.isSubsetOf(real.tree, origTree, compareIntegers));
+    const realTreeArray = wbt.toArray(real.tree);
+    assert.deepEqual(
+      Array.from(wbt.iterate(origTree, this.start, this.end)),
+      realTreeArray,
+    );
+    assert.deepEqual(
+      Array.from(wbt.reverseIterate(origTree, this.start, this.end)),
+      realTreeArray.reverse(),
+    );
     compareModelToReal(model, real);
   }
 }
