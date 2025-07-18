@@ -4,6 +4,7 @@
 
   * `start` and `end` (index) parameters have been added to `iterate`
     and `reverseIterate`.
+  * `slice` now uses an optimized implementation.
 
 ## v0.15.0 (2025-07-13)
 
