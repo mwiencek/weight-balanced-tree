@@ -1146,11 +1146,6 @@ test('setIndex', function () {
   assert.deepEqual(tree.toArray(node2), [7, 8, 9]);
   assert.notEqual(node2, node);
 
-  // Set to the same value (should return the same node)
-  node2 = tree.setIndex(node, 1, 2);
-  assert.deepEqual(tree.toArray(node2), [1, 2, 3]);
-  assert.equal(node2, node);
-
   // Negative indexing
   node2 = tree.setIndex(node, -1, 5);
   assert.deepEqual(tree.toArray(node2), [1, 2, 5]);
@@ -1158,6 +1153,12 @@ test('setIndex', function () {
   // Out of range indices are no-ops
   assert.equal(tree.setIndex(node, 3, 10), node);
   assert.equal(tree.setIndex(node, -4, 10), node);
+
+  // Set to the same value (should return the same node)
+  for (let i = 0; i < 31; i++) {
+    node2 = tree.setIndex(oneToThirtyOneTree, i, i + 1);
+    assert.equal(node2, oneToThirtyOneTree);
+  }
 
   for (const badIndex of [null, undefined, NaN, '', {}, [], true, false]) {
     // $FlowIgnore[incompatible-call]
