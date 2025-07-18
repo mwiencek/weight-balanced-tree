@@ -507,10 +507,30 @@ Array.from(iterate(tree, -4, -1));
 ### reverseIterate()
 
 ```TypeScript
-function reverseIterate<T>(tree: ImmutableTree<T>): Generator<T, void, void>;
+function reverseIterate<T>(
+  tree: ImmutableTree<T>,
+  start?: number,
+  end?: number,
+): Generator<T, void, void>;
 ```
 
 Returns a JS iterator that traverses the values of the tree in reverse order.
+
+Don't be confused by `start` and `end`: they're the same as for `iterate`.
+Think of it as taking a normal slice from `start` to `end`, and then
+iterating that slice in reverse (so iteration begins at `end - 1`, got it?).
+
+```TypeScript
+const tree = fromDistinctAscArray([1, 2, 3, 4, 5]);
+
+// both 2, 3, 4:
+iterate(tree, 1, 4);
+iterate(tree, -4, -1);
+
+// both 4, 3, 2:
+reverseIterate(tree, 1, 4);
+reverseIterate(tree, -4, -1);
+```
 
 ### map()
 

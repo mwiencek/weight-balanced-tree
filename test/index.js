@@ -1107,10 +1107,28 @@ test('removeOrThrowIfNotExists', function () {
 });
 
 test('reverseIterate', function () {
-  assert.deepEqual(
-    Array.from(tree.reverseIterate(oneToThirtyOneTree)),
-    oneToThirtyOne.slice(0).reverse(),
-  );
+  const iter = (
+    node/*: ImmutableTree<number> */,
+    start/*: number | void */,
+    end/*: number | void */,
+  ) => Array.from(tree.reverseIterate(node, start, end));
+  const oneToThirtyOneReversed = oneToThirtyOne.slice(0).reverse();
+
+  assert.deepEqual(iter(tree.empty), []);
+  assert.deepEqual(iter(tree.empty, -100, 100), []);
+  assert.deepEqual(iter(oneToThirtyOneTree, 0, 0), []);
+  // $FlowIgnore[incompatible-call]
+  assert.deepEqual(iter(oneToThirtyOneTree, null, null), []);
+  assert.deepEqual(iter(oneToThirtyOneTree, NaN, NaN), []);
+  assert.deepEqual(iter(oneToThirtyOneTree, undefined, undefined), oneToThirtyOneReversed);
+  assert.deepEqual(iter(oneToThirtyOneTree), oneToThirtyOneReversed);
+  assert.deepEqual(iter(oneToThirtyOneTree, 0, 31), oneToThirtyOneReversed);
+  assert.deepEqual(iter(oneToThirtyOneTree, -100, 100), oneToThirtyOneReversed);
+  assert.deepEqual(iter(oneToThirtyOneTree, 1, 3), [3, 2]);
+  assert.deepEqual(iter(oneToThirtyOneTree, -3, -1), [30, 29]);
+  assert.deepEqual(iter(oneToThirtyOneTree, 3, 1), []);
+  assert.deepEqual(iter(oneToThirtyOneTree, undefined, 1), [1]);
+  assert.deepEqual(iter(oneToThirtyOneTree, 30, undefined), [31]);
 });
 
 test('setDelta', function () {
