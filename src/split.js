@@ -29,24 +29,16 @@ export function _splitInternal/*:: <T, K = T> */(
     return [left, tree, right];
   }
   if (order < 0) {
-    const [small, equal, largeLeft] = _splitInternal(
-      left,
-      key,
-      cmp,
-      index - safeSize(left.right) - 1,
-    );
+    const [small, equal, largeLeft] =
+      _splitInternal(left, key, cmp, index - safeSize(left.right) - 1);
     if (small.size === 0 && equal.size === 0) {
       return [empty, empty, tree];
     } else {
       return [small, equal, join(largeLeft, tree.value, right)];
     }
   } else {
-    const [smallRight, equal, large] = _splitInternal(
-      right,
-      key,
-      cmp,
-      index + safeSize(right.left) + 1,
-    );
+    const [smallRight, equal, large] =
+      _splitInternal(right, key, cmp, index + safeSize(right.left) + 1);
     if (equal.size === 0 && large.size === 0) {
       return [tree, empty, empty];
     } else {
@@ -60,10 +52,5 @@ export default function split/*:: <T, K = T> */(
   key/*: K */,
   cmp/*: (a: K, b: T, index: number) => number */,
 )/*: SplitResult<T> */ {
-  return _splitInternal(
-    tree,
-    key,
-    cmp,
-    safeSize(tree.left),
-  );
+  return _splitInternal(tree, key, cmp, safeSize(tree.left));
 }
