@@ -1140,20 +1140,20 @@ test('setDelta', function () {
 test('setIndex', function () {
   const node = tree.fromDistinctAscArray([1, 2, 3]);
 
-  let newNode = tree.setIndex(node, 0, 7);
-  newNode = tree.setIndex(newNode, 1, 8);
-  newNode = tree.setIndex(newNode, 2, 9);
-  assert.deepEqual(tree.toArray(newNode), [7, 8, 9]);
-  assert.notEqual(newNode, node);
+  let node2 = tree.setIndex(node, 0, 7);
+  node2 = tree.setIndex(node2, 1, 8);
+  node2 = tree.setIndex(node2, 2, 9);
+  assert.deepEqual(tree.toArray(node2), [7, 8, 9]);
+  assert.notEqual(node2, node);
 
   // Set to the same value (should return the same node)
-  newNode = tree.setIndex(node, 1, 2);
-  assert.deepEqual(tree.toArray(newNode), [1, 2, 3]);
-  assert.equal(newNode, node);
+  node2 = tree.setIndex(node, 1, 2);
+  assert.deepEqual(tree.toArray(node2), [1, 2, 3]);
+  assert.equal(node2, node);
 
   // Negative indexing
-  newNode = tree.setIndex(node, -1, 5);
-  assert.deepEqual(tree.toArray(newNode), [1, 2, 5]);
+  node2 = tree.setIndex(node, -1, 5);
+  assert.deepEqual(tree.toArray(node2), [1, 2, 5]);
 
   // Out of range indices are no-ops
   assert.equal(tree.setIndex(node, 3, 10), node);
@@ -1161,8 +1161,8 @@ test('setIndex', function () {
 
   for (const badIndex of [null, undefined, NaN, '', {}, [], true, false]) {
     // $FlowIgnore[incompatible-call]
-    newNode = tree.setIndex(node, badIndex, 0);
-    assert.equal(newNode, node);
+    node2 = tree.setIndex(node, badIndex, 0);
+    assert.equal(node2, node);
   }
 });
 
@@ -1170,20 +1170,20 @@ test('updateIndex', function () {
   const node = tree.fromDistinctAscArray([1, 2, 3]);
 
   const updater = (v/*: number */)/*: number */ => v + 6;
-  let newNode = tree.updateIndex(node, 0, updater);
-  newNode = tree.updateIndex(newNode, 1, updater);
-  newNode = tree.updateIndex(newNode, 2, updater);
-  assert.deepEqual(tree.toArray(newNode), [7, 8, 9]);
-  assert.notEqual(newNode, node);
+  let node2 = tree.updateIndex(node, 0, updater);
+  node2 = tree.updateIndex(node2, 1, updater);
+  node2 = tree.updateIndex(node2, 2, updater);
+  assert.deepEqual(tree.toArray(node2), [7, 8, 9]);
+  assert.notEqual(node2, node);
 
   // Set to the same value (should return the same node)
-  newNode = tree.updateIndex(node, 1, () => 2);
-  assert.deepEqual(tree.toArray(newNode), [1, 2, 3]);
-  assert.equal(newNode, node);
+  node2 = tree.updateIndex(node, 1, () => 2);
+  assert.deepEqual(tree.toArray(node2), [1, 2, 3]);
+  assert.equal(node2, node);
 
   // Negative indexing
-  newNode = tree.updateIndex(node, -1, updater);
-  assert.deepEqual(tree.toArray(newNode), [1, 2, 9]);
+  node2 = tree.updateIndex(node, -1, updater);
+  assert.deepEqual(tree.toArray(node2), [1, 2, 9]);
 
   // Out of range indices are no-ops
   assert.equal(tree.updateIndex(node, 3, updater), node);
@@ -1191,8 +1191,8 @@ test('updateIndex', function () {
 
   for (const badIndex of [null, undefined, NaN, '', {}, [], true, false]) {
     // $FlowIgnore[incompatible-call]
-    newNode = tree.updateIndex(node, badIndex, updater);
-    assert.equal(newNode, node);
+    node2 = tree.updateIndex(node, badIndex, updater);
+    assert.equal(node2, node);
   }
 });
 
@@ -1217,50 +1217,50 @@ test('slice', function () {
 test('splice', () => {
   const node = buildAscIntegerTree(1, 10);
 
-  let {tree: newNode, deleted} = tree.splice(node, 0, 0, tree.empty);
-  assert.equal(newNode, node);
+  let {tree: node2, deleted} = tree.splice(node, 0, 0, tree.empty);
+  assert.equal(node2, node);
   assert.equal(deleted, tree.empty);
 
-  ({tree: newNode, deleted} = tree.splice(node, 100, 0, tree.empty));
-  assert.equal(newNode, node);
+  ({tree: node2, deleted} = tree.splice(node, 100, 0, tree.empty));
+  assert.equal(node2, node);
   assert.equal(deleted, tree.empty);
 
-  ({tree: newNode, deleted} = tree.splice(node, -Infinity, 0, tree.empty));
-  assert.equal(newNode, node);
+  ({tree: node2, deleted} = tree.splice(node, -Infinity, 0, tree.empty));
+  assert.equal(node2, node);
   assert.equal(deleted, tree.empty);
 
-  ({tree: newNode, deleted} = tree.splice(node, Infinity, 0, tree.empty));
-  assert.equal(newNode, node);
+  ({tree: node2, deleted} = tree.splice(node, Infinity, 0, tree.empty));
+  assert.equal(node2, node);
   assert.equal(deleted, tree.empty);
 
-  ({tree: newNode, deleted} = tree.splice(node, 0, 0, buildAscIntegerTree(-10, 0)));
-  assert.ok(tree.equals(newNode, buildAscIntegerTree(-10, 10)));
+  ({tree: node2, deleted} = tree.splice(node, 0, 0, buildAscIntegerTree(-10, 0)));
+  assert.ok(tree.equals(node2, buildAscIntegerTree(-10, 10)));
   assert.equal(deleted, tree.empty);
 
-  ({tree: newNode, deleted} = tree.splice(node, 10, 0, buildAscIntegerTree(11, 20)));
-  assert.ok(tree.equals(newNode, buildAscIntegerTree(1, 20)));
+  ({tree: node2, deleted} = tree.splice(node, 10, 0, buildAscIntegerTree(11, 20)));
+  assert.ok(tree.equals(node2, buildAscIntegerTree(1, 20)));
   assert.equal(deleted, tree.empty);
 
   for (const i of [0, -10]) {
-    ({tree: newNode, deleted} = tree.splice(node, i, 10, tree.empty));
-    assert.equal(newNode, tree.empty);
+    ({tree: node2, deleted} = tree.splice(node, i, 10, tree.empty));
+    assert.equal(node2, tree.empty);
     assert.equal(deleted, node);
   }
 
   for (const i of [1, -9]) {
-    ({tree: newNode, deleted} = tree.splice(node, i, 8, buildAscIntegerTree(2, 9)));
-    assert.ok(tree.equals(newNode, buildAscIntegerTree(1, 10)));
+    ({tree: node2, deleted} = tree.splice(node, i, 8, buildAscIntegerTree(2, 9)));
+    assert.ok(tree.equals(node2, buildAscIntegerTree(1, 10)));
     assert.ok(tree.equals(deleted, buildAscIntegerTree(2, 9)));
   }
 
-  ({tree: newNode, deleted} = tree.splice(node, 0, 10, buildAscIntegerTree(-10, 0)));
-  assert.ok(tree.equals(newNode, buildAscIntegerTree(-10, 0)));
+  ({tree: node2, deleted} = tree.splice(node, 0, 10, buildAscIntegerTree(-10, 0)));
+  assert.ok(tree.equals(node2, buildAscIntegerTree(-10, 0)));
   assert.equal(deleted, node);
 
   for (const badInput of [null, undefined, NaN, '', {}, [], false]) {
     // $FlowIgnore[incompatible-call]
-    ({tree: newNode, deleted} = tree.splice(node, badInput, badInput, tree.empty));
-    assert.equal(newNode, node);
+    ({tree: node2, deleted} = tree.splice(node, badInput, badInput, tree.empty));
+    assert.equal(node2, node);
     assert.equal(deleted, tree.empty);
   }
 });
@@ -1674,13 +1674,13 @@ test('toArray', function () {
 test('update', function (t) {
   t.test('onNotFoundDoNothing', function () {
     const node = tree.create(1);
-    const newNode = tree.update(node, {
+    const node2 = tree.update(node, {
       key: 2,
       cmp: compareIntegers,
       onConflict: onConflictThrowError,
       onNotFound: onNotFoundDoNothing,
     });
-    assert.equal(newNode, node, 'tree was not updated with onNotFoundDoNothing');
+    assert.equal(node2, node, 'tree was not updated with onNotFoundDoNothing');
   });
 
   t.test('onNotFoundThrowError', function () {
