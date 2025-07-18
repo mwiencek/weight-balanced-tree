@@ -1,6 +1,6 @@
 # Changelog
 
-## v0.16.0 (unreleased)
+## v0.16.0 (2025-07-18)
 
   * `start` and `end` (index) parameters have been added to `iterate`
     and `reverseIterate`.
