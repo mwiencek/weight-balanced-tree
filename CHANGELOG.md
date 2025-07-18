@@ -1,5 +1,9 @@
 # Changelog
 
+## v0.16.0 (unreleased)
+
+  * `start` and `end` (index) parameters have been added to `iterate`.
+
 ## v0.15.0 (2025-07-13)
 
   * Added `updateIndex`, which updates the value at a given `index` in

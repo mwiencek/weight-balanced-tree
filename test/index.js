@@ -965,10 +965,27 @@ test('isDisjointFrom', function () {
 });
 
 test('iterate', function () {
-  assert.deepEqual(
-    Array.from(tree.iterate(oneToThirtyOneTree)),
-    oneToThirtyOne,
-  );
+  const iter = (
+    node/*: ImmutableTree<number> */,
+    start/*: number | void */,
+    end/*: number | void */,
+  ) => Array.from(tree.iterate(node, start, end));
+
+  assert.deepEqual(iter(tree.empty), []);
+  assert.deepEqual(iter(tree.empty, -100, 100), []);
+  assert.deepEqual(iter(oneToThirtyOneTree, 0, 0), []);
+  // $FlowIgnore[incompatible-call]
+  assert.deepEqual(iter(oneToThirtyOneTree, null, null), []);
+  assert.deepEqual(iter(oneToThirtyOneTree, NaN, NaN), []);
+  assert.deepEqual(iter(oneToThirtyOneTree, undefined, undefined), oneToThirtyOne);
+  assert.deepEqual(iter(oneToThirtyOneTree), oneToThirtyOne);
+  assert.deepEqual(iter(oneToThirtyOneTree, 0, 31), oneToThirtyOne);
+  assert.deepEqual(iter(oneToThirtyOneTree, -100, 100), oneToThirtyOne);
+  assert.deepEqual(iter(oneToThirtyOneTree, 1, 3), [2, 3]);
+  assert.deepEqual(iter(oneToThirtyOneTree, -3, -1), [29, 30]);
+  assert.deepEqual(iter(oneToThirtyOneTree, 3, 1), []);
+  assert.deepEqual(iter(oneToThirtyOneTree, undefined, 1), [1]);
+  assert.deepEqual(iter(oneToThirtyOneTree, 30, undefined), [31]);
 });
 
 test('join', function () {

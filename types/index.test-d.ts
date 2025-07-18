@@ -110,6 +110,8 @@ expectType<types.ImmutableTree<string>>(insertIfNotExists<string>(stringTree, ''
 expectType<types.ImmutableTree<string>>(insertOrReplaceIfExists<string>(stringTree, '', cmpStrings));
 expectType<types.ImmutableTree<string>>(insertOrThrowIfExists<string>(stringTree, '', cmpStrings));
 expectType<Generator<string, undefined, undefined>>(iterate<string>(stringTree));
+expectType<Generator<string, undefined, undefined>>(iterate<string>(stringTree, 0));
+expectType<Generator<string, undefined, undefined>>(iterate<string>(stringTree, 0, 10));
 expectType<Generator<string, undefined, undefined>>(reverseIterate<string>(stringTree));
 expectType<boolean>(equals<string>(stringTree, stringTree));
 expectType<boolean>(equals<string>(stringTree, stringTree, areStringsEqual));

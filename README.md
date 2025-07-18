@@ -486,10 +486,23 @@ specified).
 ### iterate()
 
 ```TypeScript
-function iterate<T>(tree: ImmutableTree<T>): Generator<T, void, void>;
+function iterate<T>(
+  tree: ImmutableTree<T>,
+  start?: number,
+  end?: number,
+): Generator<T, void, void>;
 ```
 
-Returns a JS iterator that traverses the values of the tree in order.
+Returns a JS iterator that traverses the values of the tree in order, optionally
+starting from index `start` (inclusive) and ending at index `end` (exclusive).
+
+Negative indices can be used for `start` and `end`:
+
+```TypeScript
+const tree = fromDistinctAscArray([1, 2, 3, 4, 5]);
+Array.from(iterate(tree, -4, -1));
+// [ 2, 3, 4 ]
+```
 
 ### reverseIterate()
 
