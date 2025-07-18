@@ -394,7 +394,7 @@ immediately after it, or `defaultValue` if there is no such value.
 `key` does not have to be found in the tree: if a set has 1 & 3, the next
 value from 2 is 3.
 
-## findNode()
+### findNode()
 
 ```TypeScript
 function findNode<T, K = T>(
