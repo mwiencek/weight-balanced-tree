@@ -2,6 +2,7 @@
 
 import empty from './empty.js';
 import join from './join.js';
+import safeSize from './utility/safeSize.js';
 /*::
 import type {ImmutableTree} from './types.js';
 
@@ -32,7 +33,7 @@ export function _splitInternal/*:: <T, K = T> */(
       left,
       key,
       cmp,
-      index - (left.right === null ? 0 : left.right.size) - 1,
+      index - safeSize(left.right) - 1,
     );
     if (small.size === 0 && equal.size === 0) {
       return [empty, empty, tree];
@@ -44,7 +45,7 @@ export function _splitInternal/*:: <T, K = T> */(
       right,
       key,
       cmp,
-      index + (right.left === null ? 0 : right.left.size) + 1,
+      index + safeSize(right.left) + 1,
     );
     if (equal.size === 0 && large.size === 0) {
       return [tree, empty, empty];
@@ -63,6 +64,6 @@ export default function split/*:: <T, K = T> */(
     tree,
     key,
     cmp,
-    tree.left === null ? 0 : tree.left.size,
+    safeSize(tree.left),
   );
 }
