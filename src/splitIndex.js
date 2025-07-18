@@ -11,7 +11,7 @@ import type {ImmutableTree} from './types.js';
 export default function splitIndex/*:: <T, K = T> */(
   tree/*: ImmutableTree<T> */,
   index/*: number */,
-)/*:: : SplitResult<T> */ {
+)/*: SplitResult<T> */ {
   return _splitInternal(
     tree,
     index,

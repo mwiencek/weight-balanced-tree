@@ -17,7 +17,7 @@ export function _splitInternal/*:: <T, K = T> */(
   key/*: K */,
   cmp/*: (a: K, b: T, index: number) => number */,
   index/*: number */,
-)/*:: : SplitResult<T> */ {
+)/*: SplitResult<T> */ {
   if (tree.size === 0) {
     return [empty, empty, empty];
   }
@@ -58,7 +58,7 @@ export default function split/*:: <T, K = T> */(
   tree/*: ImmutableTree<T> */,
   key/*: K */,
   cmp/*: (a: K, b: T, index: number) => number */,
-)/*:: : SplitResult<T> */ {
+)/*: SplitResult<T> */ {
   return _splitInternal(
     tree,
     key,
